@@ -1,0 +1,30 @@
+name: arm-dev
+
+#docker compose exec arm python3 /opt/arm/dev/feeder/feeder.py completed
+#docker compose exec arm python3 /opt/arm/dev/feeder/feeder.py failed
+#docker compose exec arm python3 /opt/arm/dev/feeder/feeder.py clear
+services:
+  arm:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    volumes:
+      - ..:/opt/arm
+      - ./config:/etc/arm/config
+      - ./data:/home/arm/db
+      - ./media:/home/arm/media
+    environment:
+      TZ: Europe/Amsterdam
+    command: python3 /opt/arm/arm/runui.py
+
+
+  sqlite-web:
+    image: python:3.12-slim
+    working_dir: /data
+    volumes:
+      - ./data:/data
+    ports:
+      - "8081:8080"
+    command: sh -c "pip install --no-cache-dir sqlite-web && sqlite_web -H 0.0.0.0 -p 8080 /data/arm.db"
