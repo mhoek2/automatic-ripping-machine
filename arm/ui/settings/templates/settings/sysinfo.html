@@ -1,178 +1,539 @@
 {% block sysinfo %}
-    <style>
-        .progress-bar {
-            color: white !important;
-        }
-    </style>
-    <div class="container content">
-        <div class="row">
-            <div class="col pt-3">
-                <div class="card mx-auto">
-                    <div class="card-header text-center">
-                        <strong>System</strong>
-                    </div>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">
-                            Name: {{ server.name }}
-                        </li>
-                        <li class="list-group-item">
-                            {{ server.description }}
-                        </li>
-                        <li class="list-group-item">
-                            CPU: {{ server.cpu }}
-                        </li>
-                        <li class="list-group-item">
-                            {% if serverutil.cpu_temp is not none %}
-                                <section class="{{ ' bg-danger text-white' if serverutil.cpu_temp > 70 }}">CPU
-                                    Temp: {{ serverutil.cpu_temp }}&#176;C
-                                </section>
-                            {% else %}
-                                <section> Temp: not reported</section>
-                            {% endif %}
-                        </li>
-                        <li class="list-group-item">
-                            <h6 class="progress-label" style="float: left;margin-right: 1em;">Usage: </h6>
-                            <div class="progress">
-                                <div class="progress-bar{{ ' bg-danger' if serverutil.cpu_util > 80 }}"
-                                     role="progressbar"
-                                     style="width: {{ ' 10' if serverutil.cpu_util < 10 else serverutil.cpu_util }}%;"
-                                     aria-valuenow="{{ serverutil.cpu_util }}" aria-valuemin="0" aria-valuemax="100">
-                                    {{ serverutil.cpu_util }}%
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
+<div class="sysinfo">
+
+    <div class="sysinfo-grid">
+
+        <!-- SYSTEM -->
+        <div class="sysinfo-card">
+            <div class="sysinfo-card-header">
+                <span>System</span>
             </div>
-            <div class="col pt-3">
-                <div class="card mx-auto">
-                    <div class="card-header text-center">
-                        <strong>System Memory</strong>
+
+            <div class="sysinfo-card-body">
+
+                <div class="sysinfo-item">
+                    <div class="sysinfo-label">
+                        <span>Name</span>
+                        <span class="sysinfo-value" data-server="name"></span>
                     </div>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">
-                            Total: {{ server.mem_total }} GB
-                            <br>Free: {{ serverutil.memory_free }} GB
-                            <br>Used: {{ serverutil.memory_used }} GB
-                        </li>
-                        <li class="list-group-item">
-                            <h6 class="progress-label" style="float: left;margin-right: 1em;">Usage: </h6>
-                            <div class="progress">
-                                <div class="progress-bar{{ ' bg-danger' if serverutil.memory_percent > 80 }}"
-                                     role="progressbar"
-                                     style="width: {{ serverutil.memory_percent }}%;"
-                                     aria-valuenow="{{ serverutil.memory_percent }}" aria-valuemin="0"
-                                     aria-valuemax="100">
-                                    {{ serverutil.memory_percent }}%
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
+
+                    <div class="sysinfo-description" data-server="description"></div>
                 </div>
-            </div>
-            <div class="col pt-3">
-                <div class="card mx-auto">
-                    <div class="card-header text-center">
-                        <strong>Storage</strong>
+
+                <div class="sysinfo-item">
+                    <div class="sysinfo-label">
+                        <span>CPU</span>
+                        <span class="sysinfo-value" data-server="cpu"></span>
                     </div>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">
-                            {% if server.storage_transcode_free != 0 %}
-                                <h6 class="progress-label" style="float: left;margin-right: 1em;">Transcode: </h6>
-                                <div class="progress">
-                                    <div class="progress-bar{{ ' bg-danger' if serverutil.storage_transcode_percent > 80 }}"
-                                         role="progressbar"
-                                         style="width: {{ serverutil.storage_transcode_percent }}%;"
-                                         aria-valuenow="{{ serverutil.storage_transcode_percent }}"
-                                         aria-valuemin="0"
-                                         aria-valuemax="100">{{ serverutil.storage_transcode_percent }}%
-                                    </div>
-                                </div>
-                                <br> Free Space: {{ serverutil.storage_transcode_free }} GB
-                            {% else %}
-                                Transcode: Unable to get data on path
-                            {% endif %}
-                            <br>Path: {{ arm_path }}
-                        </li>
-                        <li class="list-group-item">
-                            {% if serverutil.storage_completed_free != 0 %}
-                                <h6 class="progress-label" style="float: left;margin-right: 1em;">Completed: </h6>
-                                <div class="progress">
-                                    <div class="progress-bar{{ ' bg-danger' if serverutil.storage_completed_percent > 80 }}"
-                                         role="progressbar"
-                                         style="width: {{ serverutil.storage_completed_percent }}%;"
-                                         aria-valuenow="{{ serverutil.storage_completed_percent }}"
-                                         aria-valuemin="0"
-                                         aria-valuemax="100">{{ serverutil.storage_completed_percent }}%
-                                    </div>
-                                </div>
-                                <br> Free Space: {{ serverutil.storage_completed_free }} GB
-                            {% else %}
-                                Completed: Unable to get data on path
-                            {% endif %}
-                            <br>Path: {{ media_path }}
-                        </li>
-                    </ul>
                 </div>
+
+                <div class="sysinfo-item">
+                    <div class="sysinfo-label">
+                        <span>Temperature</span>
+                        <span class="sysinfo-value" data-serverutil="cpu_temp"></span>
+                    </div>
+
+                    <div class="sysinfo-progress">
+                        <div
+                            class="sysinfo-progress-bar"
+                            data-progress="cpu_temp">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sysinfo-item">
+                    <div class="sysinfo-label">
+                        <span>CPU Usage</span>
+                        <span class="sysinfo-value" data-serverutil="cpu_util"></span>
+                    </div>
+
+                    <div class="sysinfo-progress">
+                        <div
+                            class="sysinfo-progress-bar"
+                            data-progress="cpu_util">
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
-        <div class="row">
-            <div class="col pt-3"></div>
-            <div class="col pt-3">
-                <div class="card mx-auto">
-                    <div class="card-header text-center">
-                        <strong>Hardware Transcoding Support</strong>
+
+
+        <!-- MEMORY -->
+        <div class="sysinfo-card">
+            <div class="sysinfo-card-header">
+                <span>System Memory</span>
+            </div>
+
+            <div class="sysinfo-card-body">
+
+                <div class="sysinfo-item">
+                    <div class="sysinfo-label">
+                        <span>Total</span>
+                        <span class="sysinfo-value" data-memory="total"></span>
                     </div>
-                    <ul class="list-group list-group-flush">
-                        <!-- INTEL -->
-                        <li class="list-group-item text-center">
-                            Intel QuickSync: {% if stats['hw_support']['intel'] %}
-                            <img src="{{ url_for('static', filename='img/success.png') }}"
-                                 alt="update image" width="20px" height="20px">
-                        {% else %}
-                            <img src="{{ url_for('static', filename='img/fail.png') }}"
-                                 alt="update image" width="20px" height="20px">
-                            <a href="https://github.com/automatic-ripping-machine/automatic-ripping-machine/wiki/"
-                               target=”_blank”>
-                                <img title="Get Help from the wiki!"
-                                     src="{{ url_for('static', filename='img/info.png') }}" width="20px"
-                                     height="20px" alt="Get Help from the wiki!"></a>
-                        {% endif %}
-                        </li>
-                        <!-- NVIDIA -->
-                        <li class="list-group-item text-center">
-                            Nvidia NVENC:{% if stats['hw_support']['nvidia'] %}
-                            <img src="{{ url_for('static', filename='img/success.png') }}"
-                                 alt="update image" width="20px" height="20px">
-                        {% else %}
-                            <img src="{{ url_for('static', filename='img/fail.png') }}"
-                                 alt="update image" width="20px" height="20px">
-                            <a href="https://github.com/automatic-ripping-machine/automatic-ripping-machine/wiki/"
-                               target=”_blank”>
-                                <img title="Get Help from the wiki!"
-                                     src="{{ url_for('static', filename='img/info.png') }}" width="20px"
-                                     height="20px" alt="Get Help from the wiki!"></a>
-                        {% endif %}
-                        </li>
-                        <!-- AMD -->
-                        <li class="list-group-item text-center">
-                            AMD VCN:{% if stats['hw_support']['amd'] %}
-                            <img src="{{ url_for('static', filename='img/success.png') }}"
-                                 alt="update image" width="20px" height="20px">
-                        {% else %}
-                            <img src="{{ url_for('static', filename='img/fail.png') }}"
-                                 alt="update image" width="20px" height="20px">
-                            <a href="https://github.com/automatic-ripping-machine/automatic-ripping-machine/wiki/"
-                               target=”_blank”>
-                                <img title="Get Help from the wiki!"
-                                     src="{{ url_for('static', filename='img/info.png') }}" width="20px"
-                                     height="20px" alt="Get Help from the wiki!"></a>
-                        {% endif %}
-                        </li>
-                    </ul>
+
+                    <div class="sysinfo-label">
+                        <span>Used</span>
+                        <span class="sysinfo-value" data-serverutil="memory_used"></span>
+                    </div>
+
+                    <div class="sysinfo-label">
+                        <span>Free</span>
+                        <span class="sysinfo-value" data-serverutil="memory_free"></span>
+                    </div>
+                </div>
+
+                <div class="sysinfo-item">
+                    <div class="sysinfo-label">
+                        <span>Memory Usage</span>
+                        <span class="sysinfo-value" data-serverutil="memory_percent"></span>
+                    </div>
+
+                    <div class="sysinfo-progress">
+                        <div
+                            class="sysinfo-progress-bar"
+                            data-progress="memory_percent">
+                        </div>
+                    </div>
+
+                    <div class="sysinfo-progress-value" data-memory="usage"></div>
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- STORAGE -->
+        <div class="sysinfo-card">
+            <div class="sysinfo-card-header">
+                <span>Storage</span>
+            </div>
+
+            <div class="sysinfo-card-body">
+
+                <div class="sysinfo-item">
+                    <div class="sysinfo-label">
+                        <span>Transcode</span>
+                        <span class="sysinfo-value" data-serverutil="storage_transcode_percent"></span>
+                    </div>
+
+                    <div class="sysinfo-progress">
+                        <div
+                            class="sysinfo-progress-bar"
+                            data-progress="storage_transcode_percent">
+                        </div>
+                    </div>
+
+                    <div class="sysinfo-progress-value">
+                        <span data-serverutil="storage_transcode_free"></span> GB free
+                    </div>
+
+                    <div class="sysinfo-path">
+                        {{ arm_path }}
+                    </div>
+                </div>
+
+
+                <div class="sysinfo-item">
+                    <div class="sysinfo-label">
+                        <span>Completed</span>
+                        <span class="sysinfo-value" data-serverutil="storage_completed_percent"></span>
+                    </div>
+
+                    <div class="sysinfo-progress">
+                        <div
+                            class="sysinfo-progress-bar"
+                            data-progress="storage_completed_percent">
+                        </div>
+                    </div>
+
+                    <div class="sysinfo-progress-value">
+                        <span data-serverutil="storage_completed_free"></span> GB free
+                    </div>
+
+                    <div class="sysinfo-path">
+                        {{ media_path }}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+
+    {% if authenticated %}
+    <div class="server-details">
+
+        <div class="server-details-header">
+            Server details
+        </div>
+
+        <div class="server-details-body">
+
+            <!-- SYSTEM + HARDWARE -->
+            <div class="server-details-group">
+
+                <!-- SYSTEM -->
+                <div class="server-details-section">
+                    <div class="server-details-section-title">
+                        System
+                    </div>
+
+                    <div class="server-details-grid">
+
+                        <div class="server-detail">
+                            <span class="server-detail-label">Datetime</span>
+                            <span class="server-detail-value" data-serverstat="server_datetime"></span>
+                        </div>
+
+                        <div class="server-detail">
+                            <span class="server-detail-label">Timezone</span>
+                            <span class="server-detail-value" data-serverstat="server_timezone"></span>
+                        </div>
+
+                        <div class="server-detail">
+                            <span class="server-detail-label">Python</span>
+                            <code data-serverstat="python_version"></code>
+                        </div>
+
+                        <div class="server-detail">
+                            <span class="server-detail-label">A.R.M</span>
+                            <code data-serverstat="arm_version_local"></code>
+                        </div>
+
+                        <div class="server-detail">
+                            <span class="server-detail-label">Git</span>
+                            <code data-serverstat="git_commit"></code>
+                        </div>
+
+                        <div class="server-detail server-detail-update"
+                             data-serverstat-update>
+                            <span class="server-detail-label">Update</span>
+
+                            <span>
+                                <a
+                                    href="https://github.com/automatic-ripping-machine/automatic-ripping-machine/wiki/Docker-Upgrading"
+                                    target="_blank">
+                                    Update available
+                                </a>
+
+                                <code data-serverstat="arm_version_remote"></code>
+                            </span>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <!-- HARDWARE TRANSCODING -->
+                <div class="server-details-section">
+                    <div class="server-details-section-title">
+                        Hardware transcoding
+                    </div>
+
+                    <div class="hardware-list">
+
+                        <div class="hardware-item">
+                            <span class="hardware-name">
+                                Intel QuickSync
+                            </span>
+
+                            <span class="hardware-status"
+                                  data-hw-support="intel">
+                                <span class="sysinfo-status"></span>
+                                <span class="hardware-status-text"></span>
+                            </span>
+                        </div>
+
+                        <div class="hardware-item">
+                            <span class="hardware-name">
+                                NVIDIA NVENC
+                            </span>
+
+                            <span class="hardware-status"
+                                  data-hw-support="nvidia">
+                                <span class="sysinfo-status"></span>
+                                <span class="hardware-status-text"></span>
+                            </span>
+                        </div>
+
+                        <div class="hardware-item">
+                            <span class="hardware-name">
+                                AMD VCN
+                            </span>
+
+                            <span class="hardware-status"
+                                  data-hw-support="amd">
+                                <span class="sysinfo-status"></span>
+                                <span class="hardware-status-text"></span>
+                            </span>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!-- RIP STATISTICS -->
+            <div class="server-details-section">
+
+                <div class="server-details-section-title">
+                    Rip statistics
+                </div>
+
+                <div class="rip-stats">
+
+                    <div class="rip-stat">
+                        <div class="rip-stat-value"
+                             data-serverstat="total_rips"></div>
+                        <div class="rip-stat-label">
+                            Total rips
+                        </div>
+                    </div>
+
+                    <div class="rip-stat">
+                        <div class="rip-stat-value"
+                             data-serverstat="movies_ripped"></div>
+                        <div class="rip-stat-label">
+                            Movies
+                        </div>
+                    </div>
+
+                    <div class="rip-stat">
+                        <div class="rip-stat-value"
+                             data-serverstat="series_ripped"></div>
+                        <div class="rip-stat-label">
+                            Series
+                        </div>
+                    </div>
+
+                    <div class="rip-stat">
+                        <div class="rip-stat-value"
+                             data-serverstat="cds_ripped"></div>
+                        <div class="rip-stat-label">
+                            Audio
+                        </div>
+                    </div>
+
                 </div>
             </div>
-            <div class="col pt-3"></div>
+
         </div>
     </div>
+    {% endif %}
+
+</div>
+
+<script>
+    function loadServerStats()
+    {
+        $.getJSON("/serverstats")
+            .done(function(response)
+            {
+                const data = response.data;
+
+                updateServerInfo(data);
+                updateServerUtil(data.serverutil);
+                updateServerStats(data);
+                updateHardwareSupport(data.hw_support);
+                updateServerVersion(data);
+            })
+            .fail(function(xhr, status, error)
+            {
+                console.error("Failed to load server stats:", status, error);
+            });
+    }
+
+
+    function updateServerInfo(data)
+    {
+        $('[data-server="name"]').text(data.server.name);
+        $('[data-server="description"]').text(data.server.description);
+        $('[data-server="cpu"]').text(data.server.cpu);
+    }
+
+
+    function updateServerUtil(util)
+    {
+        // CPU temperature
+        const $cpuTemp = $('[data-serverutil="cpu_temp"]');
+        const $cpuTempProgress = $('[data-progress="cpu_temp"]');
+
+        if (util.cpu_temp !== null && util.cpu_temp !== undefined)
+        {
+            $cpuTemp.text(util.cpu_temp + "°C");
+
+            $cpuTempProgress
+                .show()
+                .css("width", Math.min(util.cpu_temp, 100) + "%")
+                .removeClass("warning danger");
+
+            if (util.cpu_temp > 70)
+                $cpuTempProgress.addClass("danger");
+            else if (util.cpu_temp > 55)
+                $cpuTempProgress.addClass("warning");
+        }
+        else
+        {
+            $cpuTemp.text("Not reported");
+            $cpuTempProgress.hide();
+        }
+
+
+        // CPU usage
+        $('[data-serverutil="cpu_util"]')
+            .text(util.cpu_util + "%");
+
+        $('[data-progress="cpu_util"]')
+            .css("width", Math.min(util.cpu_util, 100) + "%")
+            .removeClass("warning danger");
+
+        if (util.cpu_util > 80)
+        {
+            $('[data-progress="cpu_util"]')
+                .addClass("danger");
+        }
+
+
+        // Memory
+        $('[data-serverutil="memory_used"]')
+            .text(util.memory_used + " GB");
+
+        $('[data-serverutil="memory_free"]')
+            .text(util.memory_free + " GB");
+
+        $('[data-serverutil="memory_percent"]')
+            .text(util.memory_percent + "%");
+
+        $('[data-progress="memory_percent"]')
+            .css("width", Math.min(util.memory_percent, 100) + "%")
+            .removeClass("warning danger");
+
+        if (util.memory_percent > 80)
+        {
+            $('[data-progress="memory_percent"]')
+                .addClass("danger");
+        }
+
+
+        // Transcode storage
+        $('[data-serverutil="storage_transcode_percent"]')
+            .text(util.storage_transcode_percent + "%");
+
+        $('[data-serverutil="storage_transcode_free"]')
+            .text(util.storage_transcode_free + " GB");
+
+        $('[data-progress="storage_transcode_percent"]')
+            .css(
+                "width",
+                Math.min(util.storage_transcode_percent, 100) + "%"
+            )
+            .removeClass("warning danger");
+
+        if (util.storage_transcode_percent > 80)
+        {
+            $('[data-progress="storage_transcode_percent"]')
+                .addClass("danger");
+        }
+
+
+        // Completed storage
+        $('[data-serverutil="storage_completed_percent"]')
+            .text(util.storage_completed_percent + "%");
+
+        $('[data-serverutil="storage_completed_free"]')
+            .text(util.storage_completed_free + " GB");
+
+        $('[data-progress="storage_completed_percent"]')
+            .css(
+                "width",
+                Math.min(util.storage_completed_percent, 100) + "%"
+            )
+            .removeClass("warning danger");
+
+        if (util.storage_completed_percent > 80)
+        {
+            $('[data-progress="storage_completed_percent"]')
+                .addClass("danger");
+        }
+    }
+
+
+    function updateServerStats(data)
+    {
+        $("[data-serverstat]").each(function()
+        {
+            const $element = $(this);
+            const key = $element.data("serverstat");
+
+            if (data[key] !== undefined)
+                $element.text(data[key]);
+        });
+    }
+
+
+    function updateHardwareSupport(hw)
+    {
+        ["intel", "nvidia", "amd"].forEach(function(type)
+        {
+            const $element = $('[data-hw-support="' + type + '"]');
+
+            if (!$element.length)
+                return;
+
+            const $status = $element.find(".sysinfo-status");
+            const $text = $element.find(".hardware-status-text");
+
+            $status.removeClass("ok fail");
+            $element.removeClass("supported unavailable");
+
+            if (hw[type])
+            {
+                $status.addClass("ok");
+                $element.addClass("supported");
+                $text.text("Supported");
+            }
+            else
+            {
+                $status.addClass("fail");
+                $element.addClass("unavailable");
+                $text.text("Unavailable");
+            }
+        });
+    }
+
+
+    function updateServerVersion(data)
+    {
+        const $update = $("[data-serverstat-update]");
+
+        if (!$update.length)
+            return;
+
+        if (data.updated)
+        {
+            $update.hide();
+            return;
+        }
+
+        $update.show();
+
+        $update
+            .find('[data-serverstat="arm_version_remote"]')
+            .text(data.arm_version_remote);
+    }
+
+
+    $(function()
+    {
+        setInterval(function(){
+            loadServerStats();
+        }, 2000);
+        
+    });
+</script>
+
 {% endblock %}

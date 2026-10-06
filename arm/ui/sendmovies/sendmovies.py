@@ -7,7 +7,8 @@ Covers
 from flask_login import LoginManager, login_required  # noqa: F401
 from flask import render_template, request, Blueprint, session
 
-from arm.ui import db
+from arm.ui import  app, db
+import arm.ui.utils as ui_utils
 from arm.models.job import Job
 
 route_sendmovies = Blueprint('route_sendmovies', __name__,
@@ -22,13 +23,19 @@ def send_movies():
     function for sending all dvd crc64 ids to off-site api
     This isn't very optimised and can be slow and causes a huge number of requests
     """
+    authenticated = ui_utils.authenticated_state()
+    app.logger.debug(f'Authentication state: {authenticated}')
+
     if request.args.get('s') is None:
         session["page_title"] = "Send Movies/Series"
-        return render_template('send_movies_form.html')
+        return render_template('send_movies_form.html', 
+                               authenticated=authenticated)
 
     job_list = db.session.query(Job).filter_by(hasnicetitle=True, disctype="dvd").all()
     return_job_list = [job.job_id for job in job_list]
 
     session["page_title"] = "Send Movies/Series"
 
-    return render_template('send_movies.html', job_list=return_job_list)
+    return render_template('send_movies.html', 
+                           authenticated=authenticated,
+                           job_list=return_job_list)

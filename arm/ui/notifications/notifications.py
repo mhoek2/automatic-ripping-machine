@@ -54,7 +54,11 @@ def arm_notification():
 
     session["page_title"] = "Notifications"
 
+    authenticated = ui_utils.authenticated_state()
+    app.logger.debug(f'Authentication state: {authenticated}')
+
     return render_template('notificationview.html',
+                           authenticated=authenticated,
                            notifications_new=notifications_new)
 
 

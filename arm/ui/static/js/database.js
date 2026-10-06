@@ -76,7 +76,7 @@ function setCookie(cname, cvalue, exdays) {
 }
 
 function switchDelete() {
-    $("#jobId" + activeJob).remove();
+    $(`#jobId${activeJob}`).remove();
     $(MSG_1_ID).html("Job was successfully deleted");
     hideModal();
     setTimeout(

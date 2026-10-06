@@ -26,7 +26,7 @@ $(document).ready(function () {
                 console.log(data.success);
                 console.log("#jobId" + activeJob);
                 if (data.success && data.mode === "abandon") {
-                    $("#id" + activeJob).remove();
+                    $(`#jobId${activeJob}`).remove();
                     $("#message1 .alert-heading").html("Job was successfully abandoned");
                     $(MODEL_ID).modal("toggle");
                     $("#message1").removeClass("d-none");
@@ -59,58 +59,38 @@ $(document).ready(function () {
  * @param    {Class} oldJob    Copy of old job
  */
 function updateProgress(job, oldJob) {
-    const subProgressBar = `<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" 
-                             aria-valuenow="${job.progress_round}" aria-valuemin="0" aria-valuemax="100" 
-                             style="width: ${job.progress_round}%">
-                             <small class="justify-content-center d-flex position-absolute w-100" style="color: black; z-index: 2;">
-                             ${job.progress}%
-                             </small></div></div>`;
-    const mainProgressBar = `<div id="jobId${job.job_id}_stage"><b>Stage: </b>${job.stage}</div>
-                             <div id="jobId${job.job_id}_progress" ><div class="progress">${subProgressBar}</div>
-                             <div id="jobId${job.job_id}_eta"><b>ETA: </b>${job.eta}</div>
-                             <div id="jobId${job.job_id}_cur_fps"><b>CUR FPS: </b>${job.cur_fps}</div>
-                             <div id="jobId${job.job_id}_avg_fps"><b>AVG FPS: </b>${job.avg_fps}</div>`;
-    const progressSection = $(`#jobId${job.job_id}_progress_section`);
-    const stage = $(`#jobId${job.job_id}_stage`);
-    const eta = $(`#jobId${job.job_id}_eta`);
-    const progressBarDiv = $(`#jobId${job.job_id}_progress`)
-    if (checkTranscodeStatus(job)) {
-        // Catch if the progress section is empty and populate it
-        if (progressSection[0].innerHTML === "" || !progressBarDiv.length) {
-            progressSection[0].innerHTML = mainProgressBar;
-        } else {
-            if (job.progress_round !== oldJob.progress_round || job.progress !== oldJob.progress) {
-                let el = progressBarDiv[0].querySelector('.progress-bar');
-                if (el) {
-                    el.style.width = `${job.progress_round}%`;
-                    el.setAttribute('aria-valuenow', job.progress_round);
-                    let small = el.querySelector('small');
-                    if (small) small.innerText = `${job.progress}%`;
-                } else {
-                    progressBarDiv[0].innerHTML = `<div class="progress">${subProgressBar}`;
-                }
-            }
-            updateContents(stage, job, "Stage", job.stage);
-            updateContents(eta, job, "ETA", job.eta);
+    const section = $(`#jobId${job.job_id}_progress_section`);
+    if (!section.length) return;
 
-            const curFpsDiv = $(`#jobId${job.job_id}_cur_fps`);
-            const avgFpsDiv = $(`#jobId${job.job_id}_avg_fps`);
-
-            if (job.cur_fps === undefined || job.cur_fps === '-1') {
-                curFpsDiv.hide();
-            } else {
-                curFpsDiv.show();
-                updateContents(curFpsDiv, job, "CUR FPS", job.cur_fps);
-            }
-
-            if (job.avg_fps === undefined || job.avg_fps === '-1') {
-                avgFpsDiv.hide();
-            } else {
-                avgFpsDiv.show();
-                updateContents(avgFpsDiv, job, "AVG FPS", job.avg_fps);
-            }
-        }
+    if (!checkTranscodeStatus(job)) {
+        section.empty();
+        return;
     }
+
+    if (!section.find(".job-progress").length) {
+        section.html(renderProgress(job));
+        return;
+    }
+
+    if (job.stage !== oldJob.stage) {
+        section.find(`#jobId${job.job_id}_stage`).text(job.stage);
+    }
+
+    if (job.progress !== oldJob.progress) {
+        section.find(`#jobId${job.job_id}_percent`).text(`${job.progress}%`);
+    }
+
+    if (job.progress_round !== oldJob.progress_round) {
+        section.find(`#jobId${job.job_id}_progress_bar`)
+            .css("width", `${job.progress_round}%`);
+    }
+
+    if (job.eta !== oldJob.eta) {
+        section.find(`#jobId${job.job_id}_eta`).text(`ETA ${job.eta}`);
+    }
+
+    section.find(`#jobId${job.job_id}_cur_fps`).text(`${job.cur_fps} FPS`);
+    section.find(`#jobId${job.job_id}_avg_fps`).text(`AVG ${job.avg_fps} FPS`);
 }
 
 /**
@@ -133,6 +113,7 @@ function checkTranscodeStatus(job) {
     if (job.disctype === "music" && job.stage !== "") {
         status = true;
     }
+
     return status;
 }
 
@@ -164,32 +145,44 @@ function updateContents(item, _job, keyString, itemContents) {
  * @param {Class} job     Fresh job pulled from api
  */
 function updateJobItem(oldJob, job) {
-    const cardHeader = $(`#jobId${job.job_id}_header`);
-    const posterUrl = $(`#jobId${job.job_id}_poster_url`);
-    const status = $(`#jobId${job.job_id}_status`);
-    // Update card header ( Title (Year) )
-    if (cardHeader[0].innerText !== `${job.title} (${job.year})`) {
-        cardHeader[0].innerText = `${job.title} (${job.year})`;
+    const card = $(`#jobId${job.job_id}`);
+    if (!card.length) return;
+
+    const title = card.find("[data-field='title'], #jobId" + job.job_id + "_title");
+    const poster = card.find(".job-poster");
+    const status = card.find(`#jobId${job.job_id}_status`);
+
+    const jobTitle = getJobTitle(job);
+    if (title.length && title.text() !== jobTitle) {
+        title.text(jobTitle);
     }
-    // Update card poster image
-    if (job.poster_url !== posterUrl[0].src && job.poster_url !== "None" && job.poster_url !== "N/A") {
-        posterUrl[0].src = job.poster_url;
+
+    if (poster.length && job.poster_url !== "None" && job.poster_url !== "N/A" && poster.attr("src") !== job.poster_url) {
+        poster.attr("src", job.poster_url);
     }
-    // Update job status image
-    if (job.status !== status[0].title) {
-        status[0].src = `static/img/${job.status}.png`;
-        status[0].alt = job.status;
-        status[0].title = job.status;
+
+    if (status.length) {
+        status.attr("class", `job-status ${getStatusClass(job.status)}`);
+        status.find(".status-text").text(job.status);
     }
-    // Go through and update job values as needed
-    updateContents($(`#jobId${job.job_id}_year`), job, "Year", job.year);
-    updateContents($(`#jobId${job.job_id}_devpath`), job, "Device", job.devpath);
-    updateContents($(`#jobId${job.job_id}_video_type`), job, "Type", job.video_type);
+/*
+    if (status.length) {
+        const newClass = `job-status ${getStatusClass(job.status)}`;
+        status.attr("class", newClass);
+        status.find(".status-dot").after(document.createTextNode(` ${job.status}`));
+        status.contents().filter(function () { return this.nodeType === 3; }).remove();
+        status.append(` ${job.status}`);
+    }
+*/
+    card.find("[data-field='year']").text(job.year);
+    card.find("[data-field='video_type']").text(job.video_type);
+    card.find("[data-field='devpath']").text(job.devpath);
+    card.find("[data-field='ripper']").text(getRipperName(job, getJobIds(job)));
+    card.find("[data-field='ripmethod']").text(job.config.RIPMETHOD);
+    card.find("[data-field='mainfeature']").text(job.config.MAINFEATURE);
+    card.find("[data-field='length']").text(`${job.config.MINLENGTH} – ${job.config.MAXLENGTH}`);
+
     updateProgress(job, oldJob);
-    updateContents($(`#jobId${job.job_id}_RIPMETHOD`), job, "Rip Method", job.config.RIPMETHOD);
-    updateContents($(`#jobId${job.job_id}_MAINFEATURE`), job, "Main Feature", job.config.MAINFEATURE);
-    updateContents($(`#jobId${job.job_id}_MINLENGTH`), job, "Min Length", job.config.MINLENGTH);
-    updateContents($(`#jobId${job.job_id}_MAXLENGTH`), job, "Max Length", job.config.MAXLENGTH);
 }
 
 /**
@@ -206,27 +199,16 @@ function removeJobItem(job) {
  * Then sorts the jobs in ascending order
  */
 function refreshJobsComplete() {
-    // Loop through all active jobs and remove any that have finished
-    // Notes: This breaks when arm child servers are added
     $.each(activeJobs, function (index, job) {
-        if (typeof (job) !== "undefined" && !job.active) {
-            console.log("Job isn't active:" + job.job_id.split("_")[1]);
-            console.log(job)
+        if (job && !job.active) {
             removeJobItem(job);
             activeJobs.splice(index, 1);
         }
     });
 
-    $("#joblist .col-md-4").sort(function (a, b) {
-        if (a.id === b.id) {
-            return 0;
-        }
-        return (a.id < b.id ? -1 : 1);
-    }).each(function () {
-        const elem = $(this);
-        elem.remove();
-        $(elem).appendTo("#joblist");
-    });
+    $("#joblist .job-card").sort(function (a, b) {
+        return a.id.localeCompare(b.id);
+    }).appendTo("#joblist");
 }
 
 /**

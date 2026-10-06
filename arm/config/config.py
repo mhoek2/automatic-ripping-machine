@@ -33,6 +33,118 @@ def _load_abcde(fp):
 # Load user config
 cur_cfg = _load_config(arm_config_path)
 # Load template config
+ARM_SETTINGS_GROUPS: dict[str, list[str]] = {
+    "General": [
+        "ARM_NAME",
+        "ARM_CHILDREN",
+        "DISABLE_LOGIN",
+        "DATE_FORMAT",
+        "UMASK",
+    ],
+    "Disc & Ripping": [
+        "PREVENT_99",
+        "ARM_CHECK_UDF",
+        "GET_VIDEO_TITLE",
+        "GET_AUDIO_TITLE",
+        "VIDEOTYPE",
+        "MINLENGTH",
+        "MAXLENGTH",
+        "MANUAL_WAIT",
+        "MANUAL_WAIT_TIME",
+        "ALLOW_DUPLICATES",
+        "DATA_RIP_PARAMETERS",
+        "RIP_POSTER",
+        "AUTO_EJECT",
+    ],
+    "Metadata": [
+        "METADATA_PROVIDER",
+        "ARM_API_KEY",
+        "OMDB_API_KEY",
+        "TMDB_API_KEY",
+    ],
+    "Transcoding": [
+        "SKIP_TRANSCODE",
+        "MAX_CONCURRENT_TRANSCODES",
+        "MAX_CONCURRENT_MAKEMKVINFO",
+    ],
+    "Paths & Logging": [
+        "ABCDE_CONFIG_FILE",
+        "RAW_PATH",
+        "TRANSCODE_PATH",
+        "COMPLETED_PATH",
+        "EXTRAS_SUB",
+        "INSTALLPATH",
+        "LOGPATH",
+        "LOGLEVEL",
+        "LOGLIFE",
+        "DBFILE",
+    ],
+    "Web Server": [
+        "WEBSERVER_IP",
+        "WEBSERVER_PORT",
+        "UI_BASE_URL",
+    ],
+    "File Permissions": [
+        "SET_MEDIA_PERMISSIONS",
+        "CHMOD_VALUE",
+        "SET_MEDIA_OWNER",
+        "CHOWN_USER",
+        "CHOWN_GROUP",
+    ],
+    "MakeMKV": [
+        "MAKEMKV_PERMA_KEY",
+        "RIPMETHOD",
+        "RIPMETHOD_DVD",
+        "RIPMETHOD_BR",
+        "MKV_ARGS",
+        "DELRAWFILES",
+    ],
+    "HandBrake": [
+        "HB_PRESET_DVD",
+        "HB_PRESET_BD",
+        "DEST_EXT",
+        "HANDBRAKE_CLI",
+        "HANDBRAKE_LOCAL",
+        "MAINFEATURE",
+        "HB_ARGS_DVD",
+        "HB_ARGS_BD",
+    ],
+    "FFmpeg": [
+        "FFMPEG_CLI",
+        "FFMPEG_LOCAL",
+        "FFMPEG_PRE_FILE_ARGS",
+        "FFMPEG_POST_FILE_ARGS",
+        "USE_FFMPEG",
+    ],
+    "Emby": [
+        "EMBY_REFRESH",
+        "EMBY_SERVER",
+        "EMBY_PORT",
+        "EMBY_CLIENT",
+        "EMBY_DEVICE",
+        "EMBY_DEVICEID",
+        "EMBY_USERNAME",
+        "EMBY_USERID",
+        "EMBY_PASSWORD",
+        "EMBY_API_KEY",
+    ],
+    "Notifications": [
+        "NOTIFY_RIP",
+        "NOTIFY_TRANSCODE",
+        "NOTIFY_JOBID",
+        "PB_KEY",
+        "IFTTT_KEY",
+        "IFTTT_EVENT",
+        "PO_USER_KEY",
+        "PO_APP_KEY",
+        "BASH_SCRIPT",
+        "JSON_URL",
+    ],
+    "Apprise": [
+        "APPRISE",
+    ],
+}
+
 arm_config = _load_config(os.path.join(cur_cfg["INSTALLPATH"], "setup/arm.yaml"))
 
 # Update the template config with the user's values
@@ -81,3 +193,178 @@ try:
     apprise_config = _load_config(apprise_config_path)
 except OSError:
     apprise_config = {}
+
+APPRISE_SETTINGS_GROUPS: dict[str, list[str]] = {
+    "Boxcar": [
+        "BOXCAR_KEY",
+        "BOXCAR_SECRET",
+    ],
+    "Discord": [
+        "DISCORD_WEBHOOK_ID",
+        "DISCORD_TOKEN",
+    ],
+    "Faast": [
+        "FAAST_TOKEN",
+    ],
+    "Flock": [
+        "FLOCK_TOKEN",
+    ],
+    "Gitter": [
+        "GITTER_TOKEN",
+        "GITTER_ROOM",
+    ],
+    "Gotify": [
+        "GOTIFY_TOKEN",
+        "GOTIFY_HOST",
+    ],
+    "Growl": [
+        "GROWL_HOST",
+        "GROWL_PASS",
+    ],
+    "Join": [
+        "JOIN_API",
+        "JOIN_DEVICE",
+    ],
+    "Kodi": [
+        "KODI_HOST",
+        "KODI_PORT",
+        "KODI_USER",
+        "KODI_PASS",
+    ],
+    "Kumulos": [
+        "KUMULOS_API",
+        "KUMULOS_SERVERKEY",
+    ],
+    "LaMetric": [
+        "LAMETRIC_MODE",
+        "LAMETRIC_API",
+        "LAMETRIC_HOST",
+        "LAMETRIC_APP_ID",
+        "LAMETRIC_TOKEN",
+    ],
+    "Mailgun": [
+        "MAILGUN_DOMAIN",
+        "MAILGUN_USER",
+        "MAILGUN_APIKEY",
+    ],
+    "Matrix": [
+        "MATRIX_HOST",
+        "MATRIX_USER",
+        "MATRIX_PASS",
+        "MATRIX_TOKEN",
+    ],
+    "Microsoft Teams": [
+        "MSTEAMS_TOKENA",
+        "MSTEAMS_TOKENB",
+        "MSTEAMS_TOKENC",
+    ],
+    "Nextcloud": [
+        "NEXTCLOUD_HOST",
+        "NEXTCLOUD_ADMINUSER",
+        "NEXTCLOUD_ADMINPASS",
+        "NEXTCLOUD_NOTIFY_USER",
+    ],
+    "Notica": [
+        "NOTICA_TOKEN",
+    ],
+    "Notifico": [
+        "NOTIFICO_PROJECTID",
+        "NOTIFICO_MESSAGEHOOK",
+    ],
+    "ntfy": [
+        "NTFY_TOPIC",
+        "NTFY_URL",
+        "NTFY_PORT",
+        "NTFY_USER",
+        "NTFY_PASS",
+    ],
+    "Office 365": [
+        "OFFICE365_TENANTID",
+        "OFFICE365_ACCOUNTEMAIL",
+        "OFFICE365_CLIENT_ID",
+        "OFFICE365_CLIENT_SECRET",
+    ],
+    "Popcorn": [
+        "POPCORN_API",
+        "POPCORN_EMAIL",
+        "POPCORN_PHONENO",
+    ],
+    "Prowl": [
+        "PROWL_API",
+        "PROWL_PROVIDERKEY",
+    ],
+    "Pushjet": [
+        "PUSHJET_HOST",
+        "PUSHJET_SECRET",
+    ],
+    "Push API": [
+        "PUSH_API",
+    ],
+    "Pushed": [
+        "PUSHED_APP_KEY",
+        "PUSHED_APP_SECRET",
+    ],
+    "Pushsafer": [
+        "PUSHSAFER_KEY",
+    ],
+    "Rocket.Chat": [
+        "ROCKETCHAT_HOST",
+        "ROCKETCHAT_USER",
+        "ROCKETCHAT_PASS",
+        "ROCKETCHAT_WEBHOOK",
+    ],
+    "Ryver": [
+        "RYVER_ORG",
+        "RYVER_TOKEN",
+    ],
+    "SendGrid": [
+        "SENDGRID_API",
+        "SENDGRID_FROMMAIL",
+    ],
+    "Simplepush": [
+        "SIMPLEPUSH_API",
+    ],
+    "Slack": [
+        "SLACK_TOKENA",
+        "SLACK_TOKENB",
+        "SLACK_TOKENC",
+        "SLACK_CHANNEL",
+    ],
+    "SparkPost": [
+        "SPARKPOST_API",
+        "SPARKPOST_HOST",
+        "SPARKPOST_USER",
+        "SPARKPOST_EMAIL",
+    ],
+    "Spontit": [
+        "SPONTIT_API",
+        "SPONTIT_USER_ID",
+    ],
+    "Telegram": [
+        "TELEGRAM_BOT_TOKEN",
+        "TELEGRAM_CHAT_ID",
+    ],
+    "Twist": [
+        "TWIST_EMAIL",
+        "TWIST_PASS",
+    ],
+    "XBMC": [
+        "XBMC_HOST",
+        "XBMC_PORT",
+        "XBMC_USER",
+        "XBMC_PASS",
+    ],
+    "XMPP": [
+        "XMPP_HOST",
+        "XMPP_PASS",
+        "XMPP_USER",
+    ],
+    "Webex Teams": [
+        "WEBEX_TEAMS_TOKEN",
+    ],
+    "Zulip": [
+        "ZILUP_CHAT_TOKEN",
+        "ZILUP_CHAT_BOTNAME",
+        "ZILUP_CHAT_ORG",
+    ],
+}

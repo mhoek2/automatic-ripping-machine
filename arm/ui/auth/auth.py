@@ -140,7 +140,14 @@ def update_password():
             flash("Current password does not match", "danger")
             app.logger.error("Current password does not match")
 
-    return render_template('update_password.html', user=user.email, form=form)
+
+    authenticated = ui_utils.authenticated_state()
+    app.logger.debug(f'Authentication state: {authenticated}')
+
+    return render_template('update_password.html', 
+                           authenticated=authenticated,
+                           user=user.email, 
+                           form=form)
 
 
 @login_manager.user_loader

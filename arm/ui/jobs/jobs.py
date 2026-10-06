@@ -72,13 +72,16 @@ def jobdetail():
         job.plot = search_results['Plot'] if 'Plot' in search_results else "There was a problem getting the plot"
         job.background = search_results['background_url'] if 'background_url' in search_results else None
 
+    authenticated = ui_utils.authenticated_state()
+    app.logger.debug(f'Authentication state: {authenticated}')
+
     return render_template('jobdetail.html',
+                           authenticated=authenticated,
                            jobs=job,
                            tracks=tracks,
                            s=search_results,
                            manual_edit=manual_edit,
                            form=track_form)
-
 
 @route_jobs.route('/jobdetailload', methods=['POST'])
 @login_required
@@ -130,7 +133,15 @@ def title_search():
         flash(f'Search for {request.args.get("title")}, year={request.args.get("year")}', 'success')
         return redirect(url_for('route_jobs.list_titles', title=request.args.get("title"),
                                 year=request.args.get("year"), job_id=job_id))
-    return render_template('titlesearch.html', title='Update Title', form=form, job=job)
+    
+    authenticated = ui_utils.authenticated_state()
+    app.logger.debug(f'Authentication state: {authenticated}')
+
+    return render_template('titlesearch.html', 
+                           authenticated=authenticated,
+                           title='Update Title', 
+                           form=form, 
+                           job=job)
 
 
 @route_jobs.route('/customTitle')
@@ -156,7 +167,15 @@ def customtitle():
         ui_utils.database_updater(args, job)
         flash(f'Custom title changed. Title={job.title}, Year={job.year}.', "success")
         return redirect(url_for('home'))
-    return render_template('customTitle.html', title='Change Title', form=form, job=job)
+
+    authenticated = ui_utils.authenticated_state()
+    app.logger.debug(f'Authentication state: {authenticated}')
+
+    return render_template('customTitle.html', 
+                           authenticated=authenticated,
+                           title='Change Title', 
+                           form=form, 
+                           job=job)
 
 
 @route_jobs.route('/gettitle')
@@ -241,7 +260,14 @@ def rips():
     This no longer works properly because of the 'transcoding' status
     """
     active_jobs = Job.query.filter_by(~Job.finished)
-    return render_template('activerips.html', jobs=active_jobs)
+
+    authenticated = ui_utils.authenticated_state()
+    app.logger.debug(f'Authentication state: {authenticated}')
+
+    return render_template('activerips.html', 
+                           authenticated=authenticated,
+                           title='Active rips', 
+                           jobs=active_jobs)
 
 
 @route_jobs.route('/changeparams')
@@ -254,7 +280,15 @@ def changeparams():
     job = Job.query.get(config_id)
     config = job.config
     form = ChangeParamsForm(obj=config)
-    return render_template('changeparams.html', title='Change Parameters', form=form, config=config)
+
+    authenticated = ui_utils.authenticated_state()
+    app.logger.debug(f'Authentication state: {authenticated}')
+
+    return render_template('changeparams.html', 
+                           authenticated=authenticated,
+                           title='Change Parameters', 
+                           form=form, 
+                           config=config)
 
 
 @route_jobs.route('/list_titles')
@@ -284,8 +318,17 @@ def list_titles():
     if search_results is None or 'Error' in search_results or (
             'Search' in search_results and len(search_results['Search']) < 1):
         flash(f"No search results found for {title}", 'danger')
-    return render_template('list_titles.html', results=search_results, job_id=job_id,
-                           form=form, title=title, year=year)
+
+    authenticated = ui_utils.authenticated_state()
+    app.logger.debug(f'Authentication state: {authenticated}')
+
+    return render_template('list_titles.html', 
+                           authenticated=authenticated,
+                           results=search_results, 
+                           job_id=job_id,
+                           form=form, 
+                           title=title, 
+                           year=year)
 
 
 @route_jobs.route('/json', methods=['GET'])

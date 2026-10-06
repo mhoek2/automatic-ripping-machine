@@ -45,5 +45,11 @@ def history():
 
     session["page_title"] = "History"
 
-    return render_template('history.html', jobs=jobs.items,
-                           date_format=cfg.arm_config['DATE_FORMAT'], pages=jobs)
+    authenticated = ui_utils.authenticated_state()
+    app.logger.debug(f'Authentication state: {authenticated}')
+
+    return render_template('history.html', 
+                           authenticated=authenticated,
+                           jobs=jobs.items,
+                           date_format=cfg.arm_config['DATE_FORMAT'], 
+                           pages=jobs)

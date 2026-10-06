@@ -1,25 +1,39 @@
 {% block apprise %}
-<div class="tab-pane pt-5" id="appriseTab" role="tabpanel" aria-labelledby="apprise-tab">
-    <h4> Apprise Notification Service </h4>
-    <p> Send messages from ARM to mulitple services at once using apprise. Set the required fields below, then point the service to the configuration file. ARM by default in docker loads the apprise configuration to '/etc/arm/config/apprise.yaml'</p>
-    <a class="btn btn-primary float-left" href="testapprise">Send Test Notification</a>
+<div id="apprise_settings" class="settings-tab-pane">
+
+    <div class="apprise-description">
+        <p>Send messages from ARM to multiple services at once using Apprise. Set the required fields below, then point the service to the configuration file. ARM by default in Docker loads the Apprise configuration from <code>/etc/arm/config/apprise.yaml</code>.</p>
+        <a class="ripper-settings-submit" href="testapprise">Send Test Notification</a>
+    </div>
+
     <form id="appriseCfg" name="appriseCfg" method="post" action="">
         {{ form.hidden_tag() }}
-        {% for k, v in apprise_cfg.items() %}
-        <div class="input-group mb-3">
-            <div class="input-group-prepend">
-                <span class="input-group-text" id="{{ k }}">{{ k }}: </span>
-            </div>
-            <input type="text" class="form-control" aria-label="{{ k }}" name="{{ k }}" placeholder="{{ v }}"
-                   value="{{ v }}" aria-describedby="{{ k }}"
-                   {% if apprise_read_only %}
-                     disabled="" title="apprise.yaml is read-only"
-                   {% endif %}>
+
+        <div class="ripper-settings">
+            {% for group_name, keys in apprise_groups.items() %}
+            <section class="ripper-settings-group">
+                <div class="ripper-settings-group-header">{{ group_name }}</div>
+                <div class="ripper-settings-group-body">
+
+                    {% for k in keys %}
+                    {% if k in apprise_cfg %}
+
+                    <div class="ripper-setting">
+                        <label class="ripper-setting-label" for="setting_{{ k }}">{{ k }}</label>
+                        <input class="ripper-setting-input" type="text" id="setting_{{ k }}" name="{{ k }}" placeholder="{{ apprise_cfg[k] }}" value="{{ apprise_cfg[k] }}" aria-label="{{ k }}" {% if apprise_read_only %}disabled title="apprise.yaml is read-only"{% endif %}>
+                    </div>
+
+                    {% endif %}
+                    {% endfor %}
+
+                </div>
+            </section>
+            {% endfor %}
         </div>
-        {% endfor %}
-        <button id="apprise_cfg" class="btn btn-secondary btn-lg btn-block" form="appriseCfg"
-                type="submit">Submit
-        </button>
+
+        <div class="ripper-settings-footer">
+            <button id="apprise_cfg" class="ripper-settings-submit" form="appriseCfg" type="submit">Save Settings</button>
+        </div>
     </form>
 </div>
 {% endblock %}

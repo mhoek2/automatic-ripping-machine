@@ -62,17 +62,7 @@ def is_read_only(path: os.PathLike) -> bool:
 
 route_settings.add_app_template_filter(mask_last, name='mask_last')
 
-
-@route_settings.route('/settings')
-@login_required
-def settings():
-    """
-    Page - settings
-    Method - GET
-    Overview - allows the user to update the all configs of A.R.M without
-    needing to open a text editor
-    """
-
+def get_server_stats():
     # stats for info page
     failed_rips = Job.query.filter_by(status="fail").count()
     total_rips = Job.query.filter_by().count()
@@ -87,20 +77,57 @@ def settings():
     [arm_version_local, arm_version_remote] = ui_utils.git_check_version()
     local_git_hash = ui_utils.get_git_revision_hash()
 
-    stats = {'server_datetime': server_datetime,
-             'server_timezone': server_timezone,
-             'python_version': platform.python_version(),
-             'arm_version_local': arm_version_local,
-             'arm_version_remote': arm_version_remote,
-             'git_commit': local_git_hash,
-             'movies_ripped': movies,
-             'series_ripped': series,
-             'cds_ripped': cds,
-             'no_failed_jobs': failed_rips,
-             'total_rips': total_rips,
-             'updated': ui_utils.git_check_updates(local_git_hash),
-             'hw_support': check_hw_transcode_support()
+    server = SystemInfo.query.filter_by(id="1").first()
+    serverutil = ServerUtil()
+
+    return {'server_datetime': server_datetime,
+             'serverutil': {
+                'cpu_util':                     serverutil.cpu_util,
+                'cpu_temp':                     serverutil.cpu_temp,
+                'memory_free':                  serverutil.memory_free,
+                'memory_used':                  serverutil.memory_used,
+                'memory_percent':               serverutil.memory_percent,
+                'storage_transcode_free':       serverutil.storage_transcode_free,
+                'storage_transcode_percent':    serverutil.storage_transcode_percent,
+                'storage_completed_free':       serverutil.storage_completed_free,
+                'storage_completed_percent':    serverutil.storage_completed_percent,
+             },
+             'server': {
+                'name':         server.name,
+                'cpu':          server.cpu,
+                'description':  server.description,
+             },
+             'server_timezone':     server_timezone,
+             'python_version':      platform.python_version(),
+             'arm_version_local':   arm_version_local,
+             'arm_version_remote':  arm_version_remote,
+             'git_commit':          local_git_hash,
+             'movies_ripped':       movies,
+             'series_ripped':       series,
+             'cds_ripped':          cds,
+             'no_failed_jobs':      failed_rips,
+             'total_rips':          total_rips,
+             'updated':             ui_utils.git_check_updates(local_git_hash),
+             'hw_support':          check_hw_transcode_support()
              }
+
+@route_settings.route('/serverstats')
+def serverstats():
+    return {'data': get_server_stats() }
+    
+@route_settings.route('/settings')
+@login_required
+def settings():
+    """
+    Page - settings
+    Method - GET
+    Overview - allows the user to update the all configs of A.R.M without
+    needing to open a text editor
+    """
+
+    # server stats for info page
+    serverstats = get_server_stats();
+    app.logger.debug(f"stats: {serverstats}")
 
     # ARM UI config
     armui_cfg = ui_utils.arm_db_cfg()
@@ -123,13 +150,18 @@ def settings():
 
     session["page_title"] = "Settings"
 
-    app.logger.debug(f"stats: {stats}")
+
+    authenticated = ui_utils.authenticated_state()
+    app.logger.debug(f'Authentication state: {authenticated}')
 
     return render_template("settings/settings.html",
+                           authenticated=authenticated,
                            settings=cfg.arm_config,
+                           settings_groups=cfg.ARM_SETTINGS_GROUPS,
                            ui_settings=armui_cfg,
-                           stats=stats,
+                           serverstats=serverstats,
                            apprise_cfg=cfg.apprise_config,
+                           apprise_groups=cfg.APPRISE_SETTINGS_GROUPS,
                            form=form,
                            jsoncomments=comments,
                            abcde_cfg=cfg.abcde_config,

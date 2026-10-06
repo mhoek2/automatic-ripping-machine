@@ -1,0 +1,99 @@
+.settings-page {
+    width: 100%;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+.settings-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 6px;
+    background: var(--color-surface-raised);
+    border: 1px solid var(--color-border-strong);
+    border-radius: 8px 8px 0 0;
+}
+
+.settings-tab {
+    padding: 9px 15px;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    background: transparent;
+    color: var(--color-text-muted);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition:
+        background .15s ease,
+        color .15s ease,
+        border-color .15s ease;
+}
+
+.settings-tab:hover {
+    background: var(--color-surface-hover);
+    color: var(--color-text);
+}
+
+.settings-tab.active {
+    background: var(--color-surface-hover);
+    border-color: var(--color-border-strong);
+    color: var(--color-text);
+}
+
+.settings-tab-content {
+    background: var(--color-surface-raised);
+    border: 1px solid var(--color-border-strong);
+    border-top: 0;
+    border-radius: 0 0 8px 8px;
+    overflow: hidden;
+    padding: 1em;
+}
+
+.settings-tab-pane {
+    display: none;
+}
+
+.settings-tab-pane.active {
+    display: block;
+}
+
+
+/* apprise */
+.apprise-description {
+    margin-bottom: 16px;
+    color: var(--color-text-muted);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.apprise-description p {
+    margin: 0 0 12px;
+}
+
+.apprise-description code {
+    padding: 2px 4px;
+    border-radius: 3px;
+    background: var(--color-surface-raised);
+    color: var(--color-text);
+    font-family: monospace;
+    font-size: 12px;
+}
+
+/* reponsive */
+@media (max-width: 700px) {
+    .settings-page {
+        padding: 12px;
+    }
+
+    .settings-tabs {
+        gap: 3px;
+    }
+
+    .settings-tab {
+        flex: 1 1 auto;
+        padding: 8px 10px;
+        font-size: 12px;
+    }
+}
+
+

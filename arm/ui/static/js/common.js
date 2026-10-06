@@ -14,152 +14,177 @@ const CARD_DECK = ".card-deck";
 const SUCCESS_CLASS = "alert-success";
 const MODAL_FOOTER = ".modal-footer";
 
-function getRipperName(job, idsplit) {
-    let ripperName;
-    if (job.ripper) {
-        ripperName = job.ripper;
-    } else {
-        if (idsplit[0] === "0") {
-            ripperName = "Local";
-        } else {
-            ripperName = "";
-        }
-    }
-    return ripperName;
+
+function getJobIds(job) {
+    const [serverId, jobId] = job.job_id.split("_");
+    return { serverId, jobId: jobId || job.job_id, local: serverId === "0" };
 }
 
-function addJobItem(job, authenticated) {
-    // Local server or remote
-    const idsplit = job.job_id.split("_");
-    console.log(`${idsplit[1]} - ${idsplit[0]}`)
-    //Start creating the card with job id and header title
-    let x = `<div class="col-md-4" id="jobId${job.job_id}"><div class="card m-3  mx-auto" style="min-height: 420px;">`;
-    x += `<div class="card-header row no-gutters justify-content-center"><strong id="jobId${job.job_id}_header">${titleManual(job)}</strong></div>`;
-    // Main holder for the 3 sections of info - includes 1 section (Poster img)
-    // We need to check if idsplit is undefined, database page doesn't have splitid's
-    if (idsplit[1] === undefined) {
-        x += `<div class="row no-gutters"><div class="col-lg-4"><a href="/jobdetail?job_id=${job.job_id}">${posterCheck(job)}</a></div>`;
-    } else {
-        x += `<div class="row no-gutters"><div class="col-lg-4"><a href="${job.server_url}/jobdetail?job_id=${idsplit[1]}">${posterCheck(job)}</a></div>`;
-    }
-    // Section 2 (Middle)  Contains Job info (status, type, device, start time, progress)
-    x += buildMiddleSection(job);
-    x += buildRightSection(job, idsplit, authenticated);
-    // Close Job.card
-    x += "</div></div></div></div></div></div></div>";
-    return x;
+function getJobTitle(job) {
+    return `${job.title_manual !== "None" ? job.title_manual : job.title} (${job.year})`;
 }
 
-function transcodingCheck(job) {
-    let x = "";
-    if (job.status === "transcoding" && job.stage !== "" && job.progress || job.disctype === "music" && job.stage !== "") {
-        x += `<div id="jobId${job.job_id}_stage"><strong>Stage: </strong>${job.stage}</div>`;
-        x += `<div id="jobId${job.job_id}_progress" >`;
-        x += `<div class="progress">
-                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
-                aria-valuenow="${job.progress_round}" aria-valuemin="0" aria-valuemax="100"
-                style="width: ${job.progress_round}%; background-color: #cbcbcb;">
-                    <small class="justify-content-center d-flex position-absolute w-100" style="color: black; z-index: 2;">
-                        ${job.progress}%
-                    </small>
-                </div>
-              </div></div>`;
-        x += `<div id="jobId${job.job_id}_eta"><strong>ETA: </strong>${job.eta}</div>`;
-        x += `<div id="jobId${job.job_id}_cur_fps"><strong>CUR FPS: </strong>${job.cur_fps}</div>`;
-        x += `<div id="jobId${job.job_id}_avg_fps"><strong>AVG FPS: </strong>${job.avg_fps}</div>`;
-    }
-    // YYYY-MM-DD
-    const d = new Date(Date.parse(job.start_time));
-    const datestring = `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`
-
-    x += `<strong>Start Date:</strong> ${datestring}<br>`;
-    x += `<strong>Start Time:</strong> ${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}<br>`;
-    x += `<strong>Job Time:</strong> ${job.job_length === undefined ? "Ongoing" : job.job_length}<br>`;
-    return x;
-}
-
-function musicCheck(job, idsplit) {
-    let x = "";
-    if (job.video_type !== "Music") {
-        x = `<a href="titlesearch?job_id=${idsplit[1]}" class="btn btn-primary">Title Search</a>
-             <a href="customTitle?job_id=${idsplit[1]}" class="btn btn-primary">Custom Title</a>
-             <a href="changeparams?config_id=${idsplit[1]}" class="btn btn-primary">Edit Settings</a>`;
-    }
-    return x;
+function getRipperName(job, ids) {
+    return job.ripper || (ids.local ? "Local" : "");
 }
 
 function posterCheck(job) {
-    let x;
-    let image;
-    if (job.poster_url !== "None" && job.poster_url !== "N/A") {
-        x = `<img id="jobId${job.job_id}_poster_url" alt="poster img" src="${job.poster_url}" width="240px" class="img-thumbnail">`;
-    } else {
-        if (job.video_type === "Music") {
-            image = 'music.png';
-        } else {
-            image = 'none.png';
-        }
-        x = `<img id="jobId${job.job_id}_poster_url" alt="poster img" src="/static/img/${image}" width="240px" class="img-thumbnail">`;
-    }
-    return x;
+    const image = job.poster_url !== "None" && job.poster_url !== "N/A"
+        ? job.poster_url
+        : `/static/img/${job.video_type === "Music" ? "music.png" : "none.png"}`;
+    return `<img class="job-poster" src="${image}" alt="${getJobTitle(job)}">`;
 }
 
-function titleManual(job) {
-    let x;
-    if (job.title_manual !== "None") {
-        x = `${job.title_manual}(${job.year})`;
-    } else {
-        x = `${job.title}(${job.year})`;
-    }
-    return x;
+function getStatusClass(status) {
+    return `status-${status.toLowerCase().replace(/[^a-z0-9_-]/g, "")}`;
 }
 
-function buildMiddleSection(job) {
-    let x;
-    x = "<div class=\"col-lg-4\"><div class=\"card-body px-1 py-1\">";
-    x += `<div id="jobId${job.job_id}_year"><strong>Year: </strong>${job.year}</div>`;
-    x += `<div id="jobId${job.job_id}_video_type"><strong>Type: </strong>${job.video_type}</div>`;
-    x += `<div id="jobId${job.job_id}_devpath"><strong>Device: </strong>${job.devpath}</div>`;
-    x += `<div><strong>Status: </strong><img id="jobId${job.job_id}_status" 
-                               src="static/img/${job.status}.png" height="20px" alt="${job.status}" title="${job.status}"></div>`;
-    x += `<div id="jobId${job.job_id}_progress_section">${transcodingCheck(job)}</div></div></div>`;
-    return x;
+function renderProgress(job) {
+    if (!checkTranscodeStatus(job)) return "";
+
+    return `
+        <div class="job-progress">
+            <div class="job-progress-header">
+                <span id="jobId${job.job_id}_stage">${job.stage}</span>
+                <span id="jobId${job.job_id}_percent">${job.progress}%</span>
+            </div>
+            <div class="progress-track">
+                <div id="jobId${job.job_id}_progress_bar" class="progress-value" style="width:${job.progress_round}%"></div>
+            </div>
+            <div class="job-progress-meta">
+                <span id="jobId${job.job_id}_eta">ETA ${job.eta}</span>
+                <span id="jobId${job.job_id}_cur_fps">${job.cur_fps} FPS</span>
+                <span id="jobId${job.job_id}_avg_fps">AVG ${job.avg_fps} FPS</span>
+            </div>
+        </div>`;
 }
 
-function buildRightSection(job, idsplit, authenticated) {
-    let x;
-    // idsplit[1] should only be undefined on the /database page
-    if (idsplit[1] === undefined) {
-        console.log("idsplit undefined... fixing");
-        idsplit[0] = "0";
-        idsplit[1] = job.job_id
-    } else {
-        console.log(`idsplit ${idsplit[0]} - ${idsplit[1]}`);
-    }
-    // Section 3 (Right Top) Contains Config.values
-    x = "<div class=\"col-lg-4\"><div class=\"card-body px-1 py-1\">";
-    x += `<div id="jobId${job.job_id}_RIPPER"><strong>Ripper: </strong>${getRipperName(job, idsplit)}</div>`;
-    x += `<div id="jobId${job.job_id}_RIPMETHOD"><strong>Rip Method: </strong>${job.config.RIPMETHOD}</div>`;
-    x += `<div id="jobId${job.job_id}_MAINFEATURE"><strong>Main Feature: </strong>${job.config.MAINFEATURE}</div>`;
-    x += `<div id="jobId${job.job_id}_MINLENGTH"><strong>Min Length: </strong>${job.config.MINLENGTH}</div>`;
-    x += `<div id="jobId${job.job_id}_MAXLENGTH"><strong>Max Length: </strong>${job.config.MAXLENGTH}</div>`;
-    x += "</div>";
-    // Section 3 (Right Bottom) Contains Buttons for arm json api
-    // Only show when authenticated
-    x += `<div class="card-body px-2 py-1">`;
-    if (authenticated === true) {
-        x += `<div class="btn-group-vertical" role="group" aria-label="buttons" ${idsplit[0] !== "0" ? "style=\"display: none;\"" : ""}>
-              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-type="abandon" data-jobid="${idsplit[1]}" 
-              data-href="json?job=${idsplit[1]}&mode=abandon">Abandon Job</button>
-              <a href="logs?logfile=${job.logfile}&mode=full" class="btn btn-primary">View logfile</a>`;
-        x += musicCheck(job, idsplit);
-        x += `<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-type="fixperms" 
-              data-jobid="${idsplit[1]}" data-href="json?mode=fixperms&job=${idsplit[1]}">Fix Permissions</button>`;
-        x += `</div>`;
-    }
-    x += `</div>`;
-    return x;
+function renderJobMeta(job, ids) {
+    return `
+        <div class="job-meta">
+            <div class="job-meta-item"><span class="job-meta-label">Type</span><span data-field="video_type">${job.video_type}</span></div>
+            <div class="job-meta-item"><span class="job-meta-label">Year</span><span data-field="year">${job.year}</span></div>
+            <div class="job-meta-item"><span class="job-meta-label">Device</span><span data-field="devpath">${job.devpath}</span></div>
+            <div class="job-meta-item"><span class="job-meta-label">Ripper</span><span data-field="ripper">${getRipperName(job, ids)}</span></div>
+            <div class="job-meta-item"><span class="job-meta-label">Method</span><span data-field="ripmethod">${job.config.RIPMETHOD}</span></div>
+            <div class="job-meta-item"><span class="job-meta-label">Feature</span><span data-field="mainfeature">${job.config.MAINFEATURE}</span></div>
+            <div class="job-meta-item"><span class="job-meta-label">Length</span><span data-field="length">${job.config.MINLENGTH} – ${job.config.MAXLENGTH}</span></div>
+        </div>`;
 }
+
+function renderJobActions(job, ids, authenticated) {
+    if (!authenticated) return "";
+
+    const hidden = !ids.local ? " hidden" : "";
+
+    let actions = `
+        <div class="job-actions${hidden}">
+            <button class="icon-button danger"
+                    type="button"
+                    data-toggle="modal"
+                    data-target="#exampleModal"
+                    data-type="abandon"
+                    data-jobid="${ids.jobId}"
+                    data-href="json?job=${ids.jobId}&mode=abandon"
+                    data-tooltip="Abandon Job">
+                <i class="fa-solid fa-ban"></i>
+            </button>
+
+            <a class="icon-button"
+               href="logs?logfile=${job.logfile}&mode=full"
+               data-tooltip="View Log">
+                <i class="fa-solid fa-file-lines"></i>
+            </a>`;
+
+    if (job.video_type !== "Music") {
+        actions += `
+            <a class="icon-button"
+               href="titlesearch?job_id=${ids.jobId}"
+               data-tooltip="Title Search">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </a>
+            <a class="icon-button"
+               href="customTitle?job_id=${ids.jobId}"
+               data-tooltip="Custom Title">
+                <i class="fa-solid fa-pen"></i>
+            </a>
+            <a class="icon-button"
+               href="changeparams?config_id=${ids.jobId}"
+               data-tooltip="Edit Settings">
+                <i class="fa-solid fa-sliders"></i>
+            </a>`;
+    }
+
+    actions += `
+            <button class="icon-button"
+                    type="button"
+                    data-toggle="modal"
+                    data-target="#exampleModal"
+                    data-type="fixperms"
+                    data-jobid="${ids.jobId}"
+                    data-href="json?mode=fixperms&job=${ids.jobId}"
+                    data-tooltip="Fix Permissions">
+                <i class="fa-solid fa-wrench"></i>
+            </button>
+        </div>`;
+
+    return actions;
+}
+
+function renderJob(job, authenticated) {
+    const ids = getJobIds(job);
+    const statusClass = getStatusClass(job.status);
+
+    const detailUrl = ids.local
+        ? `/jobdetail?job_id=${ids.jobId}`
+        : `${job.server_url}/jobdetail?job_id=${ids.jobId}`;
+
+    const date = new Date(job.start_time);
+    const startDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+    const startTime = `${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`;
+
+    return `
+        <article class="job-card" id="jobId${job.job_id}">
+            <a class="job-poster-link" href="${detailUrl}">
+                ${posterCheck(job)}
+            </a>
+
+            <div class="job-content">
+                <header class="job-header">
+                    <div>
+                        <h2 id="jobId${job.job_id}_title">${getJobTitle(job)}</h2>
+                        <span class="job-id">${job.job_id}</span>
+                    </div>
+
+                    <span class="job-status ${statusClass}" id="jobId${job.job_id}_status">
+                        <span class="status-dot"></span>
+                        <span class="status-text">${job.status}</span>
+                    </span>
+                </header>
+
+                ${renderJobMeta(job, ids)}
+
+                <div id="jobId${job.job_id}_progress_section">${renderProgress(job)}</div>
+
+                <div class="job-footer">
+                    <div class="job-time">
+                        <span><i class="fa-regular fa-calendar"></i> ${startDate}</span>
+                        <span><i class="fa-regular fa-clock"></i> ${startTime}</span>
+                        <span><i class="fa-solid fa-stopwatch"></i> ${job.job_length || "Ongoing"}</span>
+                    </div>
+                    ${renderJobActions(job, ids, authenticated)}
+                </div>
+            </div>
+        </article>`;
+}
+
+function addJobItem(job, authenticated) {
+    return renderJob(job, authenticated);
+}
+
+//
+// job common above
+//
 
 
 function updateModal(modal, modalTitle = "", modalBody = "") {

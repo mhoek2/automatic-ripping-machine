@@ -1,0 +1,155 @@
+.sidebar {
+    width: 5em;
+    min-width: 5em;
+    height: 100vh;
+    background: var(--color-surface);
+    border-right: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+
+.sidebar-logo {
+    width: 5em;
+    height: 5em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.sidebar-logo img {
+    width: 100%;
+}
+
+.sidebar-menu {
+    list-style: none;
+    padding: .5em 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: .4em;
+}
+
+.sidebar-menu li {
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-menu .nav-link {
+    position: relative;
+    margin: 0 .5em;
+    padding: 1em 0;
+    border: 0;
+    background: transparent;
+    color: var(--color-text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    border-radius: .6em;
+    cursor: pointer;
+    font-size: 1.1em;
+    transition: background .15s ease, color .15s ease;
+}
+
+.sidebar-menu .nav-link:hover {
+    background: var(--color-surface-hover);
+    color: var(--color-text);
+}
+
+.sidebar-menu .nav-link i {
+    width: 1.2em;
+    text-align: center;
+}
+
+.sidebar-menu li.active .nav-link {
+    background: var(--color-accent);
+    color: var(--color-text-inverse);
+}
+
+.sidebar-menu li.active .nav-link:hover {
+    background: var(--color-accent-hover);
+}
+
+
+/* Tooltip */
+.sidebar-menu .nav-link::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: calc(100% + .8em);
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--color-tooltip);
+    color: var(--color-tooltip-text);
+    padding: .45em .7em;
+    border-radius: .35em;
+    white-space: nowrap;
+    font-size: .8rem;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    z-index: 1000;
+    box-shadow: var(--shadow-tooltip);
+}
+
+.sidebar-menu .nav-link:hover::after {
+    opacity: 1;
+    visibility: visible;
+}
+
+.sidebar-menu .notification-badge {
+    position: absolute;
+    top: .35em;
+    right: .35em;
+
+    min-width: 1.35em;
+    height: 1.35em;
+    padding: 0 .25em;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    box-sizing: border-box;
+
+    background: var(--color-danger);
+    color: var(--color-text-inverse);
+
+    border-radius: 999px;
+
+    font-size: .55em;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.sidebar-menu #theme-toggle {
+    position: absolute;
+    bottom: 1em;
+    left: .5em;
+    width: 4em;
+    height: 3.5em;
+
+    border: 1px solid var(--color-border);
+    border-radius: .6em;
+
+    background: var(--color-surface-raised);
+    color: var(--color-text-muted);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+
+    transition:
+        background .15s ease,
+        border-color .15s ease,
+        color .15s ease;
+}
+
+.sidebar-menu #theme-toggle:hover {
+    background: var(--color-surface-hover);
+    border-color: var(--color-border-strong);
+    color: var(--color-text);
+}

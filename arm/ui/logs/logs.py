@@ -33,7 +33,13 @@ def logs():
     logfile = request.args['logfile']
     session["page_title"] = "Logs"
 
-    return render_template('logview.html', file=logfile, mode=mode)
+    authenticated = ui_utils.authenticated_state()
+    app.logger.debug(f'Authentication state: {authenticated}')
+
+    return render_template('logview.html', 
+                           authenticated=authenticated,
+                           file=logfile, 
+                           mode=mode)
 
 
 @route_logs.route('/listlogs', defaults={'path': ''})
@@ -53,7 +59,14 @@ def listlogs(path):
 
     # Get all files in directory
     files = ui_utils.get_info(full_path)
-    return render_template('logfiles.html', files=files, date_format=cfg.arm_config['DATE_FORMAT'])
+
+    authenticated = ui_utils.authenticated_state()
+    app.logger.debug(f'Authentication state: {authenticated}')
+
+    return render_template('logfiles.html', 
+                           authenticated=authenticated,
+                           files=files, 
+                           date_format=cfg.arm_config['DATE_FORMAT'])
 
 
 @route_logs.route('/logreader')

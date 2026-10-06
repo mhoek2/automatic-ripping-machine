@@ -1,119 +1,72 @@
 {% block ui %}
-    <div class="tab-pane pt-5" id="uiSettingsTab" role="tabpanel" aria-labelledby="uiSettings-tab">
-        <h4> UI Notification Settings </h4>
-        <form id="uiSettings" name="uiSettings" action="">
-            {{ form.hidden_tag() }}
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <span class="input-group-text" id="index_refresh">index_refresh: </span>
-                </div>
-                <input type="text" class="form-control" aria-label="index_refresh"
-                       name="index_refresh" placeholder="" value="{{ ui_settings.index_refresh }}"
-                       aria-describedby="index_refresh">
-                <a class="popovers" onClick='return false;' href=""
-                   data-content="{{ jsoncomments['index_refresh']| replace("#", "\n") }}"
-                   rel="popover"
-                   data-placement="top" data-original-title="index_refresh">
-                    <img title="More information" src="{{ url_for('static', filename='img/info.png') }}" width="30px"
-                         height="35px" alt="More info">
-                </a>
-            </div>
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <span class="input-group-text" id="notify_refresh">Notification Timeout: </span>
-                </div>
-                <input type="text" class="form-control" aria-label="notify_refresh"
-                       name="notify_refresh" placeholder="" value="{{ ui_settings.notify_refresh }}"
-                       aria-describedby="notify_refresh">
-                <a class="popovers" onClick='return false;' href=""
-                   data-content="{{ jsoncomments['notify_refresh']| replace("#", "\n") }}"
-                   rel="popover"
-                   data-placement="top" data-original-title="notify_refresh">
-                    <img title="More information" src="{{ url_for('static', filename='img/info.png') }}" width="30px"
-                         height="35px" alt="More info">
-                </a>
-            </div>
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <span class="input-group-text" id="use_icons">use_icons: </span>
-                </div>
-                <input type="text" class="form-control" aria-label="use_icons" name="use_icons"
-                       value="{{ ui_settings.use_icons }}">
+<div id="ui_settings" class="settings-tab-pane">
 
-                <a class="popovers" onClick='return false;' href=""
-                   data-content="{{ jsoncomments['use_icons']| replace("#", "\n") }}" rel="popover"
-                   data-placement="top" data-original-title="use_icons">
-                    <img title="More information" src="{{ url_for('static', filename='img/info.png') }}" width="30px"
-                         height="35px" alt="More info">
-                </a>
-            </div>
+    <form id="uiSettings" name="uiSettings" action="">
+        {{ form.hidden_tag() }}
 
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"
-                          id="save_remote_images">save_remote_images: </span>
-                </div>
-                <input type="text" class="form-control" aria-label="save_remote_images"
-                       name="save_remote_images" value="{{ ui_settings.save_remote_images }}">
-                <a class="popovers" onClick='return false;' href=""
-                   data-content="{{ jsoncomments['save_remote_images']| replace("#", "\n") }}"
-                   rel="popover"
-                   data-placement="top" data-original-title="save_remote_images">
-                    <img title="More information" src="{{ url_for('static', filename='img/info.png') }}" width="30px"
-                         height="35px" alt="More info">
-                </a>
-            </div>
+        <div class="ripper-settings">
 
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <span class="input-group-text" id="bootstrap_skin">bootstrap_skin: </span>
-                </div>
-                <input type="text" class="form-control" aria-label="bootstrap_skin"
-                       name="bootstrap_skin" placeholder="" value="{{ ui_settings.bootstrap_skin }}"
-                       aria-describedby="bootstrap_skin">
-                <a class="popovers" onClick='return false;' href=""
-                   data-content="{{ jsoncomments['bootstrap_skin']| replace("#", "\n") }}"
-                   rel="popover"
-                   data-placement="top" data-original-title="bootstrap_skin">
-                    <img title="More information" src="{{ url_for('static', filename='img/info.png') }}" width="30px"
-                         height="35px" alt="More info">
-                </a>
-            </div>
+            <section class="ripper-settings-group">
 
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <span class="input-group-text" id="language">language: </span>
+                <div class="ripper-settings-group-header">
+                    UI Notification Settings
                 </div>
-                <input type="text" class="form-control" aria-label="language" name="language"
-                       placeholder="" value="{{ ui_settings.language }}"
-                       aria-describedby="language">
-                <a class="popovers" onClick='return false;' href=""
-                   data-content="{{ jsoncomments['language']| replace("#", "\n") }}" rel="popover"
-                   data-placement="top" data-original-title="language">
-                    <img title="More information" src="{{ url_for('static', filename='img/info.png') }}" width="30px"
-                         height="35px" alt="More info">
-                </a>
-            </div>
 
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <span class="input-group-text" id="database_limit">database_limit: </span>
+                <div class="ripper-settings-group-body">
+
+                    <div class="ripper-setting">
+                        <label class="ripper-setting-label" for="setting_index_refresh">index_refresh</label>
+                        <input class="ripper-setting-input" type="text" id="setting_index_refresh" name="index_refresh" value="{{ ui_settings.index_refresh }}" aria-label="index_refresh">
+                        <a class="ripper-setting-info popovers" href="" onClick="return false;" data-content="{{ jsoncomments['index_refresh'] | replace('#', '\n') }}" rel="popover" data-placement="top" data-original-title="index_refresh" title="More information"><i class="fas fa-circle-info"></i></a>
+                    </div>
+
+                    <div class="ripper-setting">
+                        <label class="ripper-setting-label" for="setting_notify_refresh">Notification Timeout</label>
+                        <input class="ripper-setting-input" type="text" id="setting_notify_refresh" name="notify_refresh" value="{{ ui_settings.notify_refresh }}" aria-label="notify_refresh">
+                        <a class="ripper-setting-info popovers" href="" onClick="return false;" data-content="{{ jsoncomments['notify_refresh'] | replace('#', '\n') }}" rel="popover" data-placement="top" data-original-title="notify_refresh" title="More information"><i class="fas fa-circle-info"></i></a>
+                    </div>
+
+                    <div class="ripper-setting">
+                        <label class="ripper-setting-label" for="setting_use_icons">use_icons</label>
+                        <input class="ripper-setting-input" type="text" id="setting_use_icons" name="use_icons" value="{{ ui_settings.use_icons }}" aria-label="use_icons">
+                        <a class="ripper-setting-info popovers" href="" onClick="return false;" data-content="{{ jsoncomments['use_icons'] | replace('#', '\n') }}" rel="popover" data-placement="top" data-original-title="use_icons" title="More information"><i class="fas fa-circle-info"></i></a>
+                    </div>
+
+                    <div class="ripper-setting">
+                        <label class="ripper-setting-label" for="setting_save_remote_images">save_remote_images</label>
+                        <input class="ripper-setting-input" type="text" id="setting_save_remote_images" name="save_remote_images" value="{{ ui_settings.save_remote_images }}" aria-label="save_remote_images">
+                        <a class="ripper-setting-info popovers" href="" onClick="return false;" data-content="{{ jsoncomments['save_remote_images'] | replace('#', '\n') }}" rel="popover" data-placement="top" data-original-title="save_remote_images" title="More information"><i class="fas fa-circle-info"></i></a>
+                    </div>
+
+                    <div class="ripper-setting">
+                        <label class="ripper-setting-label" for="setting_bootstrap_skin">bootstrap_skin</label>
+                        <input class="ripper-setting-input" type="text" id="setting_bootstrap_skin" name="bootstrap_skin" value="{{ ui_settings.bootstrap_skin }}" aria-label="bootstrap_skin">
+                        <a class="ripper-setting-info popovers" href="" onClick="return false;" data-content="{{ jsoncomments['bootstrap_skin'] | replace('#', '\n') }}" rel="popover" data-placement="top" data-original-title="bootstrap_skin" title="More information"><i class="fas fa-circle-info"></i></a>
+                    </div>
+
+                    <div class="ripper-setting">
+                        <label class="ripper-setting-label" for="setting_language">language</label>
+                        <input class="ripper-setting-input" type="text" id="setting_language" name="language" value="{{ ui_settings.language }}" aria-label="language">
+                        <a class="ripper-setting-info popovers" href="" onClick="return false;" data-content="{{ jsoncomments['language'] | replace('#', '\n') }}" rel="popover" data-placement="top" data-original-title="language" title="More information"><i class="fas fa-circle-info"></i></a>
+                    </div>
+
+                    <div class="ripper-setting">
+                        <label class="ripper-setting-label" for="setting_database_limit">database_limit</label>
+                        <input class="ripper-setting-input" type="text" id="setting_database_limit" name="database_limit" value="{{ ui_settings.database_limit }}" aria-label="database_limit">
+                        <a class="ripper-setting-info popovers" href="" onClick="return false;" data-content="{{ jsoncomments['database_limit'] | replace('#', '\n') }}" rel="popover" data-placement="top" data-original-title="database_limit" title="More information"><i class="fas fa-circle-info"></i></a>
+                    </div>
+
                 </div>
-                <input type="text" class="form-control" aria-label="database_limit"
-                       name="database_limit" placeholder="" value="{{ ui_settings.database_limit }}"
-                       aria-describedby="database_limit">
-                <a class="popovers" onClick='return false;' href=""
-                   data-content="{{ jsoncomments['database_limit']| replace("#", "\n") }}"
-                   rel="popover"
-                   data-placement="top" data-original-title="database_limit">
-                    <img title="More information" src="{{ url_for('static', filename='img/info.png') }}" width="30px"
-                         height="35px" alt="More info">
-                </a>
-            </div>
-            <button id="uiSubmit" class="btn btn-secondary btn-lg btn-block" form="uiSettings"
-                    type="submit">
-                Submit
-            </button>
-        </form>
-    </div>
+
+            </section>
+
+        </div>
+
+        <div class="ripper-settings-footer">
+            <button id="uiSubmit" class="ripper-settings-submit" form="uiSettings" type="submit">Save Settings</button>
+        </div>
+
+    </form>
+
+</div>
 {% endblock %}

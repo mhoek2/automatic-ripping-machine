@@ -55,8 +55,13 @@ def view_database():
 
     session["page_title"] = "Database"
 
+    authenticated = ui_utils.authenticated_state()
+    app.logger.debug(f'Authentication state: {authenticated}')
+
     return render_template('databaseview.html',
-                           jobs=jobs.items, pages=jobs,
+                           authenticated=authenticated,
+                           jobs=jobs.items, 
+                           pages=jobs,
                            date_format=cfg.arm_config['DATE_FORMAT'])
 
 

@@ -1,0 +1,54 @@
+<div class="feeder_container">
+    <div>
+        <button id="feeder_clear">Clear</button>
+        <button id="feeder_completed">Add completed</button>
+        <button id="feeder_ripping">Add rip</button>
+        <button id="feeder_failed">Add failed</button>
+    </div>
+</div>
+
+<script>
+    const FEEDER_CLEAR      = 0;
+    const FEEDER_COMPLETED  = 1;
+    const FEEDER_RIPPING    = 2;
+    const FEEDER_FAILED     = 3;
+
+    function send_feeder_cmd(cmd_idx)
+    {
+        const xhr = new XMLHttpRequest();
+
+        xhr.open("GET", "/feeder?idx=" + cmd_idx, true);
+
+        xhr.onload = function()
+        {
+            let result;
+
+            try
+            {
+                result = JSON.parse(xhr.responseText);
+            }
+            catch (e)
+            {
+                console.error("Invalid feeder response:", xhr.responseText);
+                return;
+            }
+
+            console.log("Feeder:", result);
+
+            if (!result.success)
+                console.error("Feeder failed:", result);
+        };
+
+        xhr.onerror = function()
+        {
+            console.error("Feeder request failed");
+        };
+
+        xhr.send();
+    }
+
+    document.getElementById("feeder_clear").addEventListener("click", function (e) { send_feeder_cmd( FEEDER_CLEAR ); });
+    document.getElementById("feeder_completed").addEventListener("click", function (e) { send_feeder_cmd( FEEDER_COMPLETED ); });
+    document.getElementById("feeder_ripping").addEventListener("click", function (e) { send_feeder_cmd( FEEDER_RIPPING ); });
+    document.getElementById("feeder_failed").addEventListener("click", function (e) { send_feeder_cmd( FEEDER_FAILED ); });
+</script>

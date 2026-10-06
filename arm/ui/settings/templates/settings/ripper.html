@@ -1,29 +1,33 @@
 {% block ripper %}
-    <div class="tab-pane pt-5" id="settings" role="tabpanel" aria-labelledby="settings-tab">
-        <h4> Ripper ARM Settings </h4>
-        <form id="ripperSettings" name="ripperSettings" method="post" action="">
-            {{ form.hidden_tag() }}
-            {% for k, v in settings.items() %}
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="{{ k }}">{{ k }}: </span>
+<div id="ripper_settings" class="settings-tab-pane">
+    <form id="ripperSettings" name="ripperSettings" method="post" action="">
+        {{ form.hidden_tag() }}
+
+        <div class="ripper-settings">
+            {% for group_name, keys in settings_groups.items() %}
+            <section class="ripper-settings-group">
+                <div class="ripper-settings-group-header">{{ group_name }}</div>
+                <div class="ripper-settings-group-body">
+
+                    {% for k in keys %}
+                    {% if k in settings %}
+
+                    <div class="ripper-setting">
+                        <label class="ripper-setting-label" for="setting_{{ k }}">{{ k }}</label>
+                        <input class="ripper-setting-input" type="text" id="setting_{{ k }}" name="{{ k }}" placeholder="{{ settings[k] }}" value="{{ settings[k] }}" aria-label="{{ k }}" {% if ripper_read_only %}disabled title="arm.yaml is read-only"{% endif %}>
+                        <a class="ripper-setting-info popovers" href="" onClick="return false;" data-content="{{ jsoncomments[k] | replace('#', '\n') }}" rel="popover" data-placement="top" data-original-title="{{ k }}" title="More information"><i class="fas fa-circle-info"></i></a>
                     </div>
-                    <input type="text" class="form-control" aria-label="{{ k }}" name="{{ k }}"
-                           placeholder="{{ v }}" value="{{ v }}" aria-describedby="{{ k }}"
-                           {% if ripper_read_only %}
-                             disabled="" title="arm.yaml is read-only"
-                           {% endif %}>
-                    <a class="popovers" onClick='return false;' href=""
-                       data-content="{{ jsoncomments[k]| replace("#", "\n") }}" rel="popover"
-                       data-placement="top" data-original-title="{{ k }}">
-                        <img title="More information" src="{{ url_for('static', filename='img/info.png') }}" width="30px"
-                             height="35px" alt="More Info">
-                    </a>
+
+                    {% endif %}
+                    {% endfor %}
                 </div>
+            </section>
             {% endfor %}
-            <button id="settings" class="btn btn-secondary btn-lg btn-block" form="ripperSettings"
-                    type="submit">Submit
-            </button>
-        </form>
-    </div>
+        </div>
+
+        <div class="ripper-settings-footer">
+            <button id="settings" class="ripper-settings-submit" form="ripperSettings" type="submit">Save Settings</button>
+        </div>
+    </form>
+</div>
 {% endblock %}

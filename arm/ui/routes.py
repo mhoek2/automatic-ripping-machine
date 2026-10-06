@@ -28,7 +28,7 @@ from arm.models.user import User
 import arm.config.config as cfg
 from arm.ui.forms import DBUpdate
 from arm.ui.settings.ServerUtil import ServerUtil
-from arm.ui.settings.settings import check_hw_transcode_support
+from arm.ui.settings.settings import check_hw_transcode_support, get_server_stats
 
 # This attaches the armui_cfg globally to let the users use any bootswatch skin from cdn
 armui_cfg = ui_utils.arm_db_cfg()
@@ -47,8 +47,7 @@ def home():
     """
     # Check the database is current
     db_update = ui_utils.arm_db_check()
-    # Push out HW transcode status for the homepage
-    stats = {'hw_support': check_hw_transcode_support()}
+
     if not db_update["db_current"] or not db_update["db_exists"]:
         dbform = DBUpdate(request.form)
         app.logger.debug(f"Error with ARM DB: [{db_update['db_current']}]-[{db_update['db_exists']}]")
@@ -57,6 +56,7 @@ def home():
                                dbform=dbform)
 
     # Get system details from Server Info and Config
+    serverstats = get_server_stats();
     server = SystemInfo.query.filter_by(id="1").first()
     serverutil = ServerUtil()
     arm_path = cfg.arm_config['TRANSCODE_PATH']
@@ -85,8 +85,11 @@ def home():
                            authenticated=authenticated,
                            jobs=jobs,
                            children=cfg.arm_config['ARM_CHILDREN'],
-                           server=server, serverutil=serverutil,
-                           arm_path=arm_path, media_path=media_path, stats=stats)
+                           server=server, 
+                           serverutil=serverutil,
+                           serverstats=serverstats,
+                           arm_path=arm_path, 
+                           media_path=media_path)
 
 
 @app.route('/error')
@@ -197,3 +200,55 @@ def unauthorized():
     :return: Page redirect
     """
     return redirect('/login')
+
+#
+# FEEDER
+#
+import subprocess
+from flask import jsonify
+
+FEEDER_CLEAR = 0
+FEEDER_COMPLETED = 1
+FEEDER_RIPPING = 2
+FEEDER_FAILED = 3
+
+@app.route("/feeder")
+def feeder():
+    idx = request.args.get("idx", type=int)
+
+    commands = {
+        FEEDER_CLEAR: "clear",
+        FEEDER_COMPLETED: "completed",
+        FEEDER_RIPPING: "ripping",
+        FEEDER_FAILED: "failed",
+    }
+
+    command = commands.get(idx)
+
+    if command is None:
+        return jsonify({
+            "success": False,
+            "error": "Invalid feeder command",
+            "idx": idx,
+        }), 400
+
+    print(f"FEEDER: {command}", flush=True)
+
+    result = subprocess.run([
+        "python3",
+        "/opt/arm/dev/feeder/feeder.py",
+        command,
+    ])
+
+    if result.returncode != 0:
+        return jsonify({
+            "success": False,
+            "command": command,
+            "exit_code": result.returncode,
+        }), 500
+
+    return jsonify({
+        "success": True,
+        "command": command,
+        "exit_code": 0,
+    })

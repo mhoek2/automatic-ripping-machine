@@ -1,0 +1,365 @@
+.sysinfo {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+.sysinfo-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: stretch;
+}
+
+.sysinfo-card {
+    flex: 1 1 320px;
+    min-width: 280px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: none;
+}
+
+.sysinfo-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    background: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-text);
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.sysinfo-card-body {
+    padding: 16px 18px;
+}
+
+.sysinfo-item {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.sysinfo-item:first-child {
+    padding-top: 0;
+}
+
+.sysinfo-item:last-child {
+    padding-bottom: 0;
+    border-bottom: 0;
+}
+
+.sysinfo-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 7px;
+    color: var(--color-text-muted);
+    font-size: 13px;
+}
+
+.sysinfo-value {
+    color: var(--color-text);
+    font-weight: 500;
+}
+
+.sysinfo-value-muted {
+    color: var(--color-text-subtle);
+}
+
+.sysinfo-progress {
+    width: 100%;
+    height: 9px;
+    background: var(--color-background);
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.sysinfo-progress-bar {
+    height: 100%;
+    min-width: 2px;
+    border-radius: 5px;
+    background: var(--color-info);
+    transition: width .3s ease;
+}
+
+.sysinfo-progress-bar.warning {
+    background: var(--color-warning);
+}
+
+.sysinfo-progress-bar.danger {
+    background: var(--color-danger);
+}
+
+.sysinfo-progress-value {
+    margin-top: 5px;
+    color: var(--color-text-subtle);
+    font-size: 12px;
+    text-align: right;
+}
+
+.sysinfo-path {
+    margin-top: 5px;
+    color: var(--color-text-subtle);
+    font-family: monospace;
+    font-size: 11px;
+    word-break: break-all;
+}
+
+.sysinfo-storage {
+    margin-top: 4px;
+}
+
+.sysinfo-status {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    display: inline-block;
+    box-shadow: 0 0 5px currentColor;
+}
+
+.sysinfo-status.ok {
+    color: var(--color-success);
+    background: var(--color-success);
+}
+
+.sysinfo-status.fail {
+    color: var(--color-danger);
+    background: var(--color-danger);
+}
+
+.sysinfo-help {
+    color: var(--color-info);
+    text-decoration: none;
+    font-size: 12px;
+}
+
+.sysinfo-help:hover {
+    color: var(--color-accent);
+    text-decoration: underline;
+}
+
+.sysinfo-description {
+    color: var(--color-text-muted);
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+
+/*
+ * Server stats
+ */
+
+.server-details {
+    width: 100%;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 1em;
+}
+
+.server-details-group {
+    display: flex;
+    gap: 1em;
+    flex-direction: row;
+}
+
+.server-details-header {
+    padding: 14px 18px;
+    background: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-text);
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.server-details-body {
+    padding: 18px;
+}
+
+.server-details-section {
+    padding: 0 0 18px;
+    flex: 1;
+}
+
+.server-details-section-title {
+    margin-bottom: 12px;
+    color: var(--color-text-subtle);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+}
+
+.server-details-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1px;
+    background: var(--color-border);
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.server-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 11px 13px;
+    background: var(--color-surface);
+}
+
+.server-detail-label {
+    color: var(--color-text-subtle);
+    font-size: 11px;
+}
+
+.server-detail-value {
+    color: var(--color-text);
+    font-size: 13px;
+}
+
+.server-detail code {
+    color: var(--color-info);
+    font-size: 12px;
+    word-break: break-all;
+}
+
+.server-detail-update a {
+    margin-right: 8px;
+    color: var(--color-info);
+    font-size: 12px;
+    text-decoration: none;
+}
+
+.server-detail-update a:hover {
+    color: var(--color-accent);
+    text-decoration: underline;
+}
+
+
+/*
+ * Rip statistics
+ */
+
+.rip-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.rip-stat {
+    flex: 1 1 120px;
+    min-width: 100px;
+    padding: 14px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    text-align: center;
+}
+
+.rip-stat-value {
+    color: var(--color-text);
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.rip-stat-label {
+    margin-top: 5px;
+    color: var(--color-text-subtle);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+}
+
+
+/*
+ * Hardware transcoding
+ */
+
+.hardware-list {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.hardware-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px 14px;
+    background: var(--color-surface);
+}
+
+.hardware-item + .hardware-item {
+    border-top: 1px solid var(--color-border);
+}
+
+.hardware-name {
+    color: var(--color-text);
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.hardware-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+}
+
+.hardware-status.supported {
+    color: var(--color-success);
+}
+
+.hardware-status.unavailable {
+    color: var(--color-text-subtle);
+}
+
+.hardware-status a {
+    margin-left: 6px;
+    color: var(--color-info);
+    text-decoration: none;
+}
+
+.hardware-status a:hover {
+    color: var(--color-accent);
+    text-decoration: underline;
+}
+
+
+@media (max-width: 700px) {
+
+    .server-details-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .rip-stat {
+        flex-basis: calc(50% - 10px);
+    }
+
+    .server-details-group {
+        flex-direction: column;
+    }
+
+    .sysinfo {
+        padding: 12px;
+    }
+
+    .sysinfo-grid {
+        gap: 12px;
+    }
+
+    .sysinfo-card {
+        min-width: 100%;
+    }
+}

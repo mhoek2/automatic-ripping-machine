@@ -1,10 +1,7 @@
-{% if authenticated %}
-    {% extends "base.html" %}
-{% else %}
-    {% extends "support/base_simple.html" %}
-{% endif %}
+{% extends "base.html" %}
+
 {% block content %}
-    <div class="container-fluid h-100 mx-auto">
+    <div>
         <!-- Modal -->
         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
              aria-hidden="true">
@@ -28,27 +25,7 @@
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-sm-12 rounded text-center">
-                <img src="static/img/arm80.png" alt="Automatic Ripping Machine">
-                <p class="text-center">
-                <h2>Welcome to your Automatic Ripping Machine</h2>
-                </p>
-            </div>
-        </div>
-
-        <div class="row h-100 mx-auto align-items-center">
-            <div class="col-sm-12 mx-auto">
-                <p class="text-center">
-                <h5 class="text-center"><strong>Active Rips</strong></h5>
-                </p>
-            </div>
-        </div>
-        <div class="row h-100 align-items-center">
-            <div class="col-md-12 mx-auto">
-                <div id="joblist" class="card-deck"></div>
-            </div>
-        </div>
+        <div id="joblist" class="jobs-container"></div>
     </div>
 
     <div class="row" style="height: 30px;"></div>
@@ -65,4 +42,7 @@
     });
 </script>
 {% endblock %}
-{% block js %}{{ super() }}{% endblock %}
+
+{% block js %}
+    {{ super() }}
+{% endblock %}
