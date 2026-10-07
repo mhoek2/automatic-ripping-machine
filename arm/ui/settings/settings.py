@@ -62,7 +62,7 @@ def is_read_only(path: os.PathLike) -> bool:
 
 route_settings.add_app_template_filter(mask_last, name='mask_last')
 
-def get_server_stats():
+def get_server_stats( is_inited = False ):
     # stats for info page
     failed_rips = Job.query.filter_by(status="fail").count()
     total_rips = Job.query.filter_by().count()
@@ -74,8 +74,15 @@ def get_server_stats():
     server_timezone = os.environ.get("TZ", "Etc/UTC")
     current_time = datetime.now()
     server_datetime = current_time.strftime(cfg.arm_config['DATE_FORMAT'])
+
+    # git
     [arm_version_local, arm_version_remote] = ui_utils.git_check_version()
     local_git_hash = ui_utils.get_git_revision_hash()
+
+    if not is_inited:
+        git_is_uptodate = ui_utils.git_check_updates(local_git_hash)
+    else:
+        git_is_uptodate = -1
 
     server = SystemInfo.query.filter_by(id="1").first()
     serverutil = ServerUtil()
@@ -107,13 +114,15 @@ def get_server_stats():
              'cds_ripped':          cds,
              'no_failed_jobs':      failed_rips,
              'total_rips':          total_rips,
-             'updated':             ui_utils.git_check_updates(local_git_hash),
+             'updated':             git_is_uptodate,
              'hw_support':          check_hw_transcode_support()
              }
 
-@route_settings.route('/serverstats')
+@route_settings.route('/serverstats', methods=['GET'])
 def serverstats():
-    return {'data': get_server_stats() }
+    is_inited = request.args.get('is_inited', '').lower() == 'true'
+
+    return {'data': get_server_stats( is_inited ) }
     
 @route_settings.route('/settings')
 @login_required

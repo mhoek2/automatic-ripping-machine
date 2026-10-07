@@ -208,14 +208,11 @@
                             <code data-serverstat="git_commit"></code>
                         </div>
 
-                        <div class="server-detail server-detail-update"
-                             data-serverstat-update>
+                        <div class="server-detail server-detail-update" data-serverstat-update>
                             <span class="server-detail-label">Update</span>
 
                             <span>
-                                <a
-                                    href="https://github.com/automatic-ripping-machine/automatic-ripping-machine/wiki/Docker-Upgrading"
-                                    target="_blank">
+                                <a href="https://github.com/mhoek2/automatic-ripping-machine" target="_blank">
                                     Update available
                                 </a>
 
@@ -328,9 +325,9 @@
 </div>
 
 <script>
-    function loadServerStats()
+    function loadServerStats( sysinfo_inited )
     {
-        $.getJSON("/serverstats")
+        $.getJSON(`/serverstats?is_inited=${sysinfo_inited}`)
             .done(function(response)
             {
                 const data = response.data;
@@ -529,9 +526,12 @@
 
     $(function()
     {
+        let sysinfo_inited = false
+
         setInterval(function(){
-            loadServerStats();
-        }, 2000);
+            loadServerStats( sysinfo_inited );
+            sysinfo_inited = true
+        }, 5000);
         
     });
 </script>

@@ -899,7 +899,7 @@ def git_check_updates(current_hash) -> bool:
         arm_current: Bool - True for no update (or exceptions), False for update possible
     """
     # GitHub API url - branch main
-    url = "https://api.github.com/repos/automatic-ripping-machine/automatic-ripping-machine/commits/main"
+    url = "https://api.github.com/repos/mhoek2/automatic-ripping-machine/commits/master"
     arm_current = True      # set True, any exceptions will return a true value
 
     try:
