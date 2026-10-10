@@ -1,0 +1,194 @@
+.login-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    box-sizing: border-box;
+    background: var(--color-background);
+}
+
+.login-card {
+    width: 100%;
+    max-width: 380px;
+    padding: 32px;
+    box-sizing: border-box;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    box-shadow: var(--shadow-card);
+}
+
+.login-header {
+    margin-bottom: 28px;
+    text-align: center;
+}
+
+.login-logo {
+    height: 64px;
+    margin: 0 auto 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-logo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.login-header h1 {
+    margin: 0;
+    color: var(--color-text);
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.login-header p {
+    margin: 6px 0 0;
+    color: var(--color-text-muted);
+    font-size: 13px;
+}
+
+.login-field {
+    margin-bottom: 16px;
+}
+
+.login-error {
+    margin-top: 5px;
+    color: var(--color-danger);
+    font-size: 11px;
+}
+
+.login-submit {
+    width: 100%;
+    height: 38px;
+    margin-top: 8px;
+    padding: 7px 14px;
+    border: 1px solid var(--color-accent);
+    border-radius: 5px;
+    background: var(--color-accent);
+    color: var(--color-text-inverse);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background .15s ease, border-color .15s ease;
+}
+
+.login-submit:hover {
+    background: var(--color-accent-hover);
+    border-color: var(--color-accent-hover);
+}
+
+.login-submit:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--color-info-bg);
+}
+
+@media (max-width: 480px) {
+    .login-page {
+        padding: 16px;
+    }
+
+    .login-card {
+        padding: 24px;
+    }
+}
+
+/* changne password */
+.update-password-page {
+	width: 100%;
+	min-height: 100%;
+	display: flex;
+	justify-content: center;
+	padding: 32px 24px;
+	box-sizing: border-box;
+}
+
+.update-password-card {
+	width: 100%;
+	max-width: 520px;
+	background: var(--color-surface);
+	border: 1px solid var(--color-border);
+	border-radius: 10px;
+	box-shadow: var(--shadow-card);
+	overflow: hidden;
+}
+
+.update-password-header {
+	padding: 20px 22px;
+	background: var(--color-surface-raised);
+	border-bottom: 1px solid var(--color-border);
+}
+
+.update-password-header h1 {
+	margin: 0;
+	color: var(--color-text);
+	font-size: 18px;
+	font-weight: 600;
+}
+
+.update-password-header p {
+	margin: 7px 0 0;
+	color: var(--color-text-muted);
+	font-size: 12px;
+	line-height: 1.5;
+}
+
+.update-password-form {
+	padding: 20px 22px;
+}
+
+.update-password-field {
+	margin-bottom: 16px;
+}
+
+.update-password-field input[readonly] {
+	opacity: .7;
+	cursor: not-allowed;
+}
+
+.update-password-error {
+	margin-top: 5px;
+	color: var(--color-danger);
+	font-size: 11px;
+}
+
+.update-password-submit {
+	width: 100%;
+	height: 38px;
+	margin-top: 4px;
+	padding: 7px 14px;
+	border: 1px solid var(--color-accent);
+	border-radius: 5px;
+	background: var(--color-accent);
+	color: var(--color-text-inverse);
+	font-size: 13px;
+	font-weight: 500;
+	cursor: pointer;
+	transition: background .15s ease, border-color .15s ease;
+}
+
+.update-password-submit:hover {
+	background: var(--color-accent-hover);
+	border-color: var(--color-accent-hover);
+}
+
+.update-password-submit:focus {
+	outline: none;
+	box-shadow: 0 0 0 2px var(--color-info-bg);
+}
+
+@media (max-width: 600px) {
+	.update-password-page {
+		padding: 20px 12px;
+	}
+
+	.update-password-form,
+	.update-password-header {
+		padding-left: 16px;
+		padding-right: 16px;
+	}
+}

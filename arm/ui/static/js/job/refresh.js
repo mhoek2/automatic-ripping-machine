@@ -1,0 +1,242 @@
+const job_refresh = {
+	activeJobs: []
+};
+
+/**
+ * Function to update the current progress
+ * @param    {Class} job    current job
+ * @param    {Class} oldJob    Copy of old job
+ */
+function updateProgress(job, oldJob) {
+    const section = $(`#jobId${job.job_id}_progress_section`);
+    if (!section.length) return;
+
+    if (!checkTranscodeStatus(job)) {
+        section.empty();
+        return;
+    }
+
+    if (!section.find(".job-progress").length) {
+        section.html(renderProgress(job));
+        return;
+    }
+
+    if (job.stage !== oldJob.stage) {
+        section.find(`#jobId${job.job_id}_stage`).text(job.stage);
+    }
+
+    if (job.progress !== oldJob.progress) {
+        section.find(`#jobId${job.job_id}_percent`).text(`${job.progress}%`);
+    }
+
+    if (job.progress_round !== oldJob.progress_round) {
+        section.find(`#jobId${job.job_id}_progress_bar`)
+            .css("width", `${job.progress_round}%`);
+    }
+
+    if (job.eta !== oldJob.eta) {
+        section.find(`#jobId${job.job_id}_eta`).text(`ETA ${job.eta}`);
+    }
+
+    section.find(`#jobId${job.job_id}_cur_fps`).text(`${job.cur_fps} FPS`);
+    section.find(`#jobId${job.job_id}_avg_fps`).text(`AVG ${job.avg_fps} FPS`);
+}
+
+/**
+ * Checks if current job needs a stage/progress bar added
+ * This is enabled for music discs to enable current ripping track in job.stage
+ * @param job current job object
+ * @returns {boolean} True if job is transcoding or disc is an audio disc
+ */
+function checkTranscodeStatus(job) {
+    let status = false;
+    // HandBrake has the disc/files and should be outputting stage and eta
+    if (job.status === "transcoding") {
+        status = true;
+    }
+    // MakeMKV has the disc and should be outputting stage and eta
+    if (job.status === "ripping" && job.stage !== "" && job.progress) {
+        status = true;
+    }
+    // abcde is ripping the audio disc and is outputting stage and eta
+    if (job.disctype === "music" && job.stage !== "") {
+        status = true;
+    }
+
+    return status;
+}
+
+/**
+ * Function to check and update the job values
+ * @param {jQuery} item    Dom item to update
+ * @param {Class} _job    Current job
+ * @param {String} keyString    String that pairs with config item for display purposes
+ * @param itemContents    item of job class to update
+ */
+function updateContents(item, _job, keyString, itemContents) {
+    if (item[0] === undefined) {
+        console.log(item)
+        return false;
+    }
+    if (item[0].innerText.includes(itemContents)) {
+        //console.log("nothing to do - values are current")
+    } else {
+        item[0].innerHTML = `<b> ${keyString}: </b>${itemContents}`;
+        console.log(`${item[0].innerText} - <b>${keyString}: </b>${itemContents}`)
+        console.log(item[0].innerText.includes(itemContents))
+    }
+    return true;
+}
+
+/**
+ * Function that goes through the whole job card and updates outdated values
+ * @param {Class} oldJob    Old job used to compare against fresh job from api
+ * @param {Class} job     Fresh job pulled from api
+ */
+function updateJobItem(oldJob, job) {
+    const card = $(`#jobId${job.job_id}`);
+    if (!card.length) return;
+
+    const title = card.find("[data-field='title'], #jobId" + job.job_id + "_title");
+    const poster = card.find(".job-poster");
+    const status = card.find(`#jobId${job.job_id}_status`);
+
+    const jobTitle = getJobTitle(job);
+    if (title.length && title.text() !== jobTitle) {
+        title.text(jobTitle);
+    }
+
+    if (poster.length && job.poster_url !== "None" && job.poster_url !== "N/A" && poster.attr("src") !== job.poster_url) {
+        poster.attr("src", job.poster_url);
+    }
+
+    if (status.length) {
+        status.attr("class", `job-status ${getStatusClass(job.status)}`);
+        status.find(".status-text").text(job.status);
+    }
+/*
+    if (status.length) {
+        const newClass = `job-status ${getStatusClass(job.status)}`;
+        status.attr("class", newClass);
+        status.find(".status-dot").after(document.createTextNode(` ${job.status}`));
+        status.contents().filter(function () { return this.nodeType === 3; }).remove();
+        status.append(` ${job.status}`);
+    }
+*/
+    card.find("[data-field='year']").text(job.year);
+    card.find("[data-field='video_type']").text(job.video_type);
+    card.find("[data-field='devpath']").text(job.devpath);
+    card.find("[data-field='ripper']").text(getRipperName(job, getJobIds(job)));
+    card.find("[data-field='ripmethod']").text(job.config.RIPMETHOD);
+    card.find("[data-field='mainfeature']").text(job.config.MAINFEATURE);
+    card.find("[data-field='length']").text(`${job.config.MINLENGTH} – ${job.config.MAXLENGTH}`);
+
+    updateProgress(job, oldJob);
+}
+
+/**
+ * Removes a job from the card deck
+ * @param {Class} job
+ */
+function removeJobItem(job) {
+    $("#jobId" + job.job_id).remove();
+}
+
+/**
+ * Function that runs after ajax request completes successfully
+ * Will check for inactive jobs and then remove them
+ * Then sorts the jobs in ascending order
+ */
+function refreshJobsComplete() {
+    $.each(job_refresh.activeJobs, function (index, job) {
+        if (job && !job.active) {
+            removeJobItem(job);
+            job_refresh.activeJobs.splice(index, 1);
+        }
+    });
+
+    $("#joblist .job-card").sort(function (a, b) {
+        return a.id.localeCompare(b.id);
+    }).appendTo("#joblist");
+}
+
+/**
+ * Function to check for active jobs from the return from api
+ * *** This doesn't work as it should when arm has child links
+ * @param data returned data from ajax
+ * @param serverIndex current server index count (added to the front of job id's)
+ */
+function checkActiveJobs(data, serverIndex) {
+    // Loop through each active job
+    $.each(job_refresh.activeJobs, function (AJIndex) {
+        // Turn off job active and re-enable it later if we find it
+        job_refresh.activeJobs[AJIndex].active = false;
+        // Loop through each result and search for our active job
+        $.each(data.results, function (_index, job) {
+            console.log(`Looking for ${job_refresh.activeJobs[AJIndex].job_id}!==${serverIndex}_${job.job_id}`)
+            // We found a match for the current job id and the active job id
+            if (job_refresh.activeJobs[AJIndex].job_id === `${serverIndex}_${job.job_id}`) {
+                console.log(`Match found for ${job.job_id}`)
+                job_refresh.activeJobs[AJIndex].active = true;
+                return false;
+            } else {
+                console.log(`No match: ${job_refresh.activeJobs[AJIndex].job_id}!==${serverIndex}_${job.job_id}`)
+            }
+        });
+    });
+}
+
+/**
+ * Function that is run when data is received back from json api
+ * @param data all data returned from the ajax request
+ * @param serverIndex
+ * @param serverUrl the url of the server the job is running on
+ * @param serverCount
+ * @returns {*}
+ */
+function refreshJobsSuccess(data, serverIndex, serverUrl, serverCount) {
+    checkActiveJobs(data, serverIndex);
+
+    $.each(data.results, function (_index, job) {
+        console.log(job.job_id)
+        job.job_id = `${serverIndex}_${job.job_id}`;
+        job.ripper = (data.arm_name ? data.arm_name : "");
+        job.server_url = serverUrl;
+        job.active = true;
+        if (job_refresh.activeJobs.some(e => e.job_id === job.job_id)) {
+            var oldJob = job_refresh.activeJobs.find(e => e.job_id === job.job_id);
+            job_refresh.activeJobs[job_refresh.activeJobs.indexOf(oldJob)] = job;
+            updateJobItem(oldJob, job);
+        } else {
+            job_refresh.activeJobs.push(job);
+            $("#joblist").append(addJobItem(job, data.authenticated));
+        }
+        serverCount--;
+    });
+
+    return serverCount;
+}
+
+/**
+ * Function set as an interval to update all jobs from api
+ */
+function refreshJobs() {
+    let i = activeServers.length;
+
+    $.each(activeServers, function (serverIndex, serverUrl) {
+        $.ajax({
+            url: serverUrl + "/json?mode=joblist",
+            type: "get",
+            timeout: 2000,
+            error: function () {
+                --i;
+            },
+            success: function (data) {
+                i = refreshJobsSuccess(data, serverIndex, serverUrl, i);
+            },
+            complete: function (data) {
+                refreshJobsComplete();
+            }
+        });
+    });
+}

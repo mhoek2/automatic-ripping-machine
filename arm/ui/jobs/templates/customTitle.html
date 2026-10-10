@@ -1,46 +1,45 @@
 {% extends "base.html" %}
+
 {% block title %}Customize Title{% endblock %}
 
 {% block nav %}{{ super() }}{% endblock %}
 
-{% block content %}  
-	<div class="row text-center justify-content-center">
-		<div class="col">
-			<p>This is intended for DVDs or for TV Series that have more than one disk</p>
-		</div>
-	</div> 
-<div class="container justify-content-center">
-    <div class="row justify-content-center" style="flex-wrap: nowrap">
-        <div class="col-7">
-		<form action="" method="get" novalidate>
-			<div class="input-group mb-3 flex-nowrap">
-				<div class="input-group-prepend">
-					<span class="input-group-text" id="searchtitle">Title</span>
-				</div>
-				<input type="text" class="form-control" aria-label="searchtitle" name="title" placeholder="title..." value="{{job.title if job.title != '' else '' }}" aria-describedby="searchtitle">
-			    <div class="invalid-tooltip">
-					Title can't be blank
-				</div>
-			</div>
-			<div class="input-group mb-3 flex-nowrap">
-				<div class="input-group-prepend">
-					<span class="input-group-text" id="basic-addon1">Year</span>
-				</div>
-				<input type="text" class="form-control" name="year" aria-label="year" value="{{ job.year if job.year != '' else '' }}" aria-describedby="basic-addon1">
-			</div>
-			<input class="form-control" name="job_id" value="{{ job.job_id }}" hidden>
-			<button class="btn btn-info btn-lg btn-block" type="submit">Set Custom Title</button>
-		</form>
-		</div>
-	</div>
-			{% if form.errors %}
-				{% for k in form.errors %}
-					<script>$("[name='{{k}}']").addClass("is-invalid");</script>
-				{% endfor %}
-			{% endif %}
+{% block content %}
+<div class="custom-title-page">
+
+    <div class="custom-title-card">
+
+        <div class="custom-title-header">
+            <h1>Customize Title</h1>
+            <p>Set a custom title and year for this disc. This is useful for DVDs or TV series that span multiple discs.</p>
+        </div>
+
+        <form class="custom-title-form" action="" method="get" novalidate>
+
+            <div class="custom-title-field">
+                <label for="custom-title">Title</label>
+                <input type="text" id="custom-title" name="title" placeholder="Enter title..." value="{{ job.title if job.title != '' else '' }}" autocomplete="off" autofocus>
+                <div class="custom-title-error">Title can't be blank</div>
+            </div>
+
+            <div class="custom-title-field">
+                <label for="custom-year">Year</label>
+                <input type="text" id="custom-year" name="year" placeholder="Enter year..." value="{{ job.year if job.year != '' else '' }}" inputmode="numeric">
+            </div>
+
+            <input type="hidden" name="job_id" value="{{ job.job_id }}">
+
+            <button class="custom-title-submit" type="submit">Set Custom Title</button>
+
+        </form>
+
+    </div>
+
+    {% if form.errors %}
+        {% for k in form.errors %}
+            <script>$("[name='{{ k }}']").addClass("input-error");</script>
+        {% endfor %}
+    {% endif %}
+
 </div>
-
-
-
-
 {% endblock %}

@@ -160,168 +160,166 @@
             </div>
         </div>
 
-    </div>
+        {% if authenticated %}
+        <div class="server-details">
 
+            <div class="server-details-header">
+                Server details
+            </div>
 
-    {% if authenticated %}
-    <div class="server-details">
+            <div class="server-details-body">
 
-        <div class="server-details-header">
-            Server details
-        </div>
+                <!-- SYSTEM + HARDWARE -->
+                <div class="server-details-group">
 
-        <div class="server-details-body">
+                    <!-- SYSTEM -->
+                    <div class="server-details-section">
+                        <div class="server-details-section-title">
+                            System
+                        </div>
 
-            <!-- SYSTEM + HARDWARE -->
-            <div class="server-details-group">
+                        <div class="server-details-grid">
 
-                <!-- SYSTEM -->
-                <div class="server-details-section">
-                    <div class="server-details-section-title">
-                        System
+                            <div class="server-detail">
+                                <span class="server-detail-label">Datetime</span>
+                                <span class="server-detail-value" data-serverstat="server_datetime"></span>
+                            </div>
+
+                            <div class="server-detail">
+                                <span class="server-detail-label">Timezone</span>
+                                <span class="server-detail-value" data-serverstat="server_timezone"></span>
+                            </div>
+
+                            <div class="server-detail">
+                                <span class="server-detail-label">Python</span>
+                                <code data-serverstat="python_version"></code>
+                            </div>
+
+                            <div class="server-detail">
+                                <span class="server-detail-label">A.R.M</span>
+                                <code data-serverstat="arm_version_local"></code>
+                            </div>
+
+                            <div class="server-detail">
+                                <span class="server-detail-label">Git</span>
+                                <code data-serverstat="git_commit"></code>
+                            </div>
+
+                            <div class="server-detail server-detail-update" data-serverstat-update>
+                                <span class="server-detail-label">Update</span>
+
+                                <span>
+                                    <a href="https://github.com/mhoek2/automatic-ripping-machine" target="_blank">
+                                        Update available
+                                    </a>
+
+                                    <code data-serverstat="arm_version_remote"></code>
+                                </span>
+                            </div>
+
+                        </div>
                     </div>
 
-                    <div class="server-details-grid">
 
-                        <div class="server-detail">
-                            <span class="server-detail-label">Datetime</span>
-                            <span class="server-detail-value" data-serverstat="server_datetime"></span>
+                    <!-- HARDWARE TRANSCODING -->
+                    <div class="server-details-section">
+                        <div class="server-details-section-title">
+                            Hardware transcoding
                         </div>
 
-                        <div class="server-detail">
-                            <span class="server-detail-label">Timezone</span>
-                            <span class="server-detail-value" data-serverstat="server_timezone"></span>
+                        <div class="hardware-list">
+
+                            <div class="hardware-item">
+                                <span class="hardware-name">
+                                    Intel QuickSync
+                                </span>
+
+                                <span class="hardware-status"
+                                    data-hw-support="intel">
+                                    <span class="sysinfo-status"></span>
+                                    <span class="hardware-status-text"></span>
+                                </span>
+                            </div>
+
+                            <div class="hardware-item">
+                                <span class="hardware-name">
+                                    NVIDIA NVENC
+                                </span>
+
+                                <span class="hardware-status"
+                                    data-hw-support="nvidia">
+                                    <span class="sysinfo-status"></span>
+                                    <span class="hardware-status-text"></span>
+                                </span>
+                            </div>
+
+                            <div class="hardware-item">
+                                <span class="hardware-name">
+                                    AMD VCN
+                                </span>
+
+                                <span class="hardware-status"
+                                    data-hw-support="amd">
+                                    <span class="sysinfo-status"></span>
+                                    <span class="hardware-status-text"></span>
+                                </span>
+                            </div>
+
                         </div>
-
-                        <div class="server-detail">
-                            <span class="server-detail-label">Python</span>
-                            <code data-serverstat="python_version"></code>
-                        </div>
-
-                        <div class="server-detail">
-                            <span class="server-detail-label">A.R.M</span>
-                            <code data-serverstat="arm_version_local"></code>
-                        </div>
-
-                        <div class="server-detail">
-                            <span class="server-detail-label">Git</span>
-                            <code data-serverstat="git_commit"></code>
-                        </div>
-
-                        <div class="server-detail server-detail-update" data-serverstat-update>
-                            <span class="server-detail-label">Update</span>
-
-                            <span>
-                                <a href="https://github.com/mhoek2/automatic-ripping-machine" target="_blank">
-                                    Update available
-                                </a>
-
-                                <code data-serverstat="arm_version_remote"></code>
-                            </span>
-                        </div>
-
                     </div>
+
                 </div>
 
 
-                <!-- HARDWARE TRANSCODING -->
+                <!-- RIP STATISTICS -->
                 <div class="server-details-section">
+
                     <div class="server-details-section-title">
-                        Hardware transcoding
+                        Rip statistics
                     </div>
 
-                    <div class="hardware-list">
+                    <div class="rip-stats">
 
-                        <div class="hardware-item">
-                            <span class="hardware-name">
-                                Intel QuickSync
-                            </span>
-
-                            <span class="hardware-status"
-                                  data-hw-support="intel">
-                                <span class="sysinfo-status"></span>
-                                <span class="hardware-status-text"></span>
-                            </span>
+                        <div class="rip-stat">
+                            <div class="rip-stat-value"
+                                data-serverstat="total_rips"></div>
+                            <div class="rip-stat-label">
+                                Total rips
+                            </div>
                         </div>
 
-                        <div class="hardware-item">
-                            <span class="hardware-name">
-                                NVIDIA NVENC
-                            </span>
-
-                            <span class="hardware-status"
-                                  data-hw-support="nvidia">
-                                <span class="sysinfo-status"></span>
-                                <span class="hardware-status-text"></span>
-                            </span>
+                        <div class="rip-stat">
+                            <div class="rip-stat-value"
+                                data-serverstat="movies_ripped"></div>
+                            <div class="rip-stat-label">
+                                Movies
+                            </div>
                         </div>
 
-                        <div class="hardware-item">
-                            <span class="hardware-name">
-                                AMD VCN
-                            </span>
+                        <div class="rip-stat">
+                            <div class="rip-stat-value"
+                                data-serverstat="series_ripped"></div>
+                            <div class="rip-stat-label">
+                                Series
+                            </div>
+                        </div>
 
-                            <span class="hardware-status"
-                                  data-hw-support="amd">
-                                <span class="sysinfo-status"></span>
-                                <span class="hardware-status-text"></span>
-                            </span>
+                        <div class="rip-stat">
+                            <div class="rip-stat-value"
+                                data-serverstat="cds_ripped"></div>
+                            <div class="rip-stat-label">
+                                Audio
+                            </div>
                         </div>
 
                     </div>
                 </div>
 
             </div>
-
-
-            <!-- RIP STATISTICS -->
-            <div class="server-details-section">
-
-                <div class="server-details-section-title">
-                    Rip statistics
-                </div>
-
-                <div class="rip-stats">
-
-                    <div class="rip-stat">
-                        <div class="rip-stat-value"
-                             data-serverstat="total_rips"></div>
-                        <div class="rip-stat-label">
-                            Total rips
-                        </div>
-                    </div>
-
-                    <div class="rip-stat">
-                        <div class="rip-stat-value"
-                             data-serverstat="movies_ripped"></div>
-                        <div class="rip-stat-label">
-                            Movies
-                        </div>
-                    </div>
-
-                    <div class="rip-stat">
-                        <div class="rip-stat-value"
-                             data-serverstat="series_ripped"></div>
-                        <div class="rip-stat-label">
-                            Series
-                        </div>
-                    </div>
-
-                    <div class="rip-stat">
-                        <div class="rip-stat-value"
-                             data-serverstat="cds_ripped"></div>
-                        <div class="rip-stat-label">
-                            Audio
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-
         </div>
-    </div>
-    {% endif %}
+        {% endif %}
 
+    </div>
 </div>
 
 <script>

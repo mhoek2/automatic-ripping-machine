@@ -14,6 +14,19 @@ from arm.models.track import Track
 from arm.models.system_drives import SystemDrives, CDS
 from arm.models.config import Config
 
+FEEDER_SCENARIOS = {
+	"clear": None,
+	"completed": JobState.SUCCESS.value,
+	"success": JobState.SUCCESS.value,
+	"fail": JobState.FAILURE.value,
+	"active": JobState.IDLE.value,
+	"waiting": JobState.MANUAL_WAIT_STARTED.value,
+	"ripping": JobState.VIDEO_RIPPING.value,
+	"info": JobState.VIDEO_INFO.value,
+	"transcoding": JobState.TRANSCODE_ACTIVE.value,
+	"waiting_transcode": JobState.TRANSCODE_WAITING.value,
+}
+
 MOVIES = [
     {
         "title": "Interstellar",
@@ -280,25 +293,23 @@ def populate(status):
     print(f"Drive tray: {drive.tray.name}")
     print(f"Created {len(tracks)} tracks")
 
+
+
 def main():
-    command = sys.argv[1] if len(sys.argv) > 1 else "completed"
+	command = sys.argv[1] if len(sys.argv) > 1 else "completed"
 
-    with app.app_context():
-        if command == "clear":
-            clear()
-            print("Database cleared.")
-        elif command in ("completed", "success"):
-            populate(JobState.SUCCESS.value)
-        elif command == "ripping":
-            populate(JobState.VIDEO_RIPPING.value)
-        elif command == "failed":
-            populate(JobState.FAILURE.value)
-        else:
-            raise SystemExit(
-                f"Unknown scenario: {command}\n"
-                "Use: clear, completed, ripping, failed"
-            )
+	with app.app_context():
+		if command not in FEEDER_SCENARIOS:
+			raise SystemExit(
+				f"Unknown scenario: {command}\n"
+				f"Use: {', '.join(FEEDER_SCENARIOS)}"
+			)
 
+		if command == "clear":
+			clear()
+			print("Database cleared.")
+		else:
+			populate(FEEDER_SCENARIOS[command])
 
 if __name__ == "__main__":
     main()

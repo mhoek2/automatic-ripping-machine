@@ -10,10 +10,10 @@ import os
 import json
 import re
 from flask_login import LoginManager, login_required  # noqa: F401
-from flask import render_template, request, Blueprint, flash, redirect, session
+from flask import render_template, jsonify, request, Blueprint, flash, redirect, session
 
 import arm.ui.utils as ui_utils
-from arm.ui import app, db, constants
+from arm.ui import app, db, constants, json_api
 from arm.models.job import Job
 import arm.config.config as cfg
 from arm.ui.metadata import get_omdb_poster
@@ -31,39 +31,38 @@ armui_cfg = ui_utils.arm_db_cfg()
 @route_database.route('/database')
 @login_required
 def view_database():
-    """
-    The main database page
-
-    Outputs every job from the database
-     this can cause serious slow-downs with + 3/4000 entries
-    """
-    # regenerate the armui_cfg we don't want old settings
-    armui_cfg = ui_utils.arm_db_cfg()
-
-    page = request.args.get('page', 1, type=int)
-    app.logger.debug(armui_cfg)
-
-    # Check for database file
-    if os.path.isfile(cfg.arm_config['DBFILE']):
-        jobs = Job.query.order_by(db.desc(Job.job_id)).paginate(page=page,
-                                                                max_per_page=int(
-                                                                    armui_cfg.database_limit),
-                                                                error_out=False)
-    else:
-        app.logger.error('ERROR: /database no database, file doesnt exist')
-        jobs = {}
+    """Render the database page; jobs are loaded asynchronously."""
 
     session["page_title"] = "Database"
 
     authenticated = ui_utils.authenticated_state()
-    app.logger.debug(f'Authentication state: {authenticated}')
 
-    return render_template('databaseview.html',
-                           authenticated=authenticated,
-                           jobs=jobs.items, 
-                           pages=jobs,
-                           date_format=cfg.arm_config['DATE_FORMAT'])
+    return render_template(
+        'database.html',
+        authenticated=authenticated,
+        jobs=[],
+        date_format=cfg.arm_config['DATE_FORMAT']
+    )
 
+@route_database.route('/database/jobs')
+@login_required
+def load_database_jobs():
+    """Return a paginated batch of database jobs."""
+
+    if not os.path.isfile(cfg.arm_config['DBFILE']):
+        return jsonify(
+            success=False,
+            results={},
+            has_more=False,
+            error="Database file does not exist",
+            authenticated=ui_utils.authenticated_state()
+        ), 500
+
+    armui_cfg = ui_utils.arm_db_cfg()
+    limit = max(1, int(armui_cfg.database_limit))
+    before = request.args.get('before', type=int)
+
+    return json_api.get_jobs_infinite( limit, before)
 
 @route_database.route('/dbupdate', methods=['POST'])
 def update_database():

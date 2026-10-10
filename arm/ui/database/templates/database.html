@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div>
+    <!-- Messages -->
+    <div id="message1" class="alert alert-success d-none" role="alert">
+        <h4 class="alert-heading">Job was deleted successfully</h4>
+    </div>
+
+    <div id="message3" class="alert alert-danger d-none" role="alert">
+        <h4 class="alert-heading">There was a problem with your request</h4>
+        <p>There was a problem with your request. Check the ARMui log for more details.</p>
+    </div>
+
+
+    <div class="database-header">
+        <div class="database-header-info">
+            <div class="database-header-icon" aria-hidden="true">
+                <i class="fa-solid fa-database"></i>
+            </div>
+
+            <div>
+                <h1 class="database-header-title">Job Database</h1>
+                <p class="database-header-description">
+                    Browse and manage your ripping history.
+                </p>
+            </div>
+        </div>
+
+        <div class="database-header-actions">
+            <button id="get_all" type="button" class="arm-button arm-button-secondary">
+                <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+                <span>All jobs</span>
+            </button>
+
+            <button id="get_success" type="button" class="arm-button arm-button-secondary">
+                <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+                <span>Successful jobs</span>
+            </button>
+
+            <button id="get_failed" type="button" class="arm-button arm-button-secondary">
+                <i class="fa-solid fa-circle-xmark" aria-hidden="true"></i>
+                <span>Failed jobs</span>
+            </button>
+
+            <button
+                type="button"
+                class="arm-button arm-button-primary database-search-button"
+                data-modal="search"
+                aria-label="Search database"
+                title="Search database">
+                <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                <span>Search</span>
+            </button>
+        </div>
+    </div>
+
+    <div id="joblist" class="jobs-container"></div>
+
+    <div id="database-load-status" class="database-load-status" role="status" aria-live="polite">
+        Loading jobs...
+    </div>
+
+</div>
+
+{% endblock %}
+{% block footer %}{{ super() }}{% endblock %}
+{% block js %}
+    {{ super() }}
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            activeTab("database");
+
+            if (!ARM.storage.get("acknowledge_db_edits")) {
+                ARM.modal.confirm.open({
+                    type: "dbedit"
+                });
+            }
+
+            // Fetch the first batch.
+            fetchAllJobs(true);
+
+            // Fetch more when the user approaches the bottom.
+            $(".base_content").off("scroll.database").on("scroll.database", checkDatabaseScroll);
+
+            $("#get_all").on("click", function() {
+                databaseInfiniteScrollEnabled = true;
+                fetchAllJobs(true);
+            });
+
+            $("#get_success").on("click", function() {
+                databaseInfiniteScrollEnabled = false;
+                fetchJobs("/json?mode=getsuccessful");
+            });
+
+            $("#get_failed").on("click", function() {
+                databaseInfiniteScrollEnabled = false;
+                fetchJobs("/json?mode=getfailed");
+            });
+        });
+    </script>
+
+{% endblock %}

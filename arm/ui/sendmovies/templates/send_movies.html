@@ -30,13 +30,11 @@
                 </div>
             </div>
             <div class="col-md-12 mx-auto">
-                <div class="card-deck">
-                </div>
+                <div id="joblist" class="jobs-container"></div>
             </div>
         </div>
     </div>
 </div>
-<script type="application/javascript" src="static/js/common.js"></script>
 <script type="text/javascript">
     let currentJob = 1;
     $(document).ready(function () {
@@ -46,7 +44,7 @@
             var jqxhr = $.get("/json", {mode: "send_item", job: jobId}, function (job) {
                 console.log(job);
                 $("#currentTotal").html("<h3>Sending Job Progress: " + currentJob + "/" + jobItems.length + "</h3>")
-                $(".card-deck").prepend(addJobItem(job))
+                $("#joblist").prepend(addJobItem(job))
                 if (job.error !== "") {
                     $(`#jobId${job.job_id}`).addClass("alert-danger")
                     $(`#jobId${job.job_id}_progress_section`).append("<strong>Failure Reason: </strong>" + job.error)

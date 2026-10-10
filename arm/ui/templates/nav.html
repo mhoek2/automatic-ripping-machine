@@ -1,82 +1,87 @@
 {% block nav %}
-<!-- TOAST -->
-<div aria-live="polite" aria-atomic="true">
-    <!-- Position it -->
-    <div id="toastHolder" style="position: fixed; top: 30%; right: 10%;z-index: 1000;">
-        <!-- TOASTS -->
-    </div>
-</div>
-
 <nav class="sidebar">
-    <div class="sidebar-logo">
-        <div class="logo">
-            <img src="{{ url_for('static', filename='img/arm40nw.png') }}" width="114" height="40" alt="">
+	<div class="sidebar-logo">
+		<div class="logo">
+			<img src="{{ url_for('static', filename='img/arm40nw.png') }}" width="114" height="40" alt="">
+		</div>
+	</div>
+
+	<ul class="sidebar-menu">
+		<li id="navhome">
+			<a class="nav-link" href="index.html" data-tooltip="Home">
+				<i class="fa-solid fa-house"></i>
+			</a>
+		</li>
+
+		{% if authenticated %}
+		<li id="navhistory">
+			<a class="nav-link" href="history" data-tooltip="History">
+				<i class="fa-solid fa-clock-rotate-left"></i>
+			</a>
+		</li>
+
+		<li id="navviewlogs">
+			<a class="nav-link" href="listlogs" data-tooltip="View Logs">
+				<i class="fa-solid fa-file-lines"></i>
+			</a>
+		</li>
+
+		<li id="navdatabase">
+			<a class="nav-link" href="database" data-tooltip="Database">
+				<i class="fa-solid fa-database"></i>
+			</a>
+		</li>
+
+		<li id="navarmsettings">
+			<a class="nav-link" href="settings" data-tooltip="Settings">
+				<i class="fa-solid fa-gear"></i>
+			</a>
+		</li>
+
+		<li id="navsendmovies">
+			<a class="nav-link" href="send_movies" data-tooltip="Send DVDs">
+				<i class="fa-solid fa-paper-plane"></i>
+			</a>
+		</li>
+
+		<li id="notificationview">
+			<a class="nav-link" href="notificationview" data-tooltip="Notifications">
+				<i class="fa-solid fa-bell"></i>
+				{% if notify_count %}
+					<span class="notification-badge">{{ notify_count }}</span>
+				{% endif %}
+			</a>
+		</li>
+		{% endif %}
+	</ul>
+
+    
+    <div class="sidebar-user">
+        <button id="user-menu-toggle" class="nav-link" type="button" data-tooltip="User">
+            <i class="fa-regular fa-circle-user"></i>
+        </button>
+
+        <div id="user-menu" class="user-menu">
+            <a href="#" id="theme-toggle" class="user-menu-item" type="button">
+                <i class="fa-solid fa-circle-half-stroke"></i>
+                <span>Switch Theme</span>
+            </a>
+			{% if authenticated %}
+				<a href="update_password" class="user-menu-item">
+					<i class="fa-solid fa-key"></i>
+					<span>Change Password</span>
+				</a>
+				<a href="logout" class="user-menu-item">
+					<i class="fa-solid fa-right-from-bracket"></i>
+					<span>Logout</span>
+				</a>
+			{% else %}
+            <a href="login" class="user-menu-item" data-tooltip="Login to ARM">
+                <i class="fa-solid fa-right-to-bracket"></i>
+                <span>Login</span>
+            </a>
+    		{% endif %}
         </div>
     </div>
-
-    <ul class="sidebar-menu">
-        <li id="navhome">
-            <a class="nav-link" href="index.html" data-tooltip="Home">
-                <i class="fa-solid fa-house"></i>
-            </a>
-        </li>
-        {% if authenticated %}
-        <li id="navhistory">
-            <a class="nav-link" href="history" data-tooltip="History">
-                <i class="fa-solid fa-clock-rotate-left"></i>
-            </a>
-        </li>
-        <li id="navviewlogs">
-            <a class="nav-link" href="listlogs" data-tooltip="View Logs">
-                <i class="fa-solid fa-file-lines"></i>
-            </a>
-        </li>
-        <li id="navdatabase">
-            <a class="nav-link" href="database" data-tooltip="Database">
-                <i class="fa-solid fa-database"></i>
-            </a>
-        </li>
-        <li id="navarmsettings">
-            <a class="nav-link" href="settings" data-tooltip="Settings">
-                <i class="fa-solid fa-gear"></i>
-            </a>
-        </li>
-        <li id="navsendmovies">
-            <a class="nav-link" href="send_movies" data-tooltip="Send DVDs">
-                <i class="fa-solid fa-paper-plane"></i>
-            </a>
-        </li>
-        <li id="navchangepass">
-            <a class="nav-link" href="update_password" data-tooltip="Change Password">
-                <i class="fa-solid fa-key"></i>
-            </a>
-        </li>
-        <li id="navlogout">
-            <a class="nav-link" href="logout" data-tooltip="Logout">
-                <i class="fa-solid fa-right-from-bracket"></i>
-            </a>
-        </li>
-        <li id="notificationview">
-            <a class="nav-link" href="notificationview" data-tooltip="Notifications">
-                <i class="fas fa-bell"></i>
-                {% if notify_count %}
-                    <span class="notification-badge">{{ notify_count }}</span>
-                {% endif %}
-            </a>
-        </li>
-        {% else %}
-        <li id="login">
-            <a class="nav-link" href="login" data-tooltip="Login to ARM">
-                <i class="fa-regular fa-circle-user"></i>
-            </a>
-        </li>
-        {% endif %}
-
-        <li id="theme-toggle">
-            <a class="nav-link" href="#" data-tooltip="Switch theme">
-                <i class="fas fa-sun"></i>
-            </a>
-        </li>
-    </ul>
 </nav>
 {% endblock %}

@@ -50,41 +50,6 @@
     background: var(--color-surface-hover);
 }
 
-.ripper-setting-label {
-    min-width: 0;
-    color: var(--color-text-muted);
-    font-family: monospace;
-    font-size: 11px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.ripper-setting-input {
-    width: 100%;
-    min-width: 0;
-    box-sizing: border-box;
-    height: 30px;
-    padding: 4px 8px;
-    border: 1px solid var(--color-border-strong);
-    border-radius: 4px;
-    background: var(--color-control);
-    color: var(--color-text);
-    font-family: monospace;
-    font-size: 11px;
-    outline: none;
-    transition: border-color .15s ease, background .15s ease, box-shadow .15s ease;
-}
-
-.ripper-setting-input:hover {
-    background: var(--color-control-hover);
-}
-
-.ripper-setting-input:focus {
-    border-color: var(--color-accent);
-    box-shadow: 0 0 0 2px var(--color-info-bg);
-}
-
 .ripper-setting-input:disabled {
     opacity: .6;
     cursor: not-allowed;

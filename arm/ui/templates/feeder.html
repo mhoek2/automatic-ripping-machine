@@ -1,54 +1,179 @@
-<div class="feeder_container">
-    <div>
-        <button id="feeder_clear">Clear</button>
-        <button id="feeder_completed">Add completed</button>
-        <button id="feeder_ripping">Add rip</button>
-        <button id="feeder_failed">Add failed</button>
-    </div>
+<style>
+    .feeder-container {
+        position: absolute;
+        top: 10px;
+        right: 2em;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+    }
+
+    .feeder-group {
+        position: relative;
+    }
+
+    .feeder-toggle {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .feeder-dropdown-label {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.65rem 0.9rem;
+        border: 1px solid var(--border-color, #444);
+        border-radius: 0.5rem;
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .feeder-chevron {
+        margin-left: auto;
+        transition: transform 0.2s ease;
+    }
+
+    .feeder-group:hover .feeder-chevron {
+        transform: rotate(180deg);
+    }
+
+    .feeder-dropdown {
+        position: absolute;
+        top: calc(100% + 0.15rem);
+        left: 0;
+        z-index: 100;
+        display: none;
+        min-width: 100%;
+        padding: 0.35rem;
+        border: 1px solid var(--border-color, #444);
+        border-radius: 0.5rem;
+        background: var(--card-background, #222);
+        box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 20%);
+    }
+
+    .feeder-toggle:checked ~ .feeder-dropdown {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .feeder-group:hover .feeder-dropdown {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .feeder-dropdown button {
+        padding: 0.55rem 0.75rem;
+        border: 0;
+        border-radius: 0.3rem;
+        background: transparent;
+        color: inherit;
+        text-align: left;
+        white-space: nowrap;
+        cursor: pointer;
+    }
+
+    .feeder-dropdown button:hover {
+        background: var(--hover-background, rgb(128 128 128 / 15%));
+    }
+
+    .feeder-toggle:focus-visible + .feeder-dropdown-label {
+        outline: 2px solid var(--accent-color, #5794f2);
+        outline-offset: 2px;
+    }
+</style>
+
+<div class="feeder-container">
+	<div class="feeder-group">
+		<input type="checkbox" id="feeder-ripping-toggle" class="feeder-toggle">
+		<label for="feeder-ripping-toggle" class="feeder-dropdown-label">
+			<i class="fa-solid fa-compact-disc"></i>
+			Ripping
+			<i class="fa-solid fa-chevron-down feeder-chevron"></i>
+		</label>
+		<div class="feeder-dropdown" id="feeder-ripping"></div>
+	</div>
+
+	<div class="feeder-group">
+		<input type="checkbox" id="feeder-transcoding-toggle" class="feeder-toggle">
+		<label for="feeder-transcoding-toggle" class="feeder-dropdown-label">
+			<i class="fa-solid fa-film"></i>
+			Transcoding
+			<i class="fa-solid fa-chevron-down feeder-chevron"></i>
+		</label>
+		<div class="feeder-dropdown" id="feeder-transcoding"></div>
+	</div>
+
+	<div class="feeder-group">
+		<input type="checkbox" id="feeder-global-toggle" class="feeder-toggle">
+		<label for="feeder-global-toggle" class="feeder-dropdown-label">
+			<i class="fa-solid fa-globe"></i>
+			Global
+			<i class="fa-solid fa-chevron-down feeder-chevron"></i>
+		</label>
+		<div class="feeder-dropdown" id="feeder-global"></div>
+	</div>
 </div>
 
 <script>
-    const FEEDER_CLEAR      = 0;
-    const FEEDER_COMPLETED  = 1;
-    const FEEDER_RIPPING    = 2;
-    const FEEDER_FAILED     = 3;
-
-    function send_feeder_cmd(cmd_idx)
-    {
-        const xhr = new XMLHttpRequest();
-
-        xhr.open("GET", "/feeder?idx=" + cmd_idx, true);
-
-        xhr.onload = function()
-        {
-            let result;
-
-            try
-            {
-                result = JSON.parse(xhr.responseText);
-            }
-            catch (e)
-            {
-                console.error("Invalid feeder response:", xhr.responseText);
-                return;
-            }
-
+    function send_feeder_cmd(action) {
+        $.ajax({
+            url: "/feeder",
+            method: "GET",
+            data: { action },
+            dataType: "json"
+        })
+        .done(function(result) {
             console.log("Feeder:", result);
-
-            if (!result.success)
-                console.error("Feeder failed:", result);
-        };
-
-        xhr.onerror = function()
-        {
-            console.error("Feeder request failed");
-        };
-
-        xhr.send();
+        })
+        .fail(function(xhr) {
+            console.error("Feeder failed:", xhr.responseJSON || xhr.statusText);
+        });
     }
 
-    document.getElementById("feeder_clear").addEventListener("click", function (e) { send_feeder_cmd( FEEDER_CLEAR ); });
-    document.getElementById("feeder_completed").addEventListener("click", function (e) { send_feeder_cmd( FEEDER_COMPLETED ); });
-    document.getElementById("feeder_ripping").addEventListener("click", function (e) { send_feeder_cmd( FEEDER_RIPPING ); });
-    document.getElementById("feeder_failed").addEventListener("click", function (e) { send_feeder_cmd( FEEDER_FAILED ); });
+    const FEEDER_GROUPS = {
+        ripping: [
+            JobState.MANUAL_WAIT_STARTED,
+            JobState.IDLE,
+            JobState.VIDEO_RIPPING,
+            JobState.VIDEO_WAITING,
+            JobState.VIDEO_INFO,
+            JobState.AUDIO_RIPPING
+        ],
+        transcoding: [
+            JobState.TRANSCODE_ACTIVE,
+            JobState.TRANSCODE_WAITING
+        ],
+        global: [
+            JobState.SUCCESS,
+            JobState.FAILURE,
+            "clear",
+        ]
+    };
+
+    function renderFeederGroup(group, states) {
+        const container = $(`#feeder-${group}`);
+        const uniqueStates = [...new Set(states)];
+
+        uniqueStates.forEach(state => {
+            container.append(
+                $("<button>", {
+                    type: "button",
+                    text: state,
+                    "data-feeder-action": state
+                })
+            );
+        });
+    }
+
+    Object.entries(FEEDER_GROUPS).forEach(([group, states]) => {
+        renderFeederGroup(group, states);
+    });
+
+    $(document).on("click", "[data-feeder-action]", function() {
+        const state = $(this).attr("data-feeder-action");
+        send_feeder_cmd(state);
+    });
 </script>

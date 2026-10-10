@@ -1,0 +1,28 @@
+<div class="search-card">
+
+<div class="search-header">
+    <h1>{{ search_title }}</h1>
+    <p>Search for a movie or TV series by title and optionally narrow the results by year.</p>
+</div>
+
+<form class="search-form" action="" method="get" novalidate>
+    {{ form.hidden_tag() }}
+
+    <div class="search-field">
+        <label for="search-title">Title</label>
+        <input type="text" id="search-title" name="title" value="{{ title }}" placeholder="Enter title..." autocomplete="off" autofocus>
+        <div class="search-error">Search can't be blank</div>
+    </div>
+
+    <div class="search-field">
+        <label for="search-year">Year <span>(optional)</span></label>
+        <input type="text" id="search-year" name="year" value="{{ year }}" placeholder="e.g. 2024" inputmode="numeric">
+    </div>
+
+    <input type="hidden" name="save" value="save">
+    <input type="hidden" name="job_id" value="{{ job_id }}">
+
+    <button class="search-submit" type="submit">Search</button>
+</form>
+
+</div>

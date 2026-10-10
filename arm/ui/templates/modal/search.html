@@ -1,0 +1,37 @@
+<div id="search-modal" class="arm-modal" aria-hidden="true">
+	<div class="arm-modal-backdrop" data-modal-close></div>
+
+    <div class="arm-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="search-modal-title" aria-describedby="search-modal-description" tabindex="-1">
+        <div class="arm-modal-header">
+            <div class="arm-modal-icon arm-modal-icon-info" aria-hidden="true">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </div>
+
+            <button class="arm-modal-close" type="button" aria-label="Close dialog" data-modal-close>
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <div class="arm-modal-body">
+            <h2 id="search-modal-title">Search Database</h2>
+            <p id="search-modal-description">Enter a title or keyword to search the database.</p>
+
+            <form id="search-modal-form">
+                <div class="arm-modal-field">
+                    <label for="searchquery">Search term</label>
+                    <input type="text" id="searchquery" name="searchquery" placeholder="Enter a title..." autocomplete="off" aria-describedby="search-modal-error" required>
+                    <div id="search-modal-error" class="arm-modal-error" role="alert" hidden>Search string too short.</div>
+                </div>
+            </form>
+        </div>
+
+        <div class="arm-modal-footer">
+            <button class="arm-button arm-button-secondary" type="button" data-modal-close>Cancel</button>
+            <button id="search-modal-submit" class="arm-button arm-button-primary" type="submit" form="search-modal-form">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                Search
+            </button>
+        </div>
+    </div>
+
+</div>

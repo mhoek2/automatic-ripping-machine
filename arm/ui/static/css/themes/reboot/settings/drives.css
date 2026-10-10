@@ -142,52 +142,6 @@
 
 
 /*
- * Inputs
- */
-
-.drive-input-field {
-    align-items: center;
-}
-
-.drive-input {
-    width: 100%;
-    min-width: 0;
-    box-sizing: border-box;
-
-    padding: 6px 8px;
-
-    border: 1px solid var(--color-border-strong);
-    border-radius: 5px;
-
-    background: var(--color-control);
-    color: var(--color-text);
-
-    font: inherit;
-    font-size: 12px;
-
-    outline: none;
-
-    transition:
-        border-color .15s ease,
-        background .15s ease,
-        box-shadow .15s ease;
-}
-
-.drive-input:hover {
-    background: var(--color-control-hover);
-}
-
-.drive-input:focus {
-    border-color: var(--color-accent);
-    box-shadow: 0 0 0 2px var(--color-info-bg);
-}
-
-select.drive-input {
-    cursor: pointer;
-}
-
-
-/*
  * Actions
  */
 

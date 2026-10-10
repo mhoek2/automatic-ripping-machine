@@ -53,11 +53,32 @@
         });
     </script>
 
-    <!-- Highlight Active Tab -->
     <script type="application/javascript">
         function activeTab(tab) {
-            $("#nav" + tab).addClass("active");
+            $('.sidebar [id^="nav"]').removeClass("active");
+            $('.sidebar #nav' + tab).addClass("active");
         }
+
+        $(function()
+        {
+            $("#user-menu-toggle").on("click", function(e)
+            {
+                e.stopPropagation();
+                $("#user-menu").toggleClass("open");
+                $(this).toggleClass("active");
+            });
+
+            $(document).on("click", function()
+            {
+                $("#user-menu").removeClass("open");
+                $("#user-menu-toggle").removeClass("active");
+            });
+
+            $("#user-menu").on("click", function(e)
+            {
+                e.stopPropagation();
+            });
+        });
     </script>
 
     <!-- FontAwesome 
@@ -67,14 +88,25 @@
 
     <!-- Theme -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/themes/reboot/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/themes/reboot/form.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/themes/reboot/modal.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/themes/reboot/auth.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/themes/reboot/notifications.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/themes/reboot/sidebar.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/themes/reboot/log.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/themes/reboot/base_jobs.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/themes/reboot/sysinfo.css') }}">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/themes/reboot/database.css') }}">
+
     <link rel="stylesheet" href="{{ url_for('static', filename='css/themes/reboot/settings.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/themes/reboot/settings/drives.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/themes/reboot/settings/ripper.css') }}">
 
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/themes/reboot/jobs/jobs.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/themes/reboot/jobs/custom_title.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/themes/reboot/jobs/title_search.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/themes/reboot/jobs/settings.css') }}">
+    
     <!-- Set Page Title -->
     {% if session["arm_name"] %}
         {% if session["page_title"] %}

@@ -375,6 +375,11 @@ def feed_json():
                 'funct': json_api.get_x_jobs,
                 'args': (JobState.SUCCESS.value,),
             },
+            'getalljobs': {
+                'funct': json_api.get_x_jobs,
+                'args': ("all",),
+            },
+
             'fixperms': {'funct': ui_utils.fix_permissions, 'args': ('j_id',)},
             'joblist': {'funct': json_api.get_x_jobs, 'args': ('joblist',)},
             'send_item': {'funct': ui_utils.send_to_remote_db, 'args': ('j_id',)},
@@ -389,13 +394,22 @@ def feed_json():
         valid_modes = {
             'joblist': {'funct': json_api.get_x_jobs, 'args': ('joblist',)},
         }
+    
     # prepare JSON data
     if mode in valid_modes:
         args = [valid_data[x] for x in valid_modes[mode]['args']]
         return_json = valid_modes[mode]['funct'](*args)
+
+    # add notifcations to all reponses?
     return_json['notes'] = json_api.get_notifications()
 
     # return JSON data
-    return app.response_class(response=json.dumps(return_json, indent=4, sort_keys=True),
-                              status=200,
-                              mimetype=constants.JSON_TYPE)
+    return app.response_class(
+        response    = json.dumps(
+                            return_json, 
+                            indent          = 4, 
+                            sort_keys       = True
+                      ),
+        status      = 200,
+        mimetype    = constants.JSON_TYPE
+    )

@@ -21,7 +21,7 @@ from flask_login import LoginManager, login_required, \
 from sqlalchemy.exc import SQLAlchemyError
 
 import arm.ui.utils as ui_utils
-from arm.ui import app, db, constants
+from arm.ui import app, db, constants, json_api
 from arm.models.job import Job
 from arm.models.system_info import SystemInfo
 from arm.models.user import User
@@ -201,35 +201,43 @@ def unauthorized():
     """
     return redirect('/login')
 
+
+
+@app.route('/get_notications', methods=['GET'])
+def get_notications():
+    return jsonify(
+        success = True,
+        notes   = json_api.get_notifications(),
+    ) 
+    
 #
 # FEEDER
 #
 import subprocess
 from flask import jsonify
 
-FEEDER_CLEAR = 0
-FEEDER_COMPLETED = 1
-FEEDER_RIPPING = 2
-FEEDER_FAILED = 3
-
 @app.route("/feeder")
 def feeder():
-    idx = request.args.get("idx", type=int)
+    command = request.args.get("action", "")
 
-    commands = {
-        FEEDER_CLEAR: "clear",
-        FEEDER_COMPLETED: "completed",
-        FEEDER_RIPPING: "ripping",
-        FEEDER_FAILED: "failed",
+    allowed_commands = {
+        "clear",
+        "completed",
+        "success",
+        "fail",
+        "active",
+        "waiting",
+        "ripping",
+        "info",
+        "transcoding",
+        "waiting_transcode",
     }
 
-    command = commands.get(idx)
-
-    if command is None:
+    if command not in allowed_commands:
         return jsonify({
             "success": False,
             "error": "Invalid feeder command",
-            "idx": idx,
+            "command": command,
         }), 400
 
     print(f"FEEDER: {command}", flush=True)

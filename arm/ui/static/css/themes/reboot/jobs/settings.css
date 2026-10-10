@@ -1,0 +1,113 @@
+.job-settings-page {
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 32px 24px;
+    box-sizing: border-box;
+}
+
+.job-settings-card {
+    width: 100%;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+}
+
+.job-setting {
+    display: grid;
+    grid-template-columns: 180px minmax(0, 1fr);
+    align-items: center;
+    gap: 16px;
+    min-height: 56px;
+    padding: 10px 18px;
+    box-sizing: border-box;
+    background: var(--color-surface);
+}
+
+.job-setting + .job-setting {
+    border-top: 1px solid var(--color-border);
+}
+
+.job-setting:hover {
+    background: var(--color-surface-hover);
+}
+
+.job-setting-label {
+    color: var(--color-text-muted);
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.job-setting-control {
+    min-width: 0;
+}
+
+.job-setting-error {
+    display: none;
+    margin-top: 5px;
+    color: var(--color-danger);
+    font-size: 11px;
+}
+
+.job-setting input.is-invalid,
+.job-setting select.is-invalid {
+    border-color: var(--color-danger);
+    box-shadow: 0 0 0 2px var(--color-danger-bg);
+}
+
+.job-setting input.is-invalid + .job-setting-error,
+.job-setting select.is-invalid + .job-setting-error {
+    display: block;
+}
+
+.job-settings-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 14px 18px;
+    background: var(--color-surface-raised);
+    border-top: 1px solid var(--color-border);
+}
+
+.job-settings-submit {
+    min-height: 34px;
+    padding: 6px 16px;
+    border: 1px solid var(--color-accent);
+    border-radius: 5px;
+    background: var(--color-accent);
+    color: var(--color-text-inverse);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background .15s ease, border-color .15s ease;
+}
+
+.job-settings-submit:hover {
+    background: var(--color-accent-hover);
+    border-color: var(--color-accent-hover);
+}
+
+.job-settings-submit:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--color-info-bg);
+}
+
+@media (max-width: 600px) {
+    .job-settings-page {
+        padding: 20px 12px;
+    }
+    .job-setting {
+        grid-template-columns: 1fr;
+        gap: 7px;
+        padding: 12px 16px;
+    }
+
+    .job-settings-footer {
+        padding: 12px 16px;
+    }
+
+    .job-settings-submit {
+        width: 100%;
+    }
+}

@@ -1,48 +1,21 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <div>
-        <!-- Modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-             aria-hidden="true">
-            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Abandon this job ??</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <p><span class="ui-icon ui-icon-alert" style="margin:12px 12px 20px 0;"></span>
-                            <span id="m-body">This job will be abandoned. Are you sure?</span></p>
-                    </div>
-                    <div class="modal-footer">
-                        <button id="save-no" type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                        <button id="save-yes" type="button" class="btn btn-primary">Yes</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div id="joblist" class="jobs-container"></div>
 
-        <div id="joblist" class="jobs-container"></div>
-    </div>
-
-    <div class="row" style="height: 30px;"></div>
-    <p class="text-center">
-        <h5 class="text-center"><strong>System Information</strong></h5>
-    </p>
     {% include 'settings/sysinfo.html' %}
-
-    <script type="application/javascript" src="static/js/common.js"></script>
-    <script type="application/javascript" src="static/js/jobRefresh.js"></script>
-    <script type="application/javascript">
-    $(document).ready(function () {
-        const intervalId = window.setInterval(refreshJobs, {{ armui_cfg['index_refresh'] }});
-    });
-</script>
 {% endblock %}
+
 
 {% block js %}
     {{ super() }}
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            activeTab("home");
+
+            refreshJobs();
+            window.setInterval(refreshJobs, {{ armui_cfg['index_refresh'] }});
+        });
+    </script>
 {% endblock %}

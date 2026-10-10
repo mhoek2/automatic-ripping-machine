@@ -1,25 +1,22 @@
 .sysinfo {
     width: 100%;
-    max-width: 1400px;
-    margin: 0 auto;
+    margin: 3em auto 3em auto;
     box-sizing: border-box;
 }
 
 .sysinfo-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-    align-items: stretch;
+	display: grid;
+	grid-template-columns: repeat(12, minmax(0, 1fr));
+	gap: 1em;
 }
 
 .sysinfo-card {
-    flex: 1 1 320px;
-    min-width: 280px;
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: none;
+	grid-column: span 4;
+	min-width: 0;
+	background: var(--color-surface);
+	border: 1px solid var(--color-border);
+	border-radius: 10px;
+	overflow: hidden;
 }
 
 .sysinfo-card-header {
@@ -155,12 +152,13 @@
  */
 
 .server-details {
-    width: 100%;
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: 10px;
-    overflow: hidden;
-    margin-top: 1em;
+	grid-column: 1 / -1;
+	width: 100%;
+	background: var(--color-surface);
+	border: 1px solid var(--color-border);
+	border-radius: 10px;
+	overflow: hidden;
+	margin-top: 0;
 }
 
 .server-details-group {
@@ -336,30 +334,55 @@
     text-decoration: underline;
 }
 
+@media (min-width: 1600px) {
+	.sysinfo-grid {
+		grid-template-columns: repeat(6, minmax(0, 1fr));
+	}
+
+	.sysinfo-card {
+		grid-column: span 2;
+	}
+
+	.sysinfo-card:nth-child(2),
+	.sysinfo-card:nth-child(3) {
+		grid-column: span 1;
+	}
+
+	.server-details {
+		grid-column: span 2;
+		margin-top: 0;
+	}
+}
 
 @media (max-width: 700px) {
+	.sysinfo-grid {
+		grid-template-columns: repeat(1, minmax(0, 1fr));
+	}
 
-    .server-details-grid {
-        grid-template-columns: 1fr;
-    }
+	.sysinfo-card {
+		min-width: 100%;
+		grid-column: 1;
+	}
 
-    .rip-stat {
-        flex-basis: calc(50% - 10px);
-    }
+	.server-details {
+		grid-column: 1;
+		width: 100%;
+		margin-top: 0;
+	}
 
-    .server-details-group {
-        flex-direction: column;
-    }
+	.server-details-grid {
+		grid-template-columns: 1fr;
+	}
 
-    .sysinfo {
-        padding: 12px;
-    }
+	.rip-stat {
+		flex-basis: calc(50% - 10px);
+	}
 
-    .sysinfo-grid {
-        gap: 12px;
-    }
+	.server-details-group {
+		flex-direction: column;
+	}
 
-    .sysinfo-card {
-        min-width: 100%;
-    }
+	.sysinfo {
+		padding: 12px;
+	}
 }

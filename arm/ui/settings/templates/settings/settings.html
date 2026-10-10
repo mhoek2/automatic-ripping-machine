@@ -69,7 +69,7 @@
     {{ super() }}
     <script type="application/javascript">
         $(function () {
-            let toastCount = 0;
+            //let toastCount = 0;
 
             function sendSettings(formToSend, sendTo) {
                 $.ajax({
@@ -79,10 +79,11 @@
                 }).done(function (data) {
                     if (data.success === true) {
                         console.log(data)
-                        var dt = new Date();
-                        var time = `${dt.getHours()}:${dt.getMinutes()}:${dt.getSeconds()}`;
-                        addToast("Saved Successfully", `Saved ${data.form} settings at ${time}`, toastCount);
-                        toastCount++;
+                        //var dt = new Date();
+                        //var time = `${dt.getHours()}:${dt.getMinutes()}:${dt.getSeconds()}`;
+                        //addNotification("Saved Successfully", `Saved ${data.form} settings at ${time}`, toastCount);
+                        //toastCount++;
+                        alert("Setting saved");
                     }
                 });
             }

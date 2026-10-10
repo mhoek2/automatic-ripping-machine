@@ -3,12 +3,15 @@
     {% include 'head.html' %}
 
     <body>
+        <div id="notification_container" aria-live="polite" aria-atomic="false"></div>
+
+        {% include 'modal/search.html' %}
+        {% include 'modal/confirm.html' %}
+
         <div class="base_container">
             {% include 'nav.html' %}
             
             <div class="base_content">
-                {% include 'feeder.html' %}
-
                 <div id="content">
                     {% include 'base_errors.html' %}
 
@@ -21,6 +24,16 @@
         </div>
 
         {% block js %}
+        <script type="text/javascript">
+            $(document).ready(function () {
+                collectChildServers();
+
+                getNotifications();
+                window.setInterval(getNotifications, 2000 );
+            });
+        </script>
         {% endblock %}
+
+        {% include 'feeder.html' %}
     </body>
 </html>

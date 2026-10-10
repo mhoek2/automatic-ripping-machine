@@ -10,7 +10,7 @@ from collections import deque
 from pathlib import Path
 import datetime
 import psutil
-from flask import request
+from flask import request, jsonify
 from time import time, strftime, gmtime
 
 import arm.config.config as cfg
@@ -32,51 +32,67 @@ def get_notifications():
     return notification
 
 
-def get_x_jobs(job_status):
-    """
-    function for getting all Failed/Successful jobs \n
-    or\n
-    currently active jobs from the database\n
+def serialize_job_results(jobs):
+    """Serialize jobs using the same format as the existing JSON API."""
+    job_results = {}
 
-    :return: dict/json
-    """
-    success = False
+    for i, job in enumerate(jobs):
+        result = {}
+        job_log = os.path.join(cfg.arm_config['LOGPATH'], str(job.logfile))
+        process_logfile(job_log, job, result)
+
+        try:
+            result['config'] = job.config.get_d()
+        except AttributeError:
+            result['config'] = {}
+            app.logger.debug("couldn't get config")
+
+        for key, value in job.get_d().items():
+            if key != "config":
+                result[str(key)] = str(value)
+
+        job_results[i] = result
+
+    return job_results
+
+def get_x_jobs(job_status):
+    """Get successful, failed, or active jobs."""
     if job_status == "joblist":
         jobs = db.session.query(Job).filter(~Job.finished).all()
     elif JobState(job_status) in JOB_STATUS_FINISHED:
-        jobs = Job.query.filter_by(status=job_status)
+        jobs = Job.query.filter_by(status=job_status).all()
     else:
         raise ValueError(f"{job_status} is not a valid option")
 
-    job_results = {}
-    i = 0
-    for j in jobs:
-        job_results[i] = {}
-        job_log = os.path.join(cfg.arm_config['LOGPATH'], str(j.logfile))
-        process_logfile(job_log, j, job_results[i])
-        try:
-            job_results[i]['config'] = j.config.get_d()
-        except AttributeError:
-            job_results[i]['config'] = "config not found"
-            app.logger.debug("couldn't get config")
+    job_results = serialize_job_results(jobs)
 
-        for key, value in j.get_d().items():
-            if key != "config":
-                job_results[i][str(key)] = str(value)
-        i += 1
-    if jobs:
-        app.logger.debug("jobs  - we have " + str(len(job_results)) + " jobs")
-        success = True
+    return {
+        "success"       : bool(jobs),
+        "mode"          : job_status,
+        "results"       : job_results,
+        "arm_name"      : cfg.arm_config['ARM_NAME'],
+        "authenticated" : authenticated_state()
+    }
 
-    # Get authentication state
-    authenticated = authenticated_state()
+def get_jobs_infinite( limit, before ):
+    """Get jobs using infinite scroller"""
+    query = Job.query
 
-    return {"success": success,
-            "mode": job_status,
-            "results": job_results,
-            "arm_name": cfg.arm_config['ARM_NAME'],
-            "authenticated": authenticated}
+    if before is not None:
+        query = query.filter(Job.job_id < before)
 
+    jobs = query.order_by(db.desc(Job.job_id)).limit(limit + 1).all()
+
+    has_more = len(jobs) > limit
+    jobs = jobs[:limit]
+
+    return jsonify(
+        success         = True,
+        results         = serialize_job_results(jobs),
+        has_more        = has_more,
+        next_cursor     = jobs[-1].job_id if jobs else None,
+        authenticated   = authenticated_state()
+    )
 
 def process_logfile(logfile, job, job_results):
     """
@@ -354,8 +370,13 @@ def search(search_query):
             if key != "config":
                 search_results[i][str(key)] = str(value)
         i += 1
-    return {'success': True, 'mode': 'search', 'results': search_results}
 
+    return {
+        'success'       : True, 
+        'mode'          : 'search', 
+        'results'       : search_results,
+        'authenticated' : authenticated_state()
+    }
 
 def delete_job(job_id, mode):
     """
