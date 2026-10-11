@@ -67,7 +67,7 @@ def rip_visual_media(have_dupes, job, logfile, protection):
     logging.debug(f"Using MakeMKV: [{use_make_mkv}]")
     if use_make_mkv:
         logging.info("************* Ripping disc with MakeMKV *************")
-        _job_update_status(JobState.VIDEO_RIPPING.value)
+        _job_update_status(job, JobState.VIDEO_RIPPING.value)
 
         try:
             makemkv_out_path = makemkv.makemkv(job)
@@ -107,7 +107,7 @@ def rip_visual_media(have_dupes, job, logfile, protection):
         utils.database_updater({'path': final_directory}, job)
 
     # Move to final folder
-    _job_update_status(JobState.POSTPROCESSING_MOVING.value)
+    _job_update_status(job, JobState.POSTPROCESSING_MOVING.value)
     move_files_post(transcode_out_path, job)
     
     # Movie the movie poster if we have one - no longer needed, now handled by save_movie_poster   
