@@ -37,11 +37,10 @@ def view_database():
 
     authenticated = ui_utils.authenticated_state()
 
-    return render_template(
-        'database.html',
-        authenticated=authenticated,
-        jobs=[],
-        date_format=cfg.arm_config['DATE_FORMAT']
+    return render_template('database.html',
+                            authenticated   = authenticated,
+                            jobs            = [],
+                            date_format     = cfg.arm_config['DATE_FORMAT']
     )
 
 @route_database.route('/database/jobs')

@@ -165,7 +165,7 @@ def customtitle():
                                      f'{request.args.get("title")} ({request.args.get("year")})')
         db.session.add(notification)
         ui_utils.database_updater(args, job)
-        flash(f'Custom title changed. Title={job.title}, Year={job.year}.', "success")
+
         return redirect(url_for('home'))
 
     authenticated = ui_utils.authenticated_state()
@@ -248,8 +248,7 @@ def updatetitle():
                                  f'{request.args.get("title")} ({request.args.get("year")})')
     db.session.add(notification)
     db.session.commit()
-    flash(f'Title: {old_title} ({old_year}) was updated to '
-          f'{request.args.get("title")} ({request.args.get("year")})', "success")
+
     return redirect("/")
 
 

@@ -89,26 +89,10 @@ function parseNotifications(data) {
 }
 
 function getNotifications() {
-    let i = activeServers.length;
-
     $.each(activeServers, function (serverIndex, serverUrl) {
-        $.ajax({
-            url: serverUrl + "/get_notications",
-            type: "get",
-            timeout: 2000,
-            error: function () {
-                --i;
-            },
-            success: function (data) {
-                // I doubt thsi is correct atm..
-                console.log(`servercount before: ${i}`);
-                i -= Array.isArray(data.results) ? data.results.length : 0;
-                console.log(`servercount after: ${i}`);
-            },
-            complete: function (data) {
-                if (typeof data !== 'undefined' && data.responseJSON)
-                    parseNotifications(data.responseJSON);
-            }
-        });
+        $.getJSON(serverUrl + "/get_notications")
+            .done(function (data) {
+                parseNotifications(data);
+            });
     });
 }

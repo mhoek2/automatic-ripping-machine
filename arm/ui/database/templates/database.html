@@ -2,17 +2,6 @@
 
 {% block content %}
 <div>
-    <!-- Messages -->
-    <div id="message1" class="alert alert-success d-none" role="alert">
-        <h4 class="alert-heading">Job was deleted successfully</h4>
-    </div>
-
-    <div id="message3" class="alert alert-danger d-none" role="alert">
-        <h4 class="alert-heading">There was a problem with your request</h4>
-        <p>There was a problem with your request. Check the ARMui log for more details.</p>
-    </div>
-
-
     <div class="database-header">
         <div class="database-header-info">
             <div class="database-header-icon" aria-hidden="true">
@@ -78,8 +67,16 @@
                 });
             }
 
-            // Fetch the first batch.
-            fetchAllJobs(true);
+            // Initial fetch
+            (async function () {
+                // Fetch the first batch.
+                await fetchAllJobs(true);
+
+                window.setInterval(function () {
+                    const update_only = true;
+                    refreshJobs(update_only);
+                }, {{ armui_cfg['index_refresh'] }});
+            })();
 
             // Fetch more when the user approaches the bottom.
             $(".base_content").off("scroll.database").on("scroll.database", checkDatabaseScroll);

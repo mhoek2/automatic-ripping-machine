@@ -7,13 +7,8 @@
 // Rework this
 let activeServers = [];
 
-const MODEL_ID = "#exampleModal";
-const MSG_1_ID = "#message1 .alert-heading";
-const SEARCH_BOX_ID = "#searchquery";
-const MODAL_TITLE = ".modal-title";
-const CARD_DECK = "#joblist";
-const SUCCESS_CLASS = "alert-success";
-const MODAL_FOOTER = ".modal-footer";
+const JOB_LIST_CONTAINER = "#joblist";
+
 
 // arm/models/job.py
 const JobState = Object.freeze({

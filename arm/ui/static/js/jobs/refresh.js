@@ -130,24 +130,6 @@ function removeJobItem(job) {
 }
 
 /**
- * Function that runs after ajax request completes successfully
- * Will check for inactive jobs and then remove them
- * Then sorts the jobs in ascending order
- */
-function refreshJobsComplete() {
-    $.each(job_refresh.activeJobs, function (index, job) {
-        if (job && !job.active) {
-            removeJobItem(job);
-            job_refresh.activeJobs.splice(index, 1);
-        }
-    });
-
-    $("#joblist .job-card").sort(function (a, b) {
-        return a.id.localeCompare(b.id);
-    }).appendTo("#joblist");
-}
-
-/**
  * Function to check for active jobs from the return from api
  * *** This doesn't work as it should when arm has child links
  * @param data returned data from ajax
@@ -158,16 +140,15 @@ function checkActiveJobs(data, serverIndex) {
     $.each(job_refresh.activeJobs, function (AJIndex) {
         // Turn off job active and re-enable it later if we find it
         job_refresh.activeJobs[AJIndex].active = false;
+
         // Loop through each result and search for our active job
         $.each(data.results, function (_index, job) {
-            console.log(`Looking for ${job_refresh.activeJobs[AJIndex].job_id}!==${serverIndex}_${job.job_id}`)
+
             // We found a match for the current job id and the active job id
             if (job_refresh.activeJobs[AJIndex].job_id === `${serverIndex}_${job.job_id}`) {
-                console.log(`Match found for ${job.job_id}`)
+
                 job_refresh.activeJobs[AJIndex].active = true;
                 return false;
-            } else {
-                console.log(`No match: ${job_refresh.activeJobs[AJIndex].job_id}!==${serverIndex}_${job.job_id}`)
             }
         });
     });
@@ -185,7 +166,6 @@ function refreshJobsSuccess(data, serverIndex, serverUrl, serverCount) {
     checkActiveJobs(data, serverIndex);
 
     $.each(data.results, function (_index, job) {
-        console.log(job.job_id)
         job.job_id = `${serverIndex}_${job.job_id}`;
         job.ripper = (data.arm_name ? data.arm_name : "");
         job.server_url = serverUrl;
@@ -199,7 +179,7 @@ function refreshJobsSuccess(data, serverIndex, serverUrl, serverCount) {
         } 
         else {
             job_refresh.activeJobs.push(job);
-            $("#joblist").append(
+            $(JOB_LIST_CONTAINER).append(
                 addJobItem(job, data.authenticated)
             );
         }
@@ -210,29 +190,46 @@ function refreshJobsSuccess(data, serverIndex, serverUrl, serverCount) {
     return serverCount;
 }
 
+function removeInactiveJobs() {
+	$.each(job_refresh.activeJobs, function (index, job) {
+		if (job && !job.active) {
+			removeJobItem(job);
+			job_refresh.activeJobs.splice(index, 1);
+		}
+	});
+}
+
+function sortJobs() {
+	$(`${JOB_LIST_CONTAINER} .job-card`).sort(function (a, b) {
+		return a.id.localeCompare(b.id);
+	}).appendTo(JOB_LIST_CONTAINER);
+}
+
 /**
  * Function set as an interval to update all jobs from api
  */
-function refreshJobs() {
+function refreshJobs( update_only = false ) {
     let i = activeServers.length;
 
     $.each(activeServers, function (serverIndex, serverUrl) {
-        $.ajax({
-            url: serverUrl + "/json?mode=joblist",
-            type: "get",
-            timeout: 2000,
-            error: function () {
-                --i;
-            },
-            success: function (data) {
+        $.getJSON(serverUrl + "/json?mode=joblist")
+            .done(function (data) {
                 i = refreshJobsSuccess(data, serverIndex, serverUrl, i);
-            },
-            complete: function (data) {
-                refreshJobsComplete();
+            })
+            .fail(function () {
+                --i;
+            })
+            .always(function () {
+                if (!update_only) {
+                    removeInactiveJobs();
+                    sortJobs();
+                }
 
-                // update job details modal
-                $(document).trigger(`arm:modal-update_${ARM.modal.jobs.pipeline.modal}`, {});
-            }
-        });
+                // Update job details modal.
+                $(document).trigger(
+                    `arm:modal-update_${ARM.modal.jobs.pipeline.modal}`,
+                    {}
+                );
+            });
     });
 }

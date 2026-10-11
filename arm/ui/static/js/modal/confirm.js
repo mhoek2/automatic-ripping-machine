@@ -152,16 +152,6 @@ $(function() {
 				}
 
 				ARM.modal.hide(ARM.modal.confirm.modal);
-
-				$("#message1 .alert-heading").text(
-					action.success || "Action completed successfully"
-				);
-
-				$("#message1").removeClass("d-none");
-
-				setTimeout(function() {
-					$("#message1").addClass("d-none");
-				}, 5000);
 			})
 			.fail(function() {
 				body.append(

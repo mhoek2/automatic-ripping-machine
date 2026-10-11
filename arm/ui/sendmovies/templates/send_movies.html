@@ -44,7 +44,7 @@
             var jqxhr = $.get("/json", {mode: "send_item", job: jobId}, function (job) {
                 console.log(job);
                 $("#currentTotal").html("<h3>Sending Job Progress: " + currentJob + "/" + jobItems.length + "</h3>")
-                $("#joblist").prepend(addJobItem(job))
+                $(JOB_LIST_CONTAINER).prepend(addJobItem(job))
                 if (job.error !== "") {
                     $(`#jobId${job.job_id}`).addClass("alert-danger")
                     $(`#jobId${job.job_id}_progress_section`).append("<strong>Failure Reason: </strong>" + job.error)
