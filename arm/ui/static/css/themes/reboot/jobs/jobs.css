@@ -78,6 +78,7 @@
     font-size: .72rem;
     font-weight: 600;
     text-transform: uppercase;
+    cursor:pointer;
 }
 
 .status-dot {

@@ -177,7 +177,9 @@ function renderJob(job, authenticated) {
                         <span class="job-id">${job.job_id}</span>
                     </div>
 
-                    <span class="job-status ${statusClass}" id="jobId${job.job_id}_status">
+                    <span class="job-status ${statusClass}" id="jobId${job.job_id}_status" 
+                            data-modal='jobs_pipeline'
+                            data-jobid="${job.job_id}">
                         <span class="status-dot"></span>
                         <span class="status-text">${job.status}</span>
                     </span>

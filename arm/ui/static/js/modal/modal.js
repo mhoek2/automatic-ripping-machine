@@ -16,6 +16,7 @@ const ARM = {
         // modals
         confirm: {},
         database: {},
+		jobs: {},
 
         // global handlers
         show(selector) {
@@ -56,14 +57,19 @@ const ARM = {
 				return;
 			}
 
+			$(document).trigger(`arm:modal-close_${this.active}`, {});
+
 			this.active = null;
 			$("body").removeClass("modal-open");
 
+			// ??
 			if (restoreFocus && this.lastFocus) {
 				$(this.lastFocus).trigger("focus");
 			}
 
 			this.lastFocus = null;
+
+
 		}
 	}
 };

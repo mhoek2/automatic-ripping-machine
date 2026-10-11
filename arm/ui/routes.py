@@ -220,26 +220,6 @@ from flask import jsonify
 def feeder():
     command = request.args.get("action", "")
 
-    allowed_commands = {
-        "clear",
-        "completed",
-        "success",
-        "fail",
-        "active",
-        "waiting",
-        "ripping",
-        "info",
-        "transcoding",
-        "waiting_transcode",
-    }
-
-    if command not in allowed_commands:
-        return jsonify({
-            "success": False,
-            "error": "Invalid feeder command",
-            "command": command,
-        }), 400
-
     print(f"FEEDER: {command}", flush=True)
 
     result = subprocess.run([

@@ -66,4 +66,8 @@ $(function() {
 			ARM.modal.hide( search.modal );
 		});
 	});
+
+	$(document).on(`arm:modal-close_${search.modal}`, function(e, state) {
+
+	});
 });

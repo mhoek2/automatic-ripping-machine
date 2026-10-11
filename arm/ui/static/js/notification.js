@@ -100,6 +100,7 @@ function getNotifications() {
                 --i;
             },
             success: function (data) {
+                // I doubt thsi is correct atm..
                 console.log(`servercount before: ${i}`);
                 i -= Array.isArray(data.results) ? data.results.length : 0;
                 console.log(`servercount after: ${i}`);

@@ -83,6 +83,8 @@ class JobState(str, enum.Enum):
     TRANSCODE_ACTIVE = "transcoding"
     TRANSCODE_WAITING = "waiting_transcode"
 
+    # Postprocessing states
+    POSTPROCESSING_MOVING = "moving"
 
 JOB_STATUS_FINISHED = {
     JobState.SUCCESS,
@@ -99,7 +101,9 @@ JOB_STATUS_TRANSCODING = {
     JobState.TRANSCODE_ACTIVE,
     JobState.TRANSCODE_WAITING,
 }
-
+JOB_STATUS_POSTPROCESSING = {
+    JobState.POSTPROCESSING_MOVING,
+}
 
 class Job(db.Model):
     """

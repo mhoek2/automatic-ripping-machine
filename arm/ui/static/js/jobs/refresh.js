@@ -7,7 +7,7 @@ const job_refresh = {
  * @param    {Class} job    current job
  * @param    {Class} oldJob    Copy of old job
  */
-function updateProgress(job, oldJob) {
+function updateProgress(job) {
     const section = $(`#jobId${job.job_id}_progress_section`);
     if (!section.length) return;
 
@@ -21,23 +21,10 @@ function updateProgress(job, oldJob) {
         return;
     }
 
-    if (job.stage !== oldJob.stage) {
-        section.find(`#jobId${job.job_id}_stage`).text(job.stage);
-    }
-
-    if (job.progress !== oldJob.progress) {
-        section.find(`#jobId${job.job_id}_percent`).text(`${job.progress}%`);
-    }
-
-    if (job.progress_round !== oldJob.progress_round) {
-        section.find(`#jobId${job.job_id}_progress_bar`)
-            .css("width", `${job.progress_round}%`);
-    }
-
-    if (job.eta !== oldJob.eta) {
-        section.find(`#jobId${job.job_id}_eta`).text(`ETA ${job.eta}`);
-    }
-
+    section.find(`#jobId${job.job_id}_stage`).text(job.stage);
+    section.find(`#jobId${job.job_id}_percent`).text(`${job.progress}%`);
+    section.find(`#jobId${job.job_id}_progress_bar`).css("width", `${job.progress_round}%`);
+    section.find(`#jobId${job.job_id}_eta`).text(`ETA ${job.eta}`);
     section.find(`#jobId${job.job_id}_cur_fps`).text(`${job.cur_fps} FPS`);
     section.find(`#jobId${job.job_id}_avg_fps`).text(`AVG ${job.avg_fps} FPS`);
 }
@@ -93,7 +80,7 @@ function updateContents(item, _job, keyString, itemContents) {
  * @param {Class} oldJob    Old job used to compare against fresh job from api
  * @param {Class} job     Fresh job pulled from api
  */
-function updateJobItem(oldJob, job) {
+function updateJobItem(job) {
     const card = $(`#jobId${job.job_id}`);
     if (!card.length) return;
 
@@ -131,7 +118,7 @@ function updateJobItem(oldJob, job) {
     card.find("[data-field='mainfeature']").text(job.config.MAINFEATURE);
     card.find("[data-field='length']").text(`${job.config.MINLENGTH} – ${job.config.MAXLENGTH}`);
 
-    updateProgress(job, oldJob);
+    updateProgress(job);
 }
 
 /**
@@ -203,14 +190,20 @@ function refreshJobsSuccess(data, serverIndex, serverUrl, serverCount) {
         job.ripper = (data.arm_name ? data.arm_name : "");
         job.server_url = serverUrl;
         job.active = true;
-        if (job_refresh.activeJobs.some(e => e.job_id === job.job_id)) {
-            var oldJob = job_refresh.activeJobs.find(e => e.job_id === job.job_id);
-            job_refresh.activeJobs[job_refresh.activeJobs.indexOf(oldJob)] = job;
-            updateJobItem(oldJob, job);
-        } else {
+
+        const job_index = job_refresh.activeJobs.findIndex( e => e.job_id === job.job_id );
+
+        if (job_index !== -1) {
+            job_refresh.activeJobs[job_index] = job;
+            updateJobItem(job);
+        } 
+        else {
             job_refresh.activeJobs.push(job);
-            $("#joblist").append(addJobItem(job, data.authenticated));
+            $("#joblist").append(
+                addJobItem(job, data.authenticated)
+            );
         }
+
         serverCount--;
     });
 
@@ -236,6 +229,9 @@ function refreshJobs() {
             },
             complete: function (data) {
                 refreshJobsComplete();
+
+                // update job details modal
+                $(document).trigger(`arm:modal-update_${ARM.modal.jobs.pipeline.modal}`, {});
             }
         });
     });

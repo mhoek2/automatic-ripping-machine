@@ -25,6 +25,7 @@ FEEDER_SCENARIOS = {
 	"info": JobState.VIDEO_INFO.value,
 	"transcoding": JobState.TRANSCODE_ACTIVE.value,
 	"waiting_transcode": JobState.TRANSCODE_WAITING.value,
+	"moving": JobState.POSTPROCESSING_MOVING.value,
 }
 
 MOVIES = [

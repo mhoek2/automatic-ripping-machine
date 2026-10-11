@@ -1,4 +1,5 @@
 ARM.modal.confirm = {
+	modal: "#confirm-modal",
 	state: {
 		href: "",
 		activeJob: null,
@@ -74,7 +75,7 @@ ARM.modal.confirm = {
 
 		$("#m-body .arm-modal-loading, #m-body .arm-modal-error").remove();
 
-		ARM.modal.show("#confirm-modal");
+		ARM.modal.show(ARM.modal.confirm.modal);
 	}
 };
 
@@ -97,13 +98,13 @@ $(function() {
 		});
 	});
 
-	$(document).on("click", "#confirm-modal #save-yes", function() {
+	$(document).on("click", `${ARM.modal.confirm.modal} #save-yes`, function() {
 		const state = ARM.modal.confirm.state;
 		const action = ARM.modal.confirm._ACTION[state.actionType];
 
 		if (action?.storageKey) {
 			ARM.storage.set(action.storageKey, true);
-			ARM.modal.hide("#confirm-modal");
+			ARM.modal.hide(ARM.modal.confirm.modal);
 			return;
 		}
 
@@ -150,7 +151,7 @@ $(function() {
 					$(`#jobId${state.activeJob}`).remove();
 				}
 
-				ARM.modal.hide("#confirm-modal");
+				ARM.modal.hide(ARM.modal.confirm.modal);
 
 				$("#message1 .alert-heading").text(
 					action.success || "Action completed successfully"

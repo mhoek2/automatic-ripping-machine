@@ -37,7 +37,10 @@ const JobState = Object.freeze({
 
 	// Transcoding States
 	TRANSCODE_ACTIVE: "transcoding",
-	TRANSCODE_WAITING: "waiting_transcode"
+	TRANSCODE_WAITING: "waiting_transcode",
+
+	// Postprocessing states
+	POSTPROCESSING_MOVING: "moving"
 });
 
 const JOB_STATUS_FINISHED = new Set([
@@ -57,6 +60,21 @@ const JOB_STATUS_TRANSCODING = new Set([
 	JobState.TRANSCODE_ACTIVE,
 	JobState.TRANSCODE_WAITING
 ]);
+
+const JOB_STATUS_POSTPROCESSING = new Set([
+	JobState.POSTPROCESSING_MOVING,
+]);
+
+const JOB_PIPELINE_STAGES = [
+	{ status: "active", label: "Active", icon: "fa-circle-play" },
+	{ status: "waiting", label: "Waiting", icon: "fa-clock" },
+	{ status: "info", label: "Disc Info", icon: "fa-compact-disc" },
+	{ status: "ripping", label: "Ripping", icon: "fa-download" },
+	{ status: "waiting_transcode", label: "Waiting to transcode", icon: "fa-hourglass-half" },
+	{ status: "transcoding", label: "Transcoding", icon: "fa-film" },
+	{ status: "moving", label: "Moving files", icon: "fa-upload" },
+	{ status: "finished", label: "Finished", icon: "fa-flag-checkered" }
+];
 
 /**
  * Function to collect all child servers from arm.yaml config into links on the homepage

@@ -17,6 +17,15 @@ from arm.ui import app, db, constants  # noqa E402
 from arm.models.job import JobState  # noqa E402
 
 
+def _job_update_status(job, status) -> bool:
+    return utils.database_updater({'status': status}, job)
+    #job.status = status
+    #db.session.commit()
+
+def _job_notificaton(job, message):
+    utils.notify(job, constants.NOTIFY_TITLE, message)
+
+# here is main rip pipelnie..
 def rip_visual_media(have_dupes, job, logfile, protection):
     """
     Main ripping function for dvd and Blu-rays, movies or series
@@ -29,6 +38,7 @@ def rip_visual_media(have_dupes, job, logfile, protection):
     """
     # Fix the sub-folder type - (movie|tv|unknown)
     type_sub_folder = utils.convert_job_type(job.video_type)
+    
     # Fix the job title - Title (Year) | Title
     job_title = utils.fix_job_title(job)
 
@@ -38,37 +48,46 @@ def rip_visual_media(have_dupes, job, logfile, protection):
 
     # Check folders for already ripped jobs -> creates folder
     transcode_out_path = utils.check_for_dupe_folder(have_dupes, transcode_out_path, job)
+    
     # If dupes rips is disabled this might kill the run
     final_directory = utils.check_for_dupe_folder(have_dupes, final_directory, job)
 
     # Update the job.path with the final directory
     utils.database_updater({'path': final_directory}, job)
+    
     # Save poster image from disc if enabled
     utils.save_disc_poster(final_directory, job)
 
     logging.info(f"Processing files to: {transcode_out_path}")
     makemkv_out_path = None
     transcode_in_path = str(job.devpath)
+    
     # Do we need to use MakeMKV - Blu-rays, protected dvd's, and dvd with mainfeature off
     use_make_mkv = rip_with_mkv(job, protection)
     logging.debug(f"Using MakeMKV: [{use_make_mkv}]")
     if use_make_mkv:
         logging.info("************* Ripping disc with MakeMKV *************")
-        # Run MakeMKV and get path to output
-        job.status = JobState.VIDEO_RIPPING.value
-        db.session.commit()
+        _job_update_status(JobState.VIDEO_RIPPING.value)
+
         try:
             makemkv_out_path = makemkv.makemkv(job)
         except Exception as mkv_error:  # noqa: E722
             raise utils.RipperException("Error while running MakeMKV") from mkv_error
 
+        # notify user
         if job.config.NOTIFY_RIP:
-            utils.notify(job, constants.NOTIFY_TITLE, f"{job.title} rip complete. Starting transcode. ")
+            _job_notificaton(job, f"{job.title} {constants.RIPPING_COMPLETE}")
+
         logging.info("************* Ripping with MakeMKV completed *************")
         # point HB/FFMPEG to the path MakeMKV ripped to
         transcode_in_path = makemkv_out_path
+
+
     # Begin transcoding section - only transcode if skip_transcode is false
-    start_transcode(job, logfile, transcode_in_path, transcode_out_path, protection)
+    if job.config.SKIP_TRANSCODE:
+        logging.info("Transcoding is disabled, skipping transcode")
+    else:
+        start_transcode(job, logfile, transcode_in_path, transcode_out_path, protection)
 
     # --------------- POST PROCESSING ---------------
     # If ripped with MakeMKV remove the 'out' folder and set the raw as the output
@@ -88,17 +107,23 @@ def rip_visual_media(have_dupes, job, logfile, protection):
         utils.database_updater({'path': final_directory}, job)
 
     # Move to final folder
+    _job_update_status(JobState.POSTPROCESSING_MOVING.value)
     move_files_post(transcode_out_path, job)
-    # Movie the movie poster if we have one - no longer needed, now handled by save_movie_poster
+    
+    # Movie the movie poster if we have one - no longer needed, now handled by save_movie_poster   
     utils.move_movie_poster(final_directory, transcode_out_path)
+    
     # Scan Emby if arm.yaml requires it
     utils.scan_emby()
+    
     # Set permissions if arm.yaml requires it
     utils.set_permissions(final_directory)
+    
     # If set in the arm.yaml remove the raw files
     utils.delete_raw_files([transcode_in_path, transcode_out_path, makemkv_out_path])
-    # report errors if any
-    notify_exit(job)
+    
+    # finish job, and report errors if any
+    finish_job(job)
     logging.info("************* ARM processing complete *************")
 
 
@@ -113,77 +138,93 @@ def start_transcode(job, logfile, raw_in_path, transcode_out_path, protection):
     :param protection: If disc has 99 track protection
     :return: None
     """
-    if job.config.SKIP_TRANSCODE:
-        logging.info("Transcoding is disabled, skipping transcode")
-        return None
-
     # Update db with transcoding status
-    utils.database_updater({'status': "transcoding"}, job)
+    _job_update_status(job, JobState.TRANSCODE_ACTIVE.value)
+
+
+    finished : bool = False
+
     # Use FFMPEG or HandBrake depending on arm.yaml setting
     if job.config.USE_FFMPEG:
         logging.info("************* Starting Transcode With FFMPEG *************")
+        
         # If it was ripped with MakeMKV or we are doing a mkv rip then run the ffmpeg_mkv function
         if rip_with_mkv(job, protection) and job.config.RIPMETHOD == "mkv":
             logging.debug(f"ffmpeg_mkv: {raw_in_path}, {transcode_out_path}")
             ffmpeg.ffmpeg_mkv(raw_in_path, transcode_out_path, job)
+        
         # Otherwise if it is a movie and mainfeature is enabled then run ffmpeg_main_feature
         elif job.video_type == "movie" and job.config.MAINFEATURE and job.hasnicetitle:
             logging.debug(f"ffmpeg_main_feature: {raw_in_path}, {transcode_out_path}")
             ffmpeg.ffmpeg_main_feature(raw_in_path, transcode_out_path, job)
             db.session.commit()
+        
         # Finally if it is a series or mainfeature is disabled run ffmpeg_all to transcode all tracks
         else:
             logging.debug(f"ffmpeg_all: {raw_in_path}, {transcode_out_path}")
             ffmpeg.ffmpeg_all(raw_in_path, transcode_out_path, job)
             db.session.commit()
         logging.info("************* Finished Transcode With FFMPEG *************")
-        # After transcoding update db status back to active
-        utils.database_updater({'status': "active"}, job)
-        return True
+
+        finished = True
 
     elif not job.config.USE_FFMPEG:
         logging.info("************* Starting Transcode With HandBrake *************")
+        
         # If it was ripped with MakeMKV or we are doing a mkv rip then run the handbrake_mkv function
         if rip_with_mkv(job, protection) and job.config.RIPMETHOD == "mkv":
             logging.debug(f"handbrake_mkv: {raw_in_path}, {transcode_out_path}, {logfile}")
             handbrake.handbrake_mkv(raw_in_path, transcode_out_path, logfile, job)
+        
         # Otherwise if it is a movie and mainfeature is enabled then run handbrake_main_feature
         elif job.video_type == "movie" and job.config.MAINFEATURE and job.hasnicetitle:
             logging.debug(f"handbrake_main_feature: {raw_in_path}, {transcode_out_path}, {logfile}")
             handbrake.handbrake_main_feature(raw_in_path, transcode_out_path, logfile, job)
             db.session.commit()
+        
         # Finally if it is a series or mainfeature is disabled run handbrake_all to transcode all tracks
         else:
             logging.debug(f"handbrake_all: {raw_in_path}, {transcode_out_path}, {logfile}")
             handbrake.handbrake_all(raw_in_path, transcode_out_path, logfile, job)
             db.session.commit()
         logging.info("************* Finished Transcode With HandBrake *************")
+
+        finished = True
+
+    if finished:
+        if job.config.NOTIFY_TRANSCODE:
+            _job_notificaton(job, f"{job.title} {constants.TRANSCODE_COMPLETE}")
+            
         # After transcoding update db status back to active
-        utils.database_updater({'status': "active"}, job)
-        return True
+        _job_update_status(job, JobState.IDLE.value) # why ??
+
     else:
         logging.info("Invalid transcoding option selected. Skipping transcode."
                      "Set USE_FFMPEG with valid boolean value fix error")
+
+        if job.config.NOTIFY_TRANSCODE:
+            _job_notificaton(job, f"{job.title} {constants.TRANSCODE_OPTION_FAILED}")
+            
         return None
 
-
-def notify_exit(job):
+def finish_job(job):
     """
     Notify post transcoding - ARM finished\n
     Includes any errors
     :param job: current job
     :return: None
     """
-    if job.config.NOTIFY_TRANSCODE:
-        if job.errors:
-            errlist = ', '.join(job.errors)
-            utils.notify(job, constants.NOTIFY_TITLE,
-                         f" {job.title} processing completed with errors. "
-                         f"Title(s) {errlist} failed to complete. ")
-            logging.info(f"Transcoding completed with errors.  Title(s) {errlist} failed to complete. ")
-        else:
-            utils.notify(job, constants.NOTIFY_TITLE, f"{job.title} {constants.PROCESS_COMPLETE}")
+    if job.errors:
+        errlist = ', '.join(job.errors)
+        logging.info(f"Job completed with errors.  Title(s) {errlist} failed to complete. ")
 
+        _job_notificaton(job,
+                        f" {job.title} processing completed with errors. "
+                        f"Title(s) {errlist} failed to complete. "
+            )
+        return
+
+    _job_notificaton(job, f"{job.title} {constants.PROCESS_COMPLETE}")
 
 def move_files_post(transcode_out_path, job):
     """
