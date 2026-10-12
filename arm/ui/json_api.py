@@ -25,7 +25,7 @@ from arm.ui.utils import job_id_validator, database_updater, authenticated_state
 from arm.ui.settings import DriveUtils as drive_utils # noqa E402
 
 
-def get_notifications():
+def get_unseen_notifications():
     """Get all current notifications"""
     all_notification = Notifications.query.filter_by(seen=False)
     notification = [a.get_d() for a in all_notification]

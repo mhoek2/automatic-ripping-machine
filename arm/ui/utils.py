@@ -303,22 +303,31 @@ def make_dir(path):
 
 def get_info(directory):
     """
-    Used to read stats from files
-    -Used for view logs page
-    :param directory:
-    :return: list containing a list with each file's stats
+    Used to read stats from .log files.
+    Used for the view logs page.
     """
     file_list = []
+
     for i in os.listdir(directory):
-        if os.path.isfile(os.path.join(directory, i)):
-            file_stats = os.stat(os.path.join(directory, i))
-            file_size = os.path.getsize(os.path.join(directory, i))
-            file_size = round((file_size / 1024), 1)
-            file_size = f"{file_size:,.1f}"
-            create_time = strftime(cfg.arm_config['DATE_FORMAT'], localtime(file_stats.st_ctime))
-            access_time = strftime(cfg.arm_config['DATE_FORMAT'], localtime(file_stats.st_atime))
-            # [file,most_recent_access,created, file_size]
+        full_path = os.path.join(directory, i)
+
+        if os.path.isfile(full_path) and i.lower().endswith(".log"):
+            file_stats = os.stat(full_path)
+            file_size = os.path.getsize(full_path)
+            file_size = f"{round(file_size / 1024, 1):,.1f}"
+
+            create_time = strftime(
+                cfg.arm_config['DATE_FORMAT'],
+                localtime(file_stats.st_ctime)
+            )
+            access_time = strftime(
+                cfg.arm_config['DATE_FORMAT'],
+                localtime(file_stats.st_atime)
+            )
+
+            # [file, most_recent_access, created, file_size]
             file_list.append([i, access_time, create_time, file_size])
+
     return file_list
 
 
@@ -362,41 +371,53 @@ def generate_comments():
     return comments
 
 
-def generate_full_log(full_path):
-    """
-    Gets/tails all lines from log file
-    :param full_path: full path to job logfile
-    :return: None
-    """
-    try:
-        with open(full_path) as read_log_file:
-            while True:
-                yield read_log_file.read()
-                sleep(1)
-    except IOError:
-        try:
-            with open(full_path, encoding="utf8", errors='ignore') as read_log_file:
-                while True:
-                    yield read_log_file.read()
-                    sleep(1)
-        except FileNotFoundError as error:
-            raise FileNotFoundError("Not found with utf8 encoding") from error
+# def generate_full_log(full_path):
+#     """
+#     Gets/tails all lines from log file
+#     :param full_path: full path to job logfile
+#     :return: None
+#     """
+#     try:
+#         with open(full_path) as read_log_file:
+#             while True:
+#                 yield read_log_file.read()
+#                 sleep(1)
+#     except IOError:
+#         try:
+#             with open(full_path, encoding="utf8", errors='ignore') as read_log_file:
+#                 while True:
+#                     yield read_log_file.read()
+#                     sleep(1)
+#         except FileNotFoundError as error:
+#             raise FileNotFoundError("Not found with utf8 encoding") from error
 
 
+# def generate_arm_cat(full_path):
+#     """
+#     Read from log file and only output ARM: logs
+#     :param full_path: full path to job logfile
+#     :return: None
+#     """
+#     read_log_file = open(full_path)
+#     while True:
+#         new = read_log_file.readline()
+#         if new:
+#             if "ARM:" in new:
+#                 yield new
+#             else:
+#                 sleep(1)
 def generate_arm_cat(full_path):
     """
-    Read from log file and only output ARM: logs
+    Read a log file and output only lines containing ARM:.
     :param full_path: full path to job logfile
-    :return: None
     """
-    read_log_file = open(full_path)
-    while True:
-        new = read_log_file.readline()
-        if new:
-            if "ARM:" in new:
-                yield new
-            else:
-                sleep(1)
+    try:
+        with open(full_path, encoding="utf8", errors="ignore") as log_file:
+            for line in log_file:
+                if "ARM:" in line:
+                    yield line
+    except FileNotFoundError:
+        raise
 
 
 def setup_database():
@@ -983,5 +1004,7 @@ def authenticated_state() -> bool:
     else:
         if current_user.is_authenticated:
             authenticated = True
+
+    #app.logger.debug(f'Authentication state: {authenticated}')
 
     return authenticated

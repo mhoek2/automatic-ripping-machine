@@ -14,12 +14,6 @@
 		</li>
 
 		{% if authenticated %}
-		<li id="navhistory">
-			<a class="nav-link" href="history" data-tooltip="History">
-				<i class="fa-solid fa-clock-rotate-left"></i>
-			</a>
-		</li>
-
 		<li id="navviewlogs">
 			<a class="nav-link" href="listlogs" data-tooltip="View Logs">
 				<i class="fa-solid fa-file-lines"></i>
@@ -38,14 +32,8 @@
 			</a>
 		</li>
 
-		<li id="navsendmovies">
-			<a class="nav-link" href="send_movies" data-tooltip="Send DVDs">
-				<i class="fa-solid fa-paper-plane"></i>
-			</a>
-		</li>
-
-		<li id="notificationview">
-			<a class="nav-link" href="notificationview" data-tooltip="Notifications">
+		<li id="navnotification">
+			<a class="nav-link" href="notifications" data-tooltip="Notifications">
 				<i class="fa-solid fa-bell"></i>
 				{% if notify_count %}
 					<span class="notification-badge">{{ notify_count }}</span>

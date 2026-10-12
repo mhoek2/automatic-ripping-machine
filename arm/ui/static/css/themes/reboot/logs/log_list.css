@@ -1,0 +1,320 @@
+.logs-count {
+    flex-shrink: 0;
+    padding: 6px 12px;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    background: var(--color-surface);
+    color: var(--color-text-muted);
+    font-size: .8rem;
+    font-weight: 600;
+}
+
+.logs-panel {
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    background: var(--color-surface);
+    box-shadow: var(--shadow-card);
+}
+
+.logs-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.logs-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: .9rem;
+}
+
+.logs-table thead {
+    background: var(--color-surface-raised);
+}
+
+.logs-table th,
+.logs-table td {
+    padding: 15px 18px;
+    border-bottom: 1px solid var(--color-border);
+    vertical-align: middle;
+}
+
+.logs-table thead th {
+    color: var(--color-text-muted);
+    font-size: .75rem;
+    font-weight: 650;
+    letter-spacing: .035em;
+    white-space: nowrap;
+}
+
+.logs-table tbody tr:last-child th,
+.logs-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.logs-table tbody tr {
+    transition: background .15s ease;
+}
+
+.logs-table tbody tr:hover {
+    background: var(--color-surface-hover);
+}
+
+.logs-table tbody th {
+    font-weight: 500;
+}
+
+.logs-sort {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    letter-spacing: inherit;
+    cursor: pointer;
+}
+
+.logs-sort:hover {
+    color: var(--color-text);
+}
+
+.logs-sort i {
+    opacity: .55;
+}
+
+.logs-file {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 180px;
+    max-width: 340px;
+}
+
+.logs-file > i {
+    flex-shrink: 0;
+    color: var(--color-text-muted);
+    font-size: 1rem;
+}
+
+.logs-file span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.logs-size {
+    display: inline-block;
+    padding: 4px 8px;
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    background: var(--color-surface-raised);
+    font-size: .8rem;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.logs-actions-heading {
+    text-align: right;
+}
+
+.logs-actions {
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.logs-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 7px 10px;
+    border: 1px solid var(--color-border);
+    border-radius: 7px;
+    background: var(--color-control);
+    color: var(--color-text);
+    font-size: .8rem;
+    font-weight: 550;
+    text-decoration: none;
+    white-space: nowrap;
+    transition:
+        background .15s ease,
+        border-color .15s ease,
+        color .15s ease;
+}
+
+.logs-action:hover {
+    border-color: var(--color-accent);
+    background: var(--color-surface-hover);
+    color: var(--color-accent);
+    text-decoration: none;
+}
+
+.logs-action:focus-visible,
+.logs-sort:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+}
+
+.logs-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 64px 24px;
+    text-align: center;
+}
+
+.logs-empty > i {
+    margin-bottom: 18px;
+    color: var(--color-text-subtle);
+    font-size: 2.5rem;
+}
+
+.logs-empty h2 {
+    margin: 0 0 8px;
+    font-size: 1.1rem;
+}
+
+.logs-empty p {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: .9rem;
+}
+
+.logs-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin-top: 3em;
+}
+
+.logs-footer > i {
+    margin-bottom: 0.25rem;
+}
+
+.logs-footer > i {
+    margin-top: 4px;
+    color: var(--color-info);
+}
+
+/* Mobile: turn each logfile into a compact card. */
+@media (max-width: 700px) {
+    .logs-count {
+        padding: 5px 9px;
+        font-size: .75rem;
+    }
+
+    .logs-table-wrap {
+        overflow: visible;
+    }
+
+    .logs-table,
+    .logs-table tbody {
+        display: block;
+        width: 100%;
+    }
+
+    .logs-table thead {
+        display: none;
+    }
+
+    .logs-table tbody {
+        padding: 10px;
+    }
+
+    .logs-table tbody tr {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 14px 12px;
+        margin-bottom: 10px;
+        padding: 16px;
+        border: 1px solid var(--color-border);
+        border-radius: 10px;
+        background: var(--color-surface);
+    }
+
+    .logs-table tbody tr:last-child {
+        border-bottom: 1px solid var(--color-border);
+    }
+
+    .logs-table tbody tr:hover {
+        background: var(--color-surface-hover);
+    }
+
+    .logs-table tbody th,
+    .logs-table tbody td {
+        display: block;
+        min-width: 0;
+        padding: 0;
+        border: 0;
+        text-align: left;
+    }
+
+    .logs-table tbody th[data-label="Log file"] {
+        grid-column: 1 / -1;
+    }
+
+    .logs-file {
+        max-width: 100%;
+        min-width: 0;
+        font-size: .95rem;
+        font-weight: 650;
+    }
+
+    .logs-file span {
+        overflow-wrap: anywhere;
+        white-space: normal;
+    }
+
+    .logs-table td::before {
+        display: block;
+        margin-bottom: 5px;
+        color: var(--color-text-muted);
+        content: attr(data-label);
+        font-size: .72rem;
+        font-weight: 600;
+    }
+
+    .logs-table td[data-label="Actions"] {
+        grid-column: 1 / -1;
+        padding-top: 12px;
+        border-top: 1px solid var(--color-border);
+    }
+
+    .logs-table td[data-label="Actions"]::before {
+        margin-bottom: 10px;
+    }
+
+    .logs-actions {
+        justify-content: flex-start;
+        gap: 8px;
+    }
+
+    .logs-action {
+        flex: 1 1 auto;
+        padding: 9px 10px;
+    }
+
+    .logs-footer {
+        font-size: .78rem;
+    }
+}
+
+@media (max-width: 380px) {
+    .logs-table tbody tr {
+        gap: 14px 8px;
+        padding: 12px;
+    }
+
+    .logs-action {
+        gap: 5px;
+        padding: 8px 7px;
+        font-size: .75rem;
+    }
+}

@@ -52,8 +52,9 @@ def home():
         dbform = DBUpdate(request.form)
         app.logger.debug(f"Error with ARM DB: [{db_update['db_current']}]-[{db_update['db_exists']}]")
         return render_template("support/databaseupdate.html",
-                               db_update=db_update,
-                               dbform=dbform)
+            db_update   = db_update,
+            dbform      = dbform
+        )
 
     # Get system details from Server Info and Config
     serverstats = get_server_stats();
@@ -76,20 +77,16 @@ def home():
     else:
         jobs = {}
 
-    # Set authentication state for index
-    authenticated = ui_utils.authenticated_state()
-
-    app.logger.debug(f'Authentication state: {authenticated}')
-
     return render_template("index.html",
-                           authenticated=authenticated,
-                           jobs=jobs,
-                           children=cfg.arm_config['ARM_CHILDREN'],
-                           server=server, 
-                           serverutil=serverutil,
-                           serverstats=serverstats,
-                           arm_path=arm_path, 
-                           media_path=media_path)
+        authenticated    = ui_utils.authenticated_state(),
+        jobs             = jobs,
+        children         = cfg.arm_config['ARM_CHILDREN'],
+        server           = server, 
+        serverutil       = serverutil,
+        serverstats      = serverstats,
+        arm_path         = arm_path, 
+        media_path       = media_path
+    )
 
 
 @app.route('/error')
@@ -98,7 +95,10 @@ def was_error(error):
     Catch all error page
     :return: Error page
     """
-    return render_template(constants.ERROR_PAGE, title='error', error=error)
+    return render_template(constants.ERROR_PAGE, 
+        title   = 'error',
+        error   = error
+    )
 
 
 @app.errorhandler(Exception)
@@ -123,7 +123,9 @@ def handle_exception(sent_error):
                                   status=200,
                                   mimetype=constants.JSON_TYPE)
 
-    return render_template(constants.ERROR_PAGE, error=sent_error), 500
+    return render_template(constants.ERROR_PAGE, 
+        error = sent_error
+    ), 500
 
 
 @app.route('/setup')
@@ -207,7 +209,7 @@ def unauthorized():
 def get_notications():
     return jsonify(
         success = True,
-        notes   = json_api.get_notifications(),
+        notes   = json_api.get_unseen_notifications(),
     ) 
     
 #

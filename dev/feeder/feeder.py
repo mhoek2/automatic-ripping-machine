@@ -14,6 +14,9 @@ from arm.models.track import Track
 from arm.models.system_drives import SystemDrives, CDS
 from arm.models.config import Config
 
+import re
+from time import strftime
+
 FEEDER_SCENARIOS = {
 	"clear": None,
 	"completed": JobState.SUCCESS.value,
@@ -87,6 +90,70 @@ MOVIES = [
     },
 ]
 
+def make_logfile(movie, status):
+    log_dir = Path("/home/arm/logs")
+    log_dir.mkdir(parents=True, exist_ok=True)
+
+    # Remove filesystem-invalid characters and replace spaces with underscores.
+    safe_title = re.sub(r'[<>:"/\\|?*]', "", movie["title"])
+    safe_title = re.sub(r"\s+", "_", safe_title).strip(" .")
+
+    log_path = log_dir / f"{safe_title}.log"
+    now = datetime.now()
+
+    entries = [
+        (0, "INFO", "ARM: Starting Automatic Ripping Machine"),
+        (1, "INFO", f"ARM: Job initialized for {movie['title']} ({movie['year']})"),
+        (2, "INFO", "ARM: Detected virtual Blu-ray drive at /dev/sr1"),
+        (3, "INFO", "ARM: Disc type: Blu-ray"),
+        (4, "INFO", "ARM: Reading disc information"),
+        (5, "INFO", f"ARM: Detected title: {movie['title']}"),
+        (6, "INFO", f"ARM: IMDb ID: {movie['imdb_id']}"),
+        (7, "INFO", "ARM: Found 3 titles on disc"),
+        (8, "INFO", "ARM: Selecting main feature"),
+        (10, "INFO", "ARM: Starting title identification"),
+        (12, "INFO", "ARM: Title identification completed"),
+        (14, "INFO", "ARM: Preparing output directory"),
+        (16, "INFO", "ARM: Starting disc rip"),
+        (20, "INFO", "HandBrake: Reading source"),
+        (25, "INFO", "HandBrake: Encoding title 1 of 3"),
+        (30, "INFO", "HandBrake: Encoding: 12.5%"),
+        (35, "INFO", "HandBrake: Encoding: 37.5%"),
+        (40, "INFO", "HandBrake: Encoding: 62.5%"),
+        (45, "INFO", "HandBrake: Encoding: 100%"),
+        (47, "INFO", "ARM: Main feature rip completed"),
+        (49, "INFO", "ARM: Processing bonus features"),
+        (51, "INFO", "ARM: Bonus features completed"),
+    ]
+
+    if status == JobState.FAILURE.value:
+        entries.extend([
+            (53, "ERROR", "ARM: Failed to complete disc processing"),
+            (54, "ERROR", "ARM: Mock ripping error"),
+            (55, "ERROR", "ARM: Job failed"),
+        ])
+    elif status == JobState.SUCCESS.value:
+        entries.extend([
+            (53, "INFO", "ARM: Moving completed files"),
+            (55, "INFO", "ARM: Output files verified"),
+            (57, "INFO", "ARM: Ejecting disc"),
+            (59, "INFO", "ARM: Job completed successfully"),
+        ])
+    else:
+        entries.extend([
+            (53, "INFO", f"ARM: Current job status: {status}"),
+            (54, "INFO", "ARM: Waiting for next processing stage"),
+        ])
+
+    with log_path.open("w", encoding="utf-8") as log_file:
+        for seconds, level, message in entries:
+            timestamp = (now + timedelta(seconds=seconds)).strftime(
+                "%Y-%m-%d %H:%M:%S"
+            )
+            log_file.write(f"{timestamp} [{level}] {message}\n")
+
+    return str(log_path)
+
 def make_drive():
     drive = SystemDrives()
     drive.serial_id = "MOCK-MATSHITA-SR1"
@@ -126,7 +193,7 @@ def make_config(job_id):
     return Config(values, job_id)
 
 
-def make_job(movie, status=JobState.SUCCESS.value):
+def make_job(movie, status=JobState.SUCCESS.value, logfile=None):
     # Bypass ARM's Job.__init__() because it probes real hardware.
     # class_manager.new_instance() still creates a properly
     # SQLAlchemy-instrumented instance.
@@ -140,7 +207,7 @@ def make_job(movie, status=JobState.SUCCESS.value):
 
     job.arm_version = "dev"
     job.crc_id = f"MOCK-{movie['imdb_id']}"
-    job.logfile = "/home/arm/log/mock-bluray.log"
+    job.logfile = logfile
     job.start_time = now - timedelta(minutes=42)
     job.stop_time = now if finished else None
     job.job_length = "00:42:00"
@@ -260,11 +327,13 @@ def clear():
 def populate(status):
     movie = random.choice(MOVIES)
 
+    logfile = make_logfile(movie, status)
+
     drive = make_drive()
     db.session.add(drive)
     db.session.flush()
 
-    job = make_job(movie, status)
+    job = make_job(movie, status, logfile)
     db.session.add(job)
     db.session.flush()
 
@@ -293,7 +362,7 @@ def populate(status):
     print(f"Created drive: {drive.mount}")
     print(f"Drive tray: {drive.tray.name}")
     print(f"Created {len(tracks)} tracks")
-
+    print(f"Created logfile: {logfile}")
 
 
 def main():

@@ -35,12 +35,10 @@ def view_database():
 
     session["page_title"] = "Database"
 
-    authenticated = ui_utils.authenticated_state()
-
     return render_template('database.html',
-                            authenticated   = authenticated,
-                            jobs            = [],
-                            date_format     = cfg.arm_config['DATE_FORMAT']
+        authenticated   = ui_utils.authenticated_state(),
+        jobs            = [],
+        date_format     = cfg.arm_config['DATE_FORMAT']
     )
 
 @route_database.route('/database/jobs')
@@ -50,11 +48,11 @@ def load_database_jobs():
 
     if not os.path.isfile(cfg.arm_config['DBFILE']):
         return jsonify(
-            success=False,
-            results={},
-            has_more=False,
-            error="Database file does not exist",
-            authenticated=ui_utils.authenticated_state()
+            success         = False,
+            results         = {},
+            has_more        = False,
+            error           = "Database file does not exist",
+            authenticated   = ui_utils.authenticated_state()
         ), 500
 
     armui_cfg = ui_utils.arm_db_cfg()

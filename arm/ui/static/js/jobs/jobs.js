@@ -101,14 +101,14 @@ function renderJobActions(job, ids, authenticated) {
     actions += `
 			<a class="icon-button"
                 target="_blank",
-				href="logs?logfile=${job.logfile}&mode=full"
+				href="logs?logfile=${job.logfile}&mode=tail"
 				data-tooltip="View Log">
 				<i class="fa-solid fa-file-lines"></i>
 			</a>
     `;
 
     // title actions
-	if (!JOB_STATUS_FINISHED.has(job.status) && job.video_type !== "Music") {
+	if (!JOB_STATUS_POSTPROCESSING.has(job.status) && !JOB_STATUS_FINISHED.has(job.status) && job.video_type !== "Music") {
 		actions += `
 			<a class="icon-button"
 				href="titlesearch?job_id=${ids.jobId}"

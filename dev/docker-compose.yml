@@ -15,6 +15,7 @@ services:
       - ./config:/etc/arm/config
       - ./data:/home/arm/db
       - ./media:/home/arm/media
+      - ./logs:/home/arm/logs
     environment:
       TZ: Europe/Amsterdam
     command: python3 /opt/arm/arm/runui.py

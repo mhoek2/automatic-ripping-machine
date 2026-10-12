@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}Notifications{% endblock %}
+
+{% block nav %}{{ super() }}{% endblock %}
+
+{% block content %}
+<div class="notifications-page">
+	{% if notifications_new is not none %}
+		<div class="notifications-header">
+			<span>Notifications</span>
+			<a href="notification_clearall">Clear All</a>
+		</div>
+
+		<div class="notifications-list">
+			{% for notification in notifications_new %}
+			<div class="notification-card">
+				<div class="notification-content">
+					<div class="notification-title">{{ notification.title }}</div>
+					<time class="notification-time" 
+						title="{{ notification.trigger_time.strftime('%A, %d %B %Y at %H:%M:%S') }}"
+						data-timestamp="{{ (notification.trigger_time.timestamp() * 1000)|int }}" 
+					></time>
+					<div class="notification-message">{{ notification.message }}</div>
+				</div>
+				<button type="button" class="notification-dismiss" data-notification-id="{{ notification.id }}">
+					<i class="fa-solid fa-xmark" aria-hidden="true"></i> Dismiss
+				</button>
+			</div>
+			{% endfor %}
+		</div>
+	{% endif %}
+</div>
+{% endblock %}
+
+{% block js %}
+    {{ super() }}
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            activeTab("notifications");
+
+			function checkEmpty(){
+				if ($(".notification-card").length === 0) {
+					$(".notifications-page").html(`
+						<div class="notification-empty">
+							No new notifications
+						</div>
+					`);
+				}
+			}
+
+			$(document).on("click", ".notification-dismiss", function () {
+				const notificationId = $(this).data("notification-id");
+				const item = $(this).closest(".notification-card");
+
+				$.getJSON(`/notificationdismiss?id=${encodeURIComponent(notificationId)}`)
+					.done(function (data) {
+						console.log(data)
+						if (data.success) {
+							item.remove();
+
+							checkEmpty();
+						}
+					});
+			});
+
+			const relativeTime = new Intl.RelativeTimeFormat("en", {
+				numeric: "auto"
+			});
+
+			function setNotificationTimes() {
+				$(".notification-time[data-timestamp]").each(function () {
+					const timestamp = Number($(this).attr("data-timestamp"));
+					$(this).text(formatRelativeTime(timestamp));
+				});
+			}
+
+			setNotificationTimes();
+			window.setInterval(setNotificationTimes, 60 * 1000);
+
+			checkEmpty();
+        });
+    </script>
+{% endblock %}

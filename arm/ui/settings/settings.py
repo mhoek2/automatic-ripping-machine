@@ -159,30 +159,27 @@ def settings():
 
     session["page_title"] = "Settings"
 
-
-    authenticated = ui_utils.authenticated_state()
-    app.logger.debug(f'Authentication state: {authenticated}')
-
     return render_template("settings/settings.html",
-                           authenticated=authenticated,
-                           settings=cfg.arm_config,
-                           settings_groups=cfg.ARM_SETTINGS_GROUPS,
-                           ui_settings=armui_cfg,
-                           serverstats=serverstats,
-                           apprise_cfg=cfg.apprise_config,
-                           apprise_groups=cfg.APPRISE_SETTINGS_GROUPS,
-                           form=form,
-                           jsoncomments=comments,
-                           abcde_cfg=cfg.abcde_config,
-                           server=server,
-                           serverutil=serverutil,
-                           arm_path=arm_path,
-                           media_path=media_path,
-                           drives=drives,
-                           form_drive=form_drive,
-                           ripper_read_only=is_read_only(cfg.arm_config_path),
-                           apprise_read_only=is_read_only(cfg.apprise_config_path),
-                           abcde_read_only=is_read_only(cfg.abcde_config_path))
+        authenticated        = ui_utils.authenticated_state(),
+        settings             = cfg.arm_config,
+        settings_groups      = cfg.ARM_SETTINGS_GROUPS,
+        ui_settings          = armui_cfg,
+        serverstats          = serverstats,
+        apprise_cfg          = cfg.apprise_config,
+        apprise_groups       = cfg.APPRISE_SETTINGS_GROUPS,
+        form                 = form,
+        jsoncomments         = comments,
+        abcde_cfg            = cfg.abcde_config,
+        server               = server,
+        serverutil           = serverutil,
+        arm_path             = arm_path,
+        media_path           = media_path,
+        drives               = drives,
+        form_drive           = form_drive,
+        ripper_read_only     = is_read_only(cfg.arm_config_path),
+        apprise_read_only   = is_read_only(cfg.apprise_config_path),
+        abcde_read_only     = is_read_only(cfg.abcde_config_path)
+      )
 
 
 def check_hw_transcode_support():

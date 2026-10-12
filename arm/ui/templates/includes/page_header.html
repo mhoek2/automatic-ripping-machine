@@ -1,0 +1,22 @@
+<div class="page-header">
+    <div class="page-header-info">
+        <div class="page-header-icon" aria-hidden="true">
+            <i class="{{ header_icon }}"></i>
+        </div>
+
+        <div>
+            <h1 class="page-header-title">{{ header_title }}</h1>
+            {% if header_description %}
+                <p class="page-header-description">
+                    {{ header_description }}
+                </p>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if header_actions %}
+        <div class="page-header-actions">
+            {{ header_actions | safe }}
+        </div>
+    {% endif %}
+</div>

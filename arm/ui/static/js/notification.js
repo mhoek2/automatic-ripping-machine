@@ -1,4 +1,4 @@
-function addNotification(title, body, notificationId) {
+function addNotification(title, body, notificationId, timestamp = null) {
 	const timeout = Number.parseInt(getNotifyTimeout(), 10);
 	const delay = Number.isFinite(timeout) ? Math.max(0, timeout) : 15000;
 
@@ -9,7 +9,7 @@ function addNotification(title, body, notificationId) {
                     <i class="fa-solid fa-check" aria-hidden="true"></i>
                 </span>
                 <strong class="notification-title"></strong>
-                <small class="notification-time">just now</small>
+                <small class="notification-time">-</small>
             </div>
             <button type="button" class="notification-close"
                 aria-label="Dismiss notification">&times;</button>
@@ -20,6 +20,19 @@ function addNotification(title, body, notificationId) {
     notification.attr("id", `notification${notificationId}`);
     notification.find(".notification-title").text(title);
     notification.find(".notification-body").text(body);
+
+    if (!timestamp) {
+        notification.find(".notification-time").text(
+            "just now"
+        );
+    }
+    else{
+        const milliseconds = formatTimeToMilisecconds( timestamp )
+        notification.find(".notification-time").text(
+            formatRelativeTime(milliseconds)
+        );
+    }
+
 
     $("#notification_container").append(notification);
 
@@ -84,7 +97,7 @@ function parseNotifications(data) {
         if ($(`#notification${note.id}`).length)    // exists
             return null
 
-        addNotification(note.title, note.message, note.id);
+        addNotification(note.title, note.message, note.id, note.trigger_time);
     });
 }
 

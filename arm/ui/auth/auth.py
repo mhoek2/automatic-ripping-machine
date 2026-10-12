@@ -39,7 +39,10 @@ def login():
     db_update = ui_utils.arm_db_check()
     if not db_update["db_current"] or not db_update["db_exists"]:
         dbform = DBUpdate(request.form)
-        return render_template(page_support_databaseupdate, db_update=db_update, dbform=dbform)
+        return render_template(page_support_databaseupdate, 
+            db_update   = db_update, 
+            dbform      = dbform
+        )
 
     return_redirect = None
     # if there is no user in the database
@@ -55,7 +58,10 @@ def login():
         app.logger.error(f"ERROR: Missing Data in the ARM User Table: {e}")
         dbform = DBUpdate(request.form)
         db_update = ui_utils.arm_db_check()
-        return render_template(page_support_databaseupdate, db_update=db_update, dbform=dbform)
+        return render_template(page_support_databaseupdate, 
+            db_update   = db_update, 
+            dbform      = dbform
+        )
 
     # if a user is logged in
     if current_user.is_authenticated:
@@ -141,13 +147,11 @@ def update_password():
             app.logger.error("Current password does not match")
 
 
-    authenticated = ui_utils.authenticated_state()
-    app.logger.debug(f'Authentication state: {authenticated}')
-
     return render_template('update_password.html', 
-                           authenticated=authenticated,
-                           user=user.email, 
-                           form=form)
+        authenticated    = ui_utils.authenticated_state(),
+        user             = user.email, 
+        form             = form
+    )
 
 
 @login_manager.user_loader

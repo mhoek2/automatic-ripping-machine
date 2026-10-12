@@ -1,7 +1,14 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <script src="{{ url_for('static', filename='js/common.js') }}"></script>
+    {% set header_icon = "fa-solid fa-gear" %}
+    {% set header_title = "ARM Settings" %}
+    {% set header_description = "View system stats and adjust settings" %}
+    {% set header_actions %}
+    {% endset %}
+
+    {% include "includes/page_header.html" %}
+
     <style>
         .popover {
             white-space: pre-line;

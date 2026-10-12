@@ -72,16 +72,14 @@ def jobdetail():
         job.plot = search_results['Plot'] if 'Plot' in search_results else "There was a problem getting the plot"
         job.background = search_results['background_url'] if 'background_url' in search_results else None
 
-    authenticated = ui_utils.authenticated_state()
-    app.logger.debug(f'Authentication state: {authenticated}')
-
     return render_template('jobdetail.html',
-                           authenticated=authenticated,
-                           jobs=job,
-                           tracks=tracks,
-                           s=search_results,
-                           manual_edit=manual_edit,
-                           form=track_form)
+        authenticated    = ui_utils.authenticated_state(),
+        jobs             = job,
+        tracks           = tracks,
+        s                = search_results,
+        manual_edit      = manual_edit,
+        form             = track_form
+    )
 
 @route_jobs.route('/jobdetailload', methods=['POST'])
 @login_required
@@ -134,14 +132,12 @@ def title_search():
         return redirect(url_for('route_jobs.list_titles', title=request.args.get("title"),
                                 year=request.args.get("year"), job_id=job_id))
     
-    authenticated = ui_utils.authenticated_state()
-    app.logger.debug(f'Authentication state: {authenticated}')
-
     return render_template('titlesearch.html', 
-                           authenticated=authenticated,
-                           title='Update Title', 
-                           form=form, 
-                           job=job)
+        authenticated    = ui_utils.authenticated_state(),
+        title            = 'Update Title', 
+        form             = form, 
+        job              = job
+    )
 
 
 @route_jobs.route('/customTitle')
@@ -168,14 +164,12 @@ def customtitle():
 
         return redirect(url_for('home'))
 
-    authenticated = ui_utils.authenticated_state()
-    app.logger.debug(f'Authentication state: {authenticated}')
-
     return render_template('customTitle.html', 
-                           authenticated=authenticated,
-                           title='Change Title', 
-                           form=form, 
-                           job=job)
+        authenticated    = ui_utils.authenticated_state(),
+        title            = 'Change Title', 
+        form             = form, 
+        job              = job
+    )
 
 
 @route_jobs.route('/gettitle')
@@ -199,7 +193,11 @@ def gettitle():
         flash(constants.NO_JOB, "danger")
         raise ValidationError(constants.NO_JOB)
     dvd_info = ui_utils.metadata_selector("get_details", None, None, imdb_id)
-    return render_template('showtitle.html', results=dvd_info, job_id=job_id)
+    
+    return render_template('showtitle.html', 
+        results = dvd_info, 
+        job_id   = job_id
+    )
 
 
 @route_jobs.route('/updatetitle')
@@ -260,13 +258,11 @@ def rips():
     """
     active_jobs = Job.query.filter_by(~Job.finished)
 
-    authenticated = ui_utils.authenticated_state()
-    app.logger.debug(f'Authentication state: {authenticated}')
-
     return render_template('activerips.html', 
-                           authenticated=authenticated,
-                           title='Active rips', 
-                           jobs=active_jobs)
+        authenticated    = ui_utils.authenticated_state(),
+        title            = 'Active rips', 
+        jobs             = active_jobs
+    )
 
 
 @route_jobs.route('/changeparams')
@@ -280,14 +276,12 @@ def changeparams():
     config = job.config
     form = ChangeParamsForm(obj=config)
 
-    authenticated = ui_utils.authenticated_state()
-    app.logger.debug(f'Authentication state: {authenticated}')
-
     return render_template('changeparams.html', 
-                           authenticated=authenticated,
-                           title='Change Parameters', 
-                           form=form, 
-                           config=config)
+        authenticated    = ui_utils.authenticated_state(),
+        title            = 'Change Parameters', 
+        form             = form, 
+        config           = config
+    )
 
 
 @route_jobs.route('/list_titles')
@@ -318,16 +312,14 @@ def list_titles():
             'Search' in search_results and len(search_results['Search']) < 1):
         flash(f"No search results found for {title}", 'danger')
 
-    authenticated = ui_utils.authenticated_state()
-    app.logger.debug(f'Authentication state: {authenticated}')
-
     return render_template('list_titles.html', 
-                           authenticated=authenticated,
-                           results=search_results, 
-                           job_id=job_id,
-                           form=form, 
-                           title=title, 
-                           year=year)
+        authenticated    = ui_utils.authenticated_state(),
+        results          = search_results, 
+        job_id           = job_id,
+        form             = form, 
+        title            = title, 
+        year             = year
+    )
 
 
 @route_jobs.route('/json', methods=['GET'])
@@ -400,7 +392,7 @@ def feed_json():
         return_json = valid_modes[mode]['funct'](*args)
 
     # add notifcations to all reponses?
-    return_json['notes'] = json_api.get_notifications()
+    return_json['notes'] = json_api.get_unseen_notifications()
 
     # return JSON data
     return app.response_class(

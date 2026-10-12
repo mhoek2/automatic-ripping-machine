@@ -1,0 +1,199 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% set header_icon = "fa-solid fa-file-lines" %}
+    {% set header_title = "Logs" %}
+    {% set header_description = "Browse, inspect, and download log files." %}
+    {% set header_actions %}
+        <span class="logs-count">
+            {{ files|length }} {{ 'file' if files|length == 1 else 'files' }}
+        </span>
+    {% endset %}
+
+    {% include "includes/page_header.html" %}
+
+    <section class="logs-panel">
+        {% if files %}
+        <div class="logs-table-wrap">
+            <table class="logs-table" id="logs-table">
+                <thead>
+                    <tr>
+                        <th scope="col" data-sort="text">
+                            <button class="logs-sort" type="button">
+                                Log file <i class="fa-solid fa-sort" aria-hidden="true"></i>
+                            </button>
+                        </th>
+                        <th scope="col" data-sort="date">
+                            <button class="logs-sort" type="button">
+                                Last accessed <i class="fa-solid fa-sort" aria-hidden="true"></i>
+                            </button>
+                        </th>
+                        <th scope="col" data-sort="date">
+                            <button class="logs-sort" type="button">
+                                Created <i class="fa-solid fa-sort" aria-hidden="true"></i>
+                            </button>
+                        </th>
+                        <th scope="col" data-sort="number">
+                            <button class="logs-sort" type="button">
+                                Size <i class="fa-solid fa-sort" aria-hidden="true"></i>
+                            </button>
+                        </th>
+                        <th scope="col" class="logs-actions-heading">Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for file in files %}
+                    <tr>
+                        <th scope="row" data-label="Log file">
+                            <div class="logs-file">
+                                <i class="fa-regular fa-file-lines" aria-hidden="true"></i>
+                                <span title="{{ file[0] }}">{{ file[0] }}</span>
+                            </div>
+                        </th>
+
+                        <td data-label="Last accessed"
+                            data-sort-value="{{ file[1] }}">
+                            {{ file[1] }}
+                        </td>
+
+                        <td data-label="Created"
+                            data-sort-value="{{ file[2] }}">
+                            {{ file[2] }}
+                        </td>
+
+                        <td data-label="Size"
+                            data-sort-value="{{ file[3]|replace(',', '') }}">
+                            <span class="logs-size">{{ file[3] }} KB</span>
+                        </td>
+
+                        <td data-label="Actions">
+                            <div class="logs-actions">
+                                <a class="logs-action" href="{{ url_for('route_logs.logs', logfile=file[0], mode='tail') }}"
+                                   title="View the complete log">
+                                    <i class="fa-solid fa-terminal" aria-hidden="true"></i>
+                                    <span>Tail</span>
+                                </a>
+
+                                <a class="logs-action" href="{{ url_for('route_logs.logs', logfile=file[0], mode='armcat') }}"
+                                   title="View ARM messages only">
+                                    <i class="fa-solid fa-filter" aria-hidden="true"></i>
+                                    <span>ARM</span>
+                                </a>
+
+                                <a class="logs-action" href="{{ url_for('route_logs.logreader', logfile=file[0], mode='download') }}"
+                                   title="Download logfile">
+                                    <i class="fa-solid fa-download" aria-hidden="true"></i>
+                                    <span>Download</span>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="logs-empty">
+            <i class="fa-regular fa-folder-open" aria-hidden="true"></i>
+            <h2>No log files found</h2>
+            <p>Log files will appear here when ARM starts processing discs.</p>
+        </div>
+        {% endif %}
+    </section>
+
+    <div class="logs-footer">
+        <span>
+            <strong>Tail</strong> shows the full log with live updates.
+        </span>
+        <span>
+            <strong>ARM</strong> filters for ARM log messages.
+        </span>
+        <span>
+            <strong>Download</strong> saves the original file.
+        </span>
+    </div>
+{% endblock %}
+
+{% block footer %}{{ super() }}{% endblock %}
+
+{% block js %}
+{{ super() }}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            activeTab("viewlogs");
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const table = document.getElementById("logs-table");
+
+            if (table) {
+                const headers = table.querySelectorAll("thead th[data-sort]");
+
+                headers.forEach(function (header, columnIndex) {
+                    const button = header.querySelector(".logs-sort");
+                    let ascending = true;
+
+                    button.addEventListener("click", function () {
+                        const tbody = table.querySelector("tbody");
+                        const rows = Array.from(tbody.querySelectorAll("tr"));
+                        const type = header.dataset.sort;
+
+                        rows.sort(function (a, b) {
+                            const cellA = a.cells[columnIndex];
+                            const cellB = b.cells[columnIndex];
+
+                            let valueA = cellA.dataset.sortValue ??
+                                cellA.textContent.trim();
+                            let valueB = cellB.dataset.sortValue ??
+                                cellB.textContent.trim();
+
+                            if (type === "number") {
+                                valueA = parseFloat(valueA) || 0;
+                                valueB = parseFloat(valueB) || 0;
+                                return ascending ? valueA - valueB : valueB - valueA;
+                            }
+
+                            if (type === "date") {
+                                valueA = Date.parse(valueA) || 0;
+                                valueB = Date.parse(valueB) || 0;
+                                return ascending ? valueA - valueB : valueB - valueA;
+                            }
+
+                            return ascending
+                                ? valueA.localeCompare(valueB, undefined, {
+                                    numeric: true,
+                                    sensitivity: "base"
+                                })
+                                : valueB.localeCompare(valueA, undefined, {
+                                    numeric: true,
+                                    sensitivity: "base"
+                                });
+                        });
+
+                        rows.forEach(row => tbody.appendChild(row));
+
+                        headers.forEach(function (item) {
+                            const icon = item.querySelector("i");
+                            if (icon) icon.className = "fa-solid fa-sort";
+                            item.removeAttribute("aria-sort");
+                        });
+
+                        const icon = button.querySelector("i");
+                        icon.className = ascending
+                            ? "fa-solid fa-sort-up"
+                            : "fa-solid fa-sort-down";
+
+                        header.setAttribute(
+                            "aria-sort",
+                            ascending ? "ascending" : "descending"
+                        );
+
+                        ascending = !ascending;
+                    });
+                });
+            }
+        });
+    </script>
+{% endblock %}

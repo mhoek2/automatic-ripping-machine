@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% set header_icon = "fa-solid fa-file-lines" %}
+    {% set header_title = file %}
+    {% set header_description = "Live updated log below" %}
+    {% set header_actions %}
+    {% endset %}
+
+    {% include "includes/page_header.html" %}
+
+    <div id="log_file_content" class="log-output" style="max-height: 80vh;">-</div>
+{% endblock %}
+
+{% block footer %}{{ super() }}{% endblock %}
+
+{% block js %}
+{{ super() }}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            activeTab("viewlogs");
+
+            // interval object:
+            let log_viewer = startLogViewer({{ mode | tojson }}, {{ file | tojson }});
+        });
+    </script>
+
+{% endblock %}

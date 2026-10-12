@@ -9,7 +9,7 @@ Covers
 import os
 from pathlib import Path
 from flask_login import LoginManager, login_required  # noqa: F401
-from flask import render_template, request, Blueprint, send_file, session
+from flask import render_template, request, Blueprint, send_file, session, jsonify
 from werkzeug.routing import ValidationError
 
 import arm.ui.utils as ui_utils
@@ -29,17 +29,14 @@ def logs():
 
     this holds the XHR request that sends to other routes for the data
     """
-    mode = request.args['mode']
-    logfile = request.args['logfile']
+    mode    = request.args['mode']
     session["page_title"] = "Logs"
 
-    authenticated = ui_utils.authenticated_state()
-    app.logger.debug(f'Authentication state: {authenticated}')
-
-    return render_template('logview.html', 
-                           authenticated=authenticated,
-                           file=logfile, 
-                           mode=mode)
+    return render_template('log_content.html', 
+        authenticated    = ui_utils.authenticated_state(),
+        file             = request.args['logfile'], 
+        mode             = mode
+    )
 
 
 @route_logs.route('/listlogs', defaults={'path': ''})
@@ -60,43 +57,51 @@ def listlogs(path):
     # Get all files in directory
     files = ui_utils.get_info(full_path)
 
-    authenticated = ui_utils.authenticated_state()
-    app.logger.debug(f'Authentication state: {authenticated}')
-
-    return render_template('logfiles.html', 
-                           authenticated=authenticated,
-                           files=files, 
-                           date_format=cfg.arm_config['DATE_FORMAT'])
+    return render_template('log_list.html', 
+        authenticated    = ui_utils.authenticated_state(),
+        files            = files, 
+        date_format      = cfg.arm_config['DATE_FORMAT']
+    )
 
 
 @route_logs.route('/logreader')
 @login_required
 def logreader():
-    """
-    The default logreader output function
-
-    This will display or allow downloading the requested logfile
-    This is where the XHR requests are sent when viewing /logs?=logfile
-    """
-    log_path = cfg.arm_config['LOGPATH']
+    log_path = Path(cfg.arm_config['LOGPATH']).resolve()
     mode = request.args.get('mode')
-    session["page_title"] = "Logs"
 
-    # We should use the job id and not get the raw logfile from the user
-    # Maybe search database and see if we can match the logname with a previous rip ?
-    full_path = os.path.join(log_path, request.args.get('logfile'))
-    ui_utils.validate_logfile(request.args.get('logfile'), mode, Path(full_path))
-
-    # Only ARM logs
-    if mode == "armcat":
-        generate = ui_utils.generate_arm_cat(full_path)
-    # Give everything / Tail
-    elif mode == "full":
-        generate = ui_utils.generate_full_log(full_path)
-    elif mode == "download":
-        return send_file(full_path, as_attachment=True)
-    else:
-        # No mode - error out
+    logfile = request.args.get('logfile')
+    if not logfile:
         raise ValidationError
 
-    return app.response_class(generate, mimetype='text/plain')
+    requested_path = Path(logfile)
+
+    # resolve path, allow both:
+    #logfile=movie_name.log
+    #logfile=/home/arm/logs/move_name.log
+    if requested_path.is_absolute():
+        full_path = requested_path.resolve()
+    else:
+        full_path = (log_path / requested_path).resolve()
+
+    # Only allow files within LOGPATH.
+    if not full_path.is_relative_to(log_path):
+        raise ValidationError
+
+    ui_utils.validate_logfile(full_path.name, mode, full_path)
+
+    match mode:
+        case "armcat":
+            content = "".join(ui_utils.generate_arm_cat(full_path))
+        case "tail":
+            with full_path.open(encoding="utf8", errors="ignore") as log_file:
+                content = log_file.read()
+        case "download":
+            return send_file(full_path, as_attachment=True)
+        case _:
+            raise ValidationError
+
+    return jsonify({
+        "mode": mode,
+        "content": content
+    })

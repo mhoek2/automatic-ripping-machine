@@ -7,7 +7,7 @@ Covers
 """
 
 from flask_login import login_required  # noqa: F401
-from flask import render_template, Blueprint, redirect, flash, session
+from flask import render_template, Blueprint, redirect, flash, session, request, jsonify
 from datetime import datetime
 
 import arm.ui.utils as ui_utils
@@ -34,7 +34,7 @@ def arm_nav_notify():
     return dict(notify_count=notify_count)
 
 
-@route_notifications.route('/notificationview')
+@route_notifications.route('/notifications')
 @login_required
 def arm_notification():
     """
@@ -43,8 +43,6 @@ def arm_notification():
     notifications_new = Notifications.query.filter_by(cleared='0').order_by(Notifications.id.desc()).all()
 
     if len(notifications_new) != 0:
-        if len(notifications_new) > 100:
-            flash(f'Please note clearing {len(notifications_new)} Notifications will take some time', 'warning')
 
         # get the current time for each notification and then save back into notification
         for notification in notifications_new:
@@ -54,15 +52,13 @@ def arm_notification():
 
     session["page_title"] = "Notifications"
 
-    authenticated = ui_utils.authenticated_state()
-    app.logger.debug(f'Authentication state: {authenticated}')
-
-    return render_template('notificationview.html',
-                           authenticated=authenticated,
-                           notifications_new=notifications_new)
+    return render_template('notifications.html',
+        authenticated        = ui_utils.authenticated_state(),
+        notifications_new    = notifications_new
+    )
 
 
-@route_notifications.route('/notificationclose')
+@route_notifications.route('/notification_clearall')
 @login_required
 def arm_notification_close():
     """
@@ -83,4 +79,31 @@ def arm_notification_close():
     else:
         flash('No notifications to clear', 'error')
 
-    return redirect("/notificationview")
+    return redirect("/notifications")
+
+@route_notifications.route('/notificationdismiss')
+@login_required
+def arm_notification_dismiss():
+	"""
+	Dismiss a single notification and return JSON.
+	"""
+	notification_id = request.args.get('id', type=int)
+    
+	if notification_id is None:
+		return jsonify(success=False, error='Invalid notification ID'), 400
+
+	notification = Notifications.query.filter_by(
+		id=notification_id,
+		cleared='0'
+	).first()
+
+	if not notification:
+		return jsonify(success=False, error='Notification not found or already dismissed'), 404
+
+	args = {
+		'cleared': True,
+		'cleared_time': datetime.now()
+	}
+	ui_utils.database_updater(args, notification)
+
+	return jsonify(success=True, id=notification_id)

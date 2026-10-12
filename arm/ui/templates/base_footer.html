@@ -10,12 +10,19 @@
 {% endblock %}
 
 <script type="application/javascript" src="static/js/common.js"></script>
+<script type="application/javascript" src="static/js/time.js"></script>
+<script type="application/javascript" src="static/js/logs.js"></script>
 <script type="application/javascript" src="static/js/notification.js"></script>
 
 <script type="application/javascript" src="static/js/jobs/jobs.js"></script>
 <script type="application/javascript" src="static/js/jobs/refresh.js"></script>
 
 <script type="application/javascript" src="static/js/database.js"></script>
+
+
+{% include 'modal/database/search.html' %}
+{% include 'modal/confirm.html' %}
+{% include 'modal/jobs/pipeline.html' %}
 
 <script type="application/javascript" src="static/js/modal/modal.js"></script>
 <script type="application/javascript" src="static/js/modal/confirm.js"></script>

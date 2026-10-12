@@ -39,11 +39,19 @@
 	}
 
 	.notifications-page .notification-card {
+		display: flex;
+		align-items: center;
+		gap: 16px;
 		padding: 14px 16px;
 		background: var(--color-surface);
 		border: 1px solid var(--color-border);
 		border-radius: 8px;
 		box-shadow: var(--shadow-card);
+	}
+
+	.notifications-page .notification-content {
+		flex: 1;
+		min-width: 0;
 	}
 
 	.notifications-page .notification-title {
@@ -74,6 +82,24 @@
 		font-size: 13px;
 		text-align: center;
 		box-shadow: var(--shadow-card);
+	}
+
+	.notifications-page .notification-dismiss {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	flex-shrink: 0;
+	padding: 4px 0 4px 8px;
+	border: 0;
+	background: transparent;
+	color: var(--color-text-muted);
+	font: inherit;
+	font-size: 12px;
+	cursor: pointer;
+	}
+
+	.notifications-page .notification-dismiss {
+	color: var(--color-danger);
 	}
 
 
