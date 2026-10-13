@@ -29,7 +29,6 @@ from flask import render_template, request, flash, \
     redirect, Blueprint, session, url_for
 
 import arm.ui.utils as ui_utils
-from arm.ripper.ProcessHandler import arm_subprocess
 from arm.ui import app, db
 from arm.models.job import Job
 from arm.models.system_drives import SystemDrives
@@ -39,7 +38,6 @@ import arm.config.config as cfg
 from arm.ui.settings import DriveUtils as drive_utils
 from arm.ui.settings import health
 from arm.ui.forms import SettingsForm, UiSettingsForm, AbcdeForm, SystemInfoDrives
-from arm.ui.settings.ServerUtil import ServerUtil
 import arm.ripper.utils as ripper_utils
 
 route_settings = Blueprint('route_settings', __name__,
@@ -63,7 +61,7 @@ def is_read_only(path: os.PathLike) -> bool:
 
 route_settings.add_app_template_filter(mask_last, name='mask_last')
 
-def get_server_stats( is_inited = False ):
+def get_server_stats( isInited = False ):
     # stats for info page
     failed_rips = Job.query.filter_by(status="fail").count()
     total_rips  = Job.query.filter_by().count()
@@ -80,34 +78,14 @@ def get_server_stats( is_inited = False ):
     [arm_version_local, arm_version_remote] = ui_utils.git_check_version()
     local_git_hash = ui_utils.get_git_revision_hash()
 
-    if not is_inited:
+    if not isInited:
         git_is_uptodate = ui_utils.git_check_updates(local_git_hash)
-        system_health   = health.fetch();
     else:
         git_is_uptodate = -1
-        system_health   = -1
 
-    server      = SystemInfo.query.filter_by(id="1").first()
-    serverutil  = ServerUtil()
-
-    return {'server_datetime': server_datetime,
-        'serverutil': {
-            'cpu_util':                     serverutil.cpu_util,
-            'cpu_temp':                     serverutil.cpu_temp,
-            'memory_free':                  serverutil.memory_free,
-            'memory_used':                  serverutil.memory_used,
-            'memory_percent':               serverutil.memory_percent,
-            'storage_transcode_free':       serverutil.storage_transcode_free,
-            'storage_transcode_percent':    serverutil.storage_transcode_percent,
-            'storage_completed_free':       serverutil.storage_completed_free,
-            'storage_completed_percent':    serverutil.storage_completed_percent,
-        },
-        'server': {
-            'name':         server.name,
-            'cpu':          server.cpu,
-            'description':  server.description,
-        },
-        'health':          system_health,
+    return {
+        'server_datetime':     server_datetime,
+        'health':              health.fetch(isInited),
         'server_timezone':     server_timezone,
         'python_version':      platform.python_version(),
         'arm_version_local':   arm_version_local,
@@ -119,7 +97,6 @@ def get_server_stats( is_inited = False ):
         'no_failed_jobs':      failed_rips,
         'total_rips':          total_rips,
         'updated':             git_is_uptodate,
-        'hw_support':          check_hw_transcode_support()
     }
 
 @route_settings.route('/serverstats', methods=['GET'])
@@ -174,38 +151,6 @@ def settings():
         apprise_read_only   = is_read_only(cfg.apprise_config_path),
         abcde_read_only     = is_read_only(cfg.abcde_config_path)
       )
-
-
-def check_hw_transcode_support():
-    cmd = f"nice {cfg.arm_config['HANDBRAKE_CLI']}"
-
-    app.logger.debug(f"Sending command: {cmd}")
-    hw_support_status = {
-        "nvidia": False,
-        "intel": False,
-        "amd": False
-    }
-    try:
-        hand_brake_output = arm_subprocess(f"{cmd}", shell=True, check=True)
-
-        # NVENC
-        if re.search(r'nvenc: version ([0-9\\.]+) is available', str(hand_brake_output)):
-            app.logger.info("NVENC supported!")
-            hw_support_status["nvidia"] = True
-        # Intel QuickSync
-        if re.search(r'qsv:\sis(.*?)available\son', str(hand_brake_output)):
-            app.logger.info("Intel QuickSync supported!")
-            hw_support_status["intel"] = True
-        # AMD VCN
-        if re.search(r'vcn:\sis(.*?)available\son', str(hand_brake_output)):
-            app.logger.info("AMD VCN supported!")
-            hw_support_status["amd"] = True
-        app.logger.info("Handbrake call successful")
-        app.logger.debug(hand_brake_output)
-    except subprocess.CalledProcessError:
-        pass
-    return hw_support_status
-
 
 @route_settings.route('/save_settings', methods=['POST'])
 @login_required
@@ -473,6 +418,7 @@ def testapprise():
     return redirect(url_for(REDIRECT_SETTINGS))
 
 
+# hmm
 @route_settings.route('/updatesysinfo')
 def update_sysinfo():
     """

@@ -7,20 +7,18 @@ import psutil
 
 import arm.config.config as cfg
 from arm.ui import app
-from flask import flash
 
 
 class ServerUtil():
+    # CPU
     cpu_util = 0.0
     cpu_temp = 0.0
+
+    # Memory
     memory_free = 0.0
     memory_used = 0.0
     memory_percent = 0.0
-    # Hard drive space
-    storage_transcode_free = 0
-    storage_transcode_percent = 0.0
-    storage_completed_free = 0
-    storage_completed_percent = 0.0
+    
 
     def __init__(self):
         self.get_update()
@@ -29,10 +27,6 @@ class ServerUtil():
         self.get_cpu_util()
         self.get_cpu_temp()
         self.get_memory()
-        self.storage_transcode_free, self.storage_transcode_percent = \
-            self.get_disk_space(cfg.arm_config['TRANSCODE_PATH'])
-        self.storage_completed_free, self.storage_completed_percent = \
-            self.get_disk_space(cfg.arm_config['COMPLETED_PATH'])
 
     def get_cpu_util(self):
         try:
@@ -86,19 +80,3 @@ class ServerUtil():
         app.logger.debug(f"Server Mem Free:  {self.memory_free}")
         app.logger.debug(f"Server Mem Used:  {self.memory_used}")
         app.logger.debug(f"Server Mem Percent:  {self.memory_percent}")
-
-    def get_disk_space(self, filepath):
-        # Hard drive space
-        try:
-            disk_space = psutil.disk_usage(filepath).free
-            disk_space = round(disk_space / 1073741824, 1)
-            disk_percent = psutil.disk_usage(filepath).percent
-        except FileNotFoundError:
-            disk_space = 0
-            disk_percent = 0
-            app.logger.debug("ARM folders not found")
-            flash("There was a problem accessing the ARM folder: "
-                  f"'{filepath}'. Please make sure you have setup ARM", "danger")
-        app.logger.debug(f"Server {filepath} Space:  {disk_space}")
-        app.logger.debug(f"Server {filepath} Percent:  {disk_percent}")
-        return disk_space, disk_percent

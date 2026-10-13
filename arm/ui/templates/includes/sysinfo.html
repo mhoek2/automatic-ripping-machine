@@ -79,7 +79,6 @@
             </div>
         </section>
 
-
         <!-- STORAGE -->
         <section class="sysinfo-card sysinfo-card-storage">
             <div class="sysinfo-card-header">
@@ -87,81 +86,11 @@
             </div>
 
             <div class="sysinfo-card-body">
-                <div class="sysinfo-item">
-                    <div class="sysinfo-label">
-                        <span>Transcode</span>
-                        <span class="sysinfo-value" data-serverutil="storage_transcode_percent"></span>
-                    </div>
-
-                    <div class="sysinfo-progress">
-                        <div class="sysinfo-progress-bar" data-progress="storage_transcode_percent"></div>
-                    </div>
-
-                    <div class="sysinfo-memory-legend">
-                        <div class="sysinfo-memory-legend-item">
-                            <span class="sysinfo-memory-dot total"></span>
-                            <span class="sysinfo-memory-legend-label">Total</span>
-                            <strong data-storage="transcode_total">—</strong>
-                        </div>
-
-                        <div class="sysinfo-memory-legend-item">
-                            <span class="sysinfo-memory-dot used"></span>
-                            <span class="sysinfo-memory-legend-label">Used</span>
-                            <strong data-storage="transcode_used">—</strong>
-                        </div>
-
-                        <div class="sysinfo-memory-legend-item">
-                            <span class="sysinfo-memory-dot free"></span>
-                            <span class="sysinfo-memory-legend-label">Free</span>
-                            <strong data-storage="transcode_free">—</strong>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="sysinfo-item">
-                    <div class="sysinfo-label">
-                        <span>Completed</span>
-                        <span class="sysinfo-value" data-serverutil="storage_completed_percent"></span>
-                    </div>
-
-                    <div class="sysinfo-progress">
-                        <div class="sysinfo-progress-bar" data-progress="storage_completed_percent"></div>
-                    </div>
-
-                    <div class="sysinfo-memory-legend">
-                        <div class="sysinfo-memory-legend-item">
-                            <span class="sysinfo-memory-dot total"></span>
-                            <span class="sysinfo-memory-legend-label">Total</span>
-                            <strong data-storage="completed_total">—</strong>
-                        </div>
-
-                        <div class="sysinfo-memory-legend-item">
-                            <span class="sysinfo-memory-dot used"></span>
-                            <span class="sysinfo-memory-legend-label">Used</span>
-                            <strong data-storage="completed_used">—</strong>
-                        </div>
-
-                        <div class="sysinfo-memory-legend-item">
-                            <span class="sysinfo-memory-dot free"></span>
-                            <span class="sysinfo-memory-legend-label">Free</span>
-                            <strong data-storage="completed_free">—</strong>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="sysinfo-storage-health">
-                    <div class="sysinfo-section-heading">
-
-                        <span>Directory permissions</span>
-                    </div>
-
-                    <div class="server-check-list" data-health-directories>
-                        <div class="sysinfo-empty-state">Waiting for checks…</div>
-                    </div>
+                <div class="sysinfo-storage-list" data-health-directories>
+                    <div class="sysinfo-empty-state">Waiting for checks…</div>
                 </div>
             </div>
         </section>
-
 
         <!-- SERVER DETAILS -->
         {% if authenticated %}

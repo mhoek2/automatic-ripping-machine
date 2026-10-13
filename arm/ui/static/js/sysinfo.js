@@ -29,15 +29,13 @@ const sysinfo = {
                 if (!data)
                     return;
 
-                if (data.server && typeof data.server === "object")
-                    this.updateServerInfo(data);
-
-                this.updateServerUtil(data.serverutil);
+                this.updateServerInfo(data.health?.server);
+                this.updateServerUtil(data.health?.server);
                 this.updateServerStats(data);
-                this.updateMemory(data.serverutil);
+                this.updateMemory(data.health?.server);
                 this.updateStorageHealth(data.health);
                 this.updateServerHealth(data.health);
-                this.updateHardwareSupport(data.hw_support);
+                this.updateHardwareSupport(data.health?.tools);
                 this.updateServerVersion(data);
             })
             .fail((xhr, status, error) => {
@@ -45,34 +43,37 @@ const sysinfo = {
             });
     },
 
-    updateServerInfo(data)
+    updateServerInfo(server)
     {
-        $('[data-server="name"]').text(data.server.name ?? "");
-        $('[data-server="description"]').text(data.server.description ?? "");
-        $('[data-server="cpu"]').text(data.server.cpu ?? "");
+        if (!server || typeof server !== "object")
+            return;
+
+        $('[data-server="name"]').text(server.name ?? "");
+        $('[data-server="description"]').text(server.description ?? "");
+        $('[data-server="cpu"]').text(server.cpu ?? "");
     },
 
-    updateServerUtil(util)
+    updateServerUtil(server)
     {
-        if (!util || typeof util !== "object")
+        if (!server || typeof server !== "object")
             return;
 
         // CPU temperature
         const $cpuTemp = $('[data-serverutil="cpu_temp"]');
         const $cpuTempProgress = $('[data-progress="cpu_temp"]');
 
-        if (util.cpu_temp !== null && util.cpu_temp !== undefined)
+        if (server.cpu_temp !== null && server.cpu_temp !== undefined)
         {
-            $cpuTemp.text(`${util.cpu_temp}°C`);
+            $cpuTemp.text(`${server.cpu_temp}°C`);
 
             $cpuTempProgress
                 .show()
-                .css("width", this.clamp(util.cpu_temp) + "%")
+                .css("width", this.clamp(server.cpu_temp) + "%")
                 .removeClass("warning danger");
 
-            if (util.cpu_temp > 70)
+            if (server.cpu_temp > 70)
                 $cpuTempProgress.addClass("danger");
-            else if (util.cpu_temp > 55)
+            else if (server.cpu_temp > 55)
                 $cpuTempProgress.addClass("warning");
         }
         else
@@ -84,30 +85,16 @@ const sysinfo = {
         // CPU usage
         this.updateProgress(
             "cpu_util",
-            util.cpu_util,
+            server.cpu_util,
             { warning: 70, danger: 80 }
         );
 
         // Memory usage percentage
-        if (util.memory_percent !== null && util.memory_percent !== undefined)
+        if (server.memory_percent !== null && server.memory_percent !== undefined)
         {
             $('[data-serverutil="memory_percent"]')
-                .text(`${util.memory_percent}%`);
+                .text(`${server.memory_percent}%`);
         }
-
-        // Transcode storage
-        this.updateStorage(
-            "storage_transcode",
-            util.storage_transcode_percent,
-            util.storage_transcode_free
-        );
-
-        // Completed storage
-        this.updateStorage(
-            "storage_completed",
-            util.storage_completed_percent,
-            util.storage_completed_free
-        );
     },
 
     updateProgress(key, value, thresholds = {})
@@ -130,63 +117,139 @@ const sysinfo = {
         $(`[data-serverutil="${key}"]`).text(`${percentage}%`);
     },
 
-
-    updateStorage(prefix, percentage, free) {
-        this.updateProgress(`${prefix}_percent`, percentage, {
-            warning: 70,
-            danger: 80
-        });
-
-        const freeValue = this.toNumber(free);
-
-        if (freeValue === null) return;
-
-        $(`[data-serverutil="${prefix}_free"]`).text(freeValue.toFixed(1));
-
-        this.updateStorageLegend(
-            prefix.replace("storage_", ""),
-            percentage,
-            freeValue
-        );
+    updateStorageHealth(health) {
+        this.renderStorageDirectories(health.directories);
     },
 
-    updateStorageLegend(prefix, percentage, free) {
-        const percent = this.toNumber(percentage);
+    renderStorageDirectories(directories) {
+        const $container = $("[data-health-directories]").empty();
 
-        if (percent === null || percent >= 100 || percent < 0) {
-            // Free space is still known, even if total cannot be calculated.
-            $(`[data-storage="${prefix}_free"]`).text(
-                `${free.toFixed(1)} GB`
+        if (!directories || typeof directories !== "object" ||
+            Object.keys(directories).length === 0) {
+            $container.append(
+                $("<div>")
+                    .addClass("sysinfo-empty-state")
+                    .text("No directories available")
             );
             return;
         }
 
-        // Percentage represents the proportion of storage used.
-        const total = free / (1 - percent / 100);
-        const used = total - free;
+        const labels = {
+            raw: "Raw",
+            transcode: "Transcode",
+            completed: "Completed",
+            logs: "Logs"
+        };
 
-        $(`[data-storage="${prefix}_total"]`).text(
-            `${total.toFixed(1)} GB`
-        );
+        Object.entries(directories).forEach(([name, directory]) => {
+            const $row = $("<div>").addClass("sysinfo-storage-row");
+            const $header = $("<div>").addClass("sysinfo-storage-header");
+            const $info = $("<div>").addClass("sysinfo-storage-info");
 
-        $(`[data-storage="${prefix}_used"]`).text(
-            `${used.toFixed(1)} GB`
-        );
+            $("<div>")
+                .addClass("sysinfo-storage-name")
+                .text(labels[name] || name)
+                .appendTo($info);
 
-        $(`[data-storage="${prefix}_free"]`).text(
-            `${free.toFixed(1)} GB`
-        );
+            const $checks = $("<div>").addClass("sysinfo-storage-checks");
+
+            [
+                ["exists", "Exists"],
+                ["readable", "Read"],
+                ["writable", "Write"]
+            ].forEach(([key, label]) => {
+                const ok = directory[key] === true;
+
+                const $badge = $("<span>")
+                    .addClass("server-check-status")
+                    .addClass(ok ? "ok" : "fail")
+                    .append(this.icon(
+                        ok ? "fa-circle-check" : "fa-circle-xmark"
+                    ))
+                    .append($("<span>").text(label));
+
+                $checks.append($badge);
+            });
+
+            $header.append($info, $checks);
+            $row.append($header);
+
+            const used = this.toNumber(directory.used);
+            const free = this.toNumber(directory.free);
+            const total = this.toNumber(directory.total);
+            const percentage = this.toNumber(directory.percent);
+
+            if (
+                used !== null &&
+                free !== null &&
+                total !== null &&
+                percentage !== null
+            ) {
+                const $label = $("<div>").addClass("sysinfo-label");
+
+                $("<span>")
+                    .text(directory.path || "")
+                    .appendTo($label);
+
+                $("<span>")
+                    .text(`${percentage}%`)
+                    .appendTo($label);
+
+                const $progress = $("<div>").addClass("sysinfo-progress");
+                const $bar = $("<div>")
+                    .addClass("sysinfo-progress-bar")
+                    .css("width", this.clamp(percentage) + "%");
+
+                if (percentage > 80)
+                    $bar.addClass("danger");
+                else if (percentage > 70)
+                    $bar.addClass("warning");
+
+                $progress.append($bar);
+
+                const $legend = $("<div>").addClass("sysinfo-memory-legend");
+
+                [
+                    ["Total", total],
+                    ["Used", used],
+                    ["Free", free]
+                ].forEach(([label, value]) => {
+                    const $item = $("<div>")
+                        .addClass("sysinfo-memory-legend-item");
+
+                    $("<span>")
+                        .addClass("sysinfo-memory-dot")
+                        .addClass(label.toLowerCase())
+                        .appendTo($item);
+
+                    $("<span>")
+                        .addClass("sysinfo-memory-legend-label")
+                        .text(label)
+                        .appendTo($item);
+
+                    $("<strong>")
+                        .text(this.formatGb(value))
+                        .appendTo($item);
+
+                    $legend.append($item);
+                });
+
+                $row.append($label, $progress, $legend);
+            }
+
+            $container.append($row);
+        });
     },
 
 
-    updateMemory(util)
+    updateMemory(server)
     {
-        if (!util || typeof util !== "object")
+        if (!server || typeof server !== "object")
             return;
 
-        const used = this.toNumber(util.memory_used);
-        const free = this.toNumber(util.memory_free);
-        const reportedTotal = this.toNumber(util.memory_total);
+        const used = this.toNumber(server.memory_used);
+        const free = this.toNumber(server.memory_free);
+        const reportedTotal = this.toNumber(server.memory_total);
 
         // Derive total if the API does not explicitly report it.
         const total = reportedTotal !== null
@@ -202,7 +265,7 @@ const sysinfo = {
         if (free !== null)
             $('[data-memory="free"]').text(this.formatGb(free));
 
-        let usedPercent = this.toNumber(util.memory_percent);
+        let usedPercent = this.toNumber(server.memory_percent);
 
         if (usedPercent === null && total > 0 && used !== null)
             usedPercent = (used / total) * 100;
@@ -237,26 +300,14 @@ const sysinfo = {
         });
     },
 
-    updateStorageHealth(health)
-    {
-        // Preserve the existing UI while initialization is in progress.
-        if (health === -1 || !health || typeof health !== "object")
-            return;
-
-        this.renderHealthRows(
-            "[data-health-directories]",
-            health.directories,
-            "directory"
-        );
-    },
-
     updateServerHealth(health)
     {
         // Preserve the existing UI while initialization is in progress.
-        if (health === -1 || !health || typeof health !== "object")
+        if ( !health || typeof health !== "object")
             return;
 
         const checks = [];
+        const validTools = (health.tools !== -1 && health.tools && typeof health.tools === "object");
 
         $.each(health.directories || {}, (_, item) => {
             checks.push(
@@ -264,9 +315,11 @@ const sysinfo = {
             );
         });
 
-        $.each(health.tools || {}, (_, item) => {
-            checks.push(Boolean(item.available));
-        });
+        if (validTools) {
+            $.each(health.tools || {}, (_, item) => {
+                checks.push(Boolean(item.available));
+            });
+        }
 
         const failed = checks.filter(ok => !ok).length;
         const $summary = $("[data-health-summary]");
@@ -295,11 +348,13 @@ const sysinfo = {
                 .append(" All checks passed");
         }
 
-        this.renderHealthRows(
-            "[data-health-tools]",
-            health.tools,
-            "tool"
-        );
+        if (validTools) {
+            this.renderHealthRows(
+                "[data-health-tools]",
+                health.tools,
+                "tool"
+            );
+        }
     },
 
     renderHealthRows(selector, items, type)
@@ -321,13 +376,14 @@ const sysinfo = {
             const $info = $("<div>").addClass("server-check-info");
 
             const labels = {
-                raw: "Raw",
-                transcode: "Transcode",
-                completed: "Completed",
-                logs: "Logs",
                 handbrake: "HandBrake",
                 makemkv: "MakeMKV"
             };
+
+            // Transcoding hardware support, currently has its own section
+            // Only render objects that have labels
+            if (!labels[name])
+                return 1;
 
             const label = labels[name] ||
                 name.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
@@ -347,26 +403,7 @@ const sysinfo = {
 
             const $status = $("<div>").addClass("server-check-meta");
 
-            if (type === "directory")
-            {
-                [
-                    ["exists", "Exists"],
-                    ["readable", "Read"],
-                    ["writable", "Write"]
-                ].forEach(([key, text]) => {
-                    const ok = Boolean(item[key]);
-
-                    const $check = $("<span>")
-                        .addClass(ok ? "ok" : "fail");
-
-                    $check
-                        .append(this.icon(ok ? "fa-circle-check" : "fa-circle-xmark"))
-                        .append(" " + text);
-
-                    $status.append($check);
-                });
-            }
-            else if (type === "tool")
+            if (type === "tool")
             {
                 const ok = Boolean(item.available);
                 const statusText = ok
@@ -389,24 +426,24 @@ const sysinfo = {
         });
     },
 
-    updateHardwareSupport(hw)
+    updateHardwareSupport(tools)
     {
-        if (!hw || hw === -1 || typeof hw !== "object")
+        if (tools === -1 || !tools || typeof tools !== "object")
             return;
 
         const hardware = {
-            intel: "Intel Quick Sync",
-            nvidia: "NVIDIA NVENC",
-            amd: "AMD VCN"
+            intel   : "Intel Quick Sync",
+            nvidia  : "NVIDIA NVENC",
+            amd     : "AMD VCN"
         };
 
         Object.keys(hardware).forEach(type => {
             const $row = $(`[data-hw-support="${type}"]`);
 
-            if (!$row.length || hw[type] === undefined || hw[type] === null)
+            if (!$row.length || tools.transcode[type] === undefined || tools.transcode[type] === null)
                 return;
 
-            const supported = Boolean(hw[type]);
+            const supported = Boolean(tools.transcode[type]);
             const label = supported ? "Supported" : "Unavailable";
 
             $row.find(".server-check-status").remove();
@@ -425,12 +462,8 @@ const sysinfo = {
             return;
 
         // Do not hide or overwrite the existing UI while pending.
-        if (data.updated === -1 ||
-            data.updated === undefined ||
-            data.updated === null)
-        {
+        if (data.updated === -1 || data.updated === undefined || data.updated === null)
             return;
-        }
 
         if (data.updated)
         {

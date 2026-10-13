@@ -198,36 +198,75 @@
 
 
 /*
- * Storage directory permissions
+ * Storage directory
  */
 
-.sysinfo-storage-health {
-    margin-top: 20px;
-}
 
-.sysinfo-section-heading,
-.server-section-heading {
+.sysinfo-storage-list {
     display: flex;
-    align-items: center;
-    gap: 9px;
-    margin-bottom: 12px;
-    color: var(--color-text);
-    font-size: 13px;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.sysinfo-storage-row {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 0.75em;
+}
+
+.sysinfo-storage-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    min-width: 0;
+}
+
+.sysinfo-storage-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 0;
+}
+
+.sysinfo-storage-name {
     font-weight: 600;
+    font-size: 0.8rem;
 }
 
-.sysinfo-section-heading > i,
-.server-section-heading > i {
-    width: 16px;
-    color: var(--color-info);
-    text-align: center;
+.sysinfo-storage-path {
+    color: var(--color-text-muted);
+    font-size: 0.8rem;
+    overflow-wrap: anywhere;
 }
 
-.sysinfo-empty-state {
-    padding: 12px;
-    color: var(--color-text-subtle);
-    font-size: 12px;
+.sysinfo-storage-checks {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    flex-shrink: 0;
 }
+
+.sysinfo-storage-checks .server-check-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.75rem;
+}
+
+@media (max-width: 600px) {
+    .sysinfo-storage-header {
+        flex-direction: column;
+    }
+
+    .sysinfo-storage-checks {
+        justify-content: flex-start;
+    }
+}
+
 
 
 /*
