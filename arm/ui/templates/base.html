@@ -1,22 +1,22 @@
 <!doctype html>
 <html data-theme="dark" lang="en">
-    {% include 'head.html' %}
+    {% include 'includes/base/head.html' %}
 
     <body>
         <div id="notification_container" aria-live="polite" aria-atomic="false"></div>
 
         <div class="base_container">
-            {% include 'sidebar.html' %}
+            {% include 'includes/base/sidebar.html' %}
             
             <div class="base_content">
                 <div id="content">
-                    {% include 'base_errors.html' %}
+                    {% include 'includes/base/errors.html' %}
 
                     {% block content %}{% endblock %}
                 </div>
 
                 <!-- Footer -->
-                {% include 'base_footer.html' %}
+                {% include 'includes/base/footer.html' %}
             </div>
         </div>
 
@@ -31,6 +31,6 @@
         </script>
         {% endblock %}
 
-        {% include 'feeder.html' %}
+        {% include 'includes/base/feeder.html' %}
     </body>
 </html>

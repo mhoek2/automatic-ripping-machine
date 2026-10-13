@@ -145,12 +145,6 @@ def settings():
     # ARM UI config
     armui_cfg = ui_utils.arm_db_cfg()
 
-    # Get system details from Server Info and Config
-    server = SystemInfo.query.filter_by(id="1").first()
-    serverutil = ServerUtil()
-    arm_path = cfg.arm_config['TRANSCODE_PATH']
-    media_path = cfg.arm_config['COMPLETED_PATH']
-
     # System Drives (CD/DVD/Blueray drives)
     drive_utils.update_job_status()
     drives = drive_utils.get_drives()
@@ -174,10 +168,6 @@ def settings():
         form                 = form,
         jsoncomments         = comments,
         abcde_cfg            = cfg.abcde_config,
-        server               = server,
-        serverutil           = serverutil,
-        arm_path             = arm_path,
-        media_path           = media_path,
         drives               = drives,
         form_drive           = form_drive,
         ripper_read_only     = is_read_only(cfg.arm_config_path),
