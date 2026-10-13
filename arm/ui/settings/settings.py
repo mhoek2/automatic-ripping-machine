@@ -37,6 +37,7 @@ from arm.models.system_info import SystemInfo
 from arm.models.ui_settings import UISettings
 import arm.config.config as cfg
 from arm.ui.settings import DriveUtils as drive_utils
+from arm.ui.settings import health
 from arm.ui.forms import SettingsForm, UiSettingsForm, AbcdeForm, SystemInfoDrives
 from arm.ui.settings.ServerUtil import ServerUtil
 import arm.ripper.utils as ripper_utils
@@ -65,14 +66,14 @@ route_settings.add_app_template_filter(mask_last, name='mask_last')
 def get_server_stats( is_inited = False ):
     # stats for info page
     failed_rips = Job.query.filter_by(status="fail").count()
-    total_rips = Job.query.filter_by().count()
-    movies = Job.query.filter_by(video_type="movie").count()
-    series = Job.query.filter_by(video_type="series").count()
-    cds = Job.query.filter_by(disctype="music").count()
+    total_rips  = Job.query.filter_by().count()
+    movies      = Job.query.filter_by(video_type="movie").count()
+    series      = Job.query.filter_by(video_type="series").count()
+    cds         = Job.query.filter_by(disctype="music").count()
 
     # Get the current server time and timezone
     server_timezone = os.environ.get("TZ", "Etc/UTC")
-    current_time = datetime.now()
+    current_time    = datetime.now()
     server_datetime = current_time.strftime(cfg.arm_config['DATE_FORMAT'])
 
     # git
@@ -81,42 +82,45 @@ def get_server_stats( is_inited = False ):
 
     if not is_inited:
         git_is_uptodate = ui_utils.git_check_updates(local_git_hash)
+        system_health   = health.fetch();
     else:
         git_is_uptodate = -1
+        system_health   = -1
 
-    server = SystemInfo.query.filter_by(id="1").first()
-    serverutil = ServerUtil()
+    server      = SystemInfo.query.filter_by(id="1").first()
+    serverutil  = ServerUtil()
 
     return {'server_datetime': server_datetime,
-             'serverutil': {
-                'cpu_util':                     serverutil.cpu_util,
-                'cpu_temp':                     serverutil.cpu_temp,
-                'memory_free':                  serverutil.memory_free,
-                'memory_used':                  serverutil.memory_used,
-                'memory_percent':               serverutil.memory_percent,
-                'storage_transcode_free':       serverutil.storage_transcode_free,
-                'storage_transcode_percent':    serverutil.storage_transcode_percent,
-                'storage_completed_free':       serverutil.storage_completed_free,
-                'storage_completed_percent':    serverutil.storage_completed_percent,
-             },
-             'server': {
-                'name':         server.name,
-                'cpu':          server.cpu,
-                'description':  server.description,
-             },
-             'server_timezone':     server_timezone,
-             'python_version':      platform.python_version(),
-             'arm_version_local':   arm_version_local,
-             'arm_version_remote':  arm_version_remote,
-             'git_commit':          local_git_hash,
-             'movies_ripped':       movies,
-             'series_ripped':       series,
-             'cds_ripped':          cds,
-             'no_failed_jobs':      failed_rips,
-             'total_rips':          total_rips,
-             'updated':             git_is_uptodate,
-             'hw_support':          check_hw_transcode_support()
-             }
+        'serverutil': {
+            'cpu_util':                     serverutil.cpu_util,
+            'cpu_temp':                     serverutil.cpu_temp,
+            'memory_free':                  serverutil.memory_free,
+            'memory_used':                  serverutil.memory_used,
+            'memory_percent':               serverutil.memory_percent,
+            'storage_transcode_free':       serverutil.storage_transcode_free,
+            'storage_transcode_percent':    serverutil.storage_transcode_percent,
+            'storage_completed_free':       serverutil.storage_completed_free,
+            'storage_completed_percent':    serverutil.storage_completed_percent,
+        },
+        'server': {
+            'name':         server.name,
+            'cpu':          server.cpu,
+            'description':  server.description,
+        },
+        'health':          system_health,
+        'server_timezone':     server_timezone,
+        'python_version':      platform.python_version(),
+        'arm_version_local':   arm_version_local,
+        'arm_version_remote':  arm_version_remote,
+        'git_commit':          local_git_hash,
+        'movies_ripped':       movies,
+        'series_ripped':       series,
+        'cds_ripped':          cds,
+        'no_failed_jobs':      failed_rips,
+        'total_rips':          total_rips,
+        'updated':             git_is_uptodate,
+        'hw_support':          check_hw_transcode_support()
+    }
 
 @route_settings.route('/serverstats', methods=['GET'])
 def serverstats():

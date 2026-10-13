@@ -29,10 +29,10 @@ function getStatusClass(status) {
 }
 
 function renderProgress(job) {
-    if (!checkTranscodeStatus(job)) return "";
+    if (!hasProgress(job)) return "";
 
     return `
-        <div class="job-progress">
+        <div class="job-progress" data-job-status="${job.status}">
             <div class="job-progress-header">
                 <span id="jobId${job.job_id}_stage">${job.stage}</span>
                 <span id="jobId${job.job_id}_percent">${job.progress}%</span>
@@ -41,9 +41,11 @@ function renderProgress(job) {
                 <div id="jobId${job.job_id}_progress_bar" class="progress-value" style="width:${job.progress_round}%"></div>
             </div>
             <div class="job-progress-meta">
-                <span id="jobId${job.job_id}_eta">ETA ${job.eta}</span>
-                <span id="jobId${job.job_id}_cur_fps">${job.cur_fps} FPS</span>
-                <span id="jobId${job.job_id}_avg_fps">AVG ${job.avg_fps} FPS</span>
+                <span id="jobId${job.job_id}_eta">ETA ${job.eta || "Unknown"}</span>
+                ${job.status === "transcoding" ? `
+                    <span id="jobId${job.job_id}_cur_fps">${job.cur_fps || 0} FPS</span>
+                    <span id="jobId${job.job_id}_avg_fps">AVG ${job.avg_fps || 0} FPS</span>
+                ` : ""}
             </div>
         </div>`;
 }
@@ -152,6 +154,7 @@ function renderJobActions(job, ids, authenticated) {
 
 	return actions;
 }
+
 function renderJob(job, authenticated) {
     const ids = getJobIds(job);
     const statusClass = getStatusClass(job.status);

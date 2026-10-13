@@ -1,8 +1,15 @@
 function startLogViewer(mode, logfile, interval = 3000, element_id = "#log_file_content") {
     const log_element = $(element_id);
 
-    if (!log_element.length)
+    if (!logfile) {
+        console.error(`Invalid log file: ${logfile}`);
         return;
+    }
+
+    if (!log_element.length){
+        console.error(`Invalid log dom element`);
+        return;
+    }
 
     const element = log_element[0];
     const threshold = 5;
@@ -71,7 +78,8 @@ function startLogViewer(mode, logfile, interval = 3000, element_id = "#log_file_
     const timer = window.setInterval(fetchLog, interval);
 
     // Return a cleanup function to stop polling and remove the listener.
-    return function stopLogViewer() {
+    return function cleanup() {
+        log_element.text("");
         window.clearInterval(timer);
         element.removeEventListener("scroll", updateFollowBottom);
     };

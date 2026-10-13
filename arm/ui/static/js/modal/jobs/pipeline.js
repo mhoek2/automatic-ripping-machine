@@ -3,24 +3,53 @@ ARM.modal.jobs = ARM.modal.jobs || {};
 ARM.modal.jobs.pipeline = {
 	modal: "#jobs-pipeline-modal",
 	job_id: null,
+	log_viewer: null,
+	last_status: null,
 
 	open(options = {}) {
-		const jobId = options.jobId ?? null;
-		if (!jobId)
+		const job_id = options.jobId ?? null;
+
+		if (!job_id)
+			return;
+		
+		const job_index = job_refresh.activeJobs.findIndex( e => e.job_id === job_id );
+		const job = job_refresh.activeJobs[job_index] ;
+
+		if (!job)
 			return;
 
 		const pipeline = ARM.modal.jobs.pipeline;
-		pipeline.job_id = jobId;
+		pipeline.job_id = job_id;
+		pipeline.log_viewer = startLogViewer("tail", job.logfile);
+
+		$("#job-pipeline-modal-title").text(`
+			${job.title} (${job.year})
+		`);
 
 		ARM.modal.show(pipeline.modal);
 	},
 
 	close() {
-		ARM.modal.jobs.pipeline.job_id = null;
+		const pipeline = ARM.modal.jobs.pipeline;
+
+		pipeline.job_id = null;
+
+		if (pipeline.log_viewer && typeof pipeline.log_viewer === 'function') {
+			pipeline.log_viewer();
+		}
+		pipeline.log_viewer = null;
 	},
 
 	renderJobStatus(job) {
+		const pipeline = ARM.modal.jobs.pipeline;
+
 		const status = job.status;
+
+		if (status === pipeline.last_status)
+			return;
+
+		pipeline.last_status = job.status;
+
 		const finished = JOB_STATUS_FINISHED.has(status);
 		const failed = status === JobState.FAILURE;
 		const successful = status === JobState.SUCCESS;
@@ -86,8 +115,8 @@ ARM.modal.jobs.pipeline = {
 
 		console.log(job);
 
-		const body = $(`${pipeline.modal} .arm-modal-body`);
-		body.html(pipeline.renderJobStatus(job));
+		$(`${pipeline.modal} .arm-modal-body #pipeline`).html(pipeline.renderJobStatus(job));
+		$(`${pipeline.modal} .arm-modal-body #progress`).html(renderProgress(job));
 	}
 };
 

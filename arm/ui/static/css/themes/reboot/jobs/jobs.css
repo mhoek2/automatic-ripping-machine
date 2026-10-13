@@ -79,6 +79,11 @@
     font-weight: 600;
     text-transform: uppercase;
     cursor:pointer;
+    transition: transform 100ms ease-in-out;
+}
+
+.job-status:hover {
+    transform:translateX(2px);
 }
 
 .status-dot {

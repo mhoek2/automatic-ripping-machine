@@ -5,13 +5,12 @@ const job_refresh = {
 /**
  * Function to update the current progress
  * @param    {Class} job    current job
- * @param    {Class} oldJob    Copy of old job
  */
 function updateProgress(job) {
     const section = $(`#jobId${job.job_id}_progress_section`);
     if (!section.length) return;
 
-    if (!checkTranscodeStatus(job)) {
+    if (!hasProgress(job)) {
         section.empty();
         return;
     }
@@ -35,18 +34,18 @@ function updateProgress(job) {
  * @param job current job object
  * @returns {boolean} True if job is transcoding or disc is an audio disc
  */
-function checkTranscodeStatus(job) {
+function hasProgress(job) {
     let status = false;
     // HandBrake has the disc/files and should be outputting stage and eta
     if (job.status === "transcoding") {
         status = true;
     }
     // MakeMKV has the disc and should be outputting stage and eta
-    if (job.status === "ripping" && job.stage !== "" && job.progress) {
+    if (job.status === "ripping" && job.stage) {
         status = true;
     }
     // abcde is ripping the audio disc and is outputting stage and eta
-    if (job.disctype === "music" && job.stage !== "") {
+    if (job.disctype === "music" && job.stage) {
         status = true;
     }
 

@@ -1,3 +1,11 @@
+#jobs-pipeline-modal {
+	
+}
+
+#jobs-pipeline-modal .log-output {
+	margin: 1em;
+}
+
 .job-status-pipeline {
 	--pipeline-line: var(--color-border-strong, #3b414b);
 
@@ -146,39 +154,6 @@
 		color: var(--status-pending, #d29922);
 		opacity: 0.85;
 	}
-
-
-/* summary */
-.job-status-summary {
-	display: flex;
-	align-items: center;
-	gap: 0.65rem;
-	margin-top: 0.75rem;
-	padding: 0.8rem 1rem;
-	border: 1px solid var(--status-running-border, var(--pipeline-line));
-	border-radius: 0.65rem;
-	background: var(--status-running-bg, transparent);
-	color: var(--status-running, inherit);
-	font-size: 0.9rem;
-}
-
-.job-status-summary.status-success {
-	border-color: var(--status-success-border, var(--pipeline-line));
-	background: var(--status-success-bg, transparent);
-	color: var(--status-success, inherit);
-}
-
-.job-status-summary.status-failed {
-	border-color: var(--status-failed-border, var(--pipeline-line));
-	background: var(--status-failed-bg, transparent);
-	color: var(--status-failed, inherit);
-}
-
-.job-status-summary.status-unknown {
-	border-color: var(--status-unknown-border, var(--pipeline-line));
-	background: var(--status-unknown-bg, transparent);
-	color: var(--status-unknown, inherit);
-}
 
 @media (max-width: 520px) {
 	.job-pipeline-step {

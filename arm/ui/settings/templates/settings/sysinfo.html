@@ -1,22 +1,19 @@
 {% block sysinfo %}
 <div class="sysinfo">
-
     <div class="sysinfo-grid">
 
         <!-- SYSTEM -->
-        <div class="sysinfo-card">
+        <section class="sysinfo-card sysinfo-card-system">
             <div class="sysinfo-card-header">
                 <span>System</span>
             </div>
 
             <div class="sysinfo-card-body">
-
                 <div class="sysinfo-item">
                     <div class="sysinfo-label">
                         <span>Name</span>
                         <span class="sysinfo-value" data-server="name"></span>
                     </div>
-
                     <div class="sysinfo-description" data-server="description"></div>
                 </div>
 
@@ -32,86 +29,64 @@
                         <span>Temperature</span>
                         <span class="sysinfo-value" data-serverutil="cpu_temp"></span>
                     </div>
-
                     <div class="sysinfo-progress">
-                        <div
-                            class="sysinfo-progress-bar"
-                            data-progress="cpu_temp">
-                        </div>
+                        <div class="sysinfo-progress-bar" data-progress="cpu_temp"></div>
                     </div>
                 </div>
 
                 <div class="sysinfo-item">
                     <div class="sysinfo-label">
-                        <span>CPU Usage</span>
+                        <span>CPU usage</span>
                         <span class="sysinfo-value" data-serverutil="cpu_util"></span>
                     </div>
-
                     <div class="sysinfo-progress">
-                        <div
-                            class="sysinfo-progress-bar"
-                            data-progress="cpu_util">
-                        </div>
+                        <div class="sysinfo-progress-bar" data-progress="cpu_util"></div>
                     </div>
                 </div>
 
-            </div>
-        </div>
-
-
-        <!-- MEMORY -->
-        <div class="sysinfo-card">
-            <div class="sysinfo-card-header">
-                <span>System Memory</span>
-            </div>
-
-            <div class="sysinfo-card-body">
-
-                <div class="sysinfo-item">
+                <!-- MEMORY -->
+                <div class="sysinfo-item sysinfo-memory">
                     <div class="sysinfo-label">
-                        <span>Total</span>
-                        <span class="sysinfo-value" data-memory="total"></span>
-                    </div>
-
-                    <div class="sysinfo-label">
-                        <span>Used</span>
-                        <span class="sysinfo-value" data-serverutil="memory_used"></span>
-                    </div>
-
-                    <div class="sysinfo-label">
-                        <span>Free</span>
-                        <span class="sysinfo-value" data-serverutil="memory_free"></span>
-                    </div>
-                </div>
-
-                <div class="sysinfo-item">
-                    <div class="sysinfo-label">
-                        <span>Memory Usage</span>
+                        <span>System memory</span>
                         <span class="sysinfo-value" data-serverutil="memory_percent"></span>
                     </div>
 
-                    <div class="sysinfo-progress">
-                        <div
-                            class="sysinfo-progress-bar"
-                            data-progress="memory_percent">
-                        </div>
+                    <div class="sysinfo-memory-bar" role="img" aria-label="System memory usage">
+                        <div class="sysinfo-memory-used" data-memory-segment="used"></div>
+                        <div class="sysinfo-memory-free" data-memory-segment="free"></div>
                     </div>
 
-                    <div class="sysinfo-progress-value" data-memory="usage"></div>
-                </div>
+                    <div class="sysinfo-memory-legend">
+                        <div class="sysinfo-memory-legend-item">
+                            <span class="sysinfo-memory-dot total"></span>
+                            <span class="sysinfo-memory-legend-label">Total</span>
+                            <strong data-memory="total">—</strong>
+                        </div>
 
+                        <div class="sysinfo-memory-legend-item">
+                            <span class="sysinfo-memory-dot used"></span>
+                            <span class="sysinfo-memory-legend-label">Used</span>
+                            <strong data-memory="used">—</strong>
+                        </div>
+
+                        <div class="sysinfo-memory-legend-item">
+                            <span class="sysinfo-memory-dot free"></span>
+                            <span class="sysinfo-memory-legend-label">Free</span>
+                            <strong data-memory="free">—</strong>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
+        </section>
 
 
         <!-- STORAGE -->
-        <div class="sysinfo-card">
+        <section class="sysinfo-card sysinfo-card-storage">
             <div class="sysinfo-card-header">
                 <span>Storage</span>
             </div>
 
             <div class="sysinfo-card-body">
-
                 <div class="sysinfo-item">
                     <div class="sysinfo-label">
                         <span>Transcode</span>
@@ -119,21 +94,29 @@
                     </div>
 
                     <div class="sysinfo-progress">
-                        <div
-                            class="sysinfo-progress-bar"
-                            data-progress="storage_transcode_percent">
+                        <div class="sysinfo-progress-bar" data-progress="storage_transcode_percent"></div>
+                    </div>
+
+                    <div class="sysinfo-memory-legend">
+                        <div class="sysinfo-memory-legend-item">
+                            <span class="sysinfo-memory-dot total"></span>
+                            <span class="sysinfo-memory-legend-label">Total</span>
+                            <strong data-storage="transcode_total">—</strong>
+                        </div>
+
+                        <div class="sysinfo-memory-legend-item">
+                            <span class="sysinfo-memory-dot used"></span>
+                            <span class="sysinfo-memory-legend-label">Used</span>
+                            <strong data-storage="transcode_used">—</strong>
+                        </div>
+
+                        <div class="sysinfo-memory-legend-item">
+                            <span class="sysinfo-memory-dot free"></span>
+                            <span class="sysinfo-memory-legend-label">Free</span>
+                            <strong data-storage="transcode_free">—</strong>
                         </div>
                     </div>
-
-                    <div class="sysinfo-progress-value">
-                        <span data-serverutil="storage_transcode_free"></span> GB free
-                    </div>
-
-                    <div class="sysinfo-path">
-                        {{ arm_path }}
-                    </div>
                 </div>
-
 
                 <div class="sysinfo-item">
                     <div class="sysinfo-label">
@@ -142,396 +125,190 @@
                     </div>
 
                     <div class="sysinfo-progress">
-                        <div
-                            class="sysinfo-progress-bar"
-                            data-progress="storage_completed_percent">
+                        <div class="sysinfo-progress-bar" data-progress="storage_completed_percent"></div>
+                    </div>
+
+                    <div class="sysinfo-memory-legend">
+                        <div class="sysinfo-memory-legend-item">
+                            <span class="sysinfo-memory-dot total"></span>
+                            <span class="sysinfo-memory-legend-label">Total</span>
+                            <strong data-storage="completed_total">—</strong>
                         </div>
-                    </div>
 
-                    <div class="sysinfo-progress-value">
-                        <span data-serverutil="storage_completed_free"></span> GB free
-                    </div>
+                        <div class="sysinfo-memory-legend-item">
+                            <span class="sysinfo-memory-dot used"></span>
+                            <span class="sysinfo-memory-legend-label">Used</span>
+                            <strong data-storage="completed_used">—</strong>
+                        </div>
 
-                    <div class="sysinfo-path">
-                        {{ media_path }}
+                        <div class="sysinfo-memory-legend-item">
+                            <span class="sysinfo-memory-dot free"></span>
+                            <span class="sysinfo-memory-legend-label">Free</span>
+                            <strong data-storage="completed_free">—</strong>
+                        </div>
                     </div>
                 </div>
 
+                <div class="sysinfo-storage-health">
+                    <div class="sysinfo-section-heading">
+
+                        <span>Directory permissions</span>
+                    </div>
+
+                    <div class="server-check-list" data-health-directories>
+                        <div class="sysinfo-empty-state">Waiting for checks…</div>
+                    </div>
+                </div>
             </div>
-        </div>
+        </section>
 
+
+        <!-- SERVER DETAILS -->
         {% if authenticated %}
-        <div class="server-details">
-
+        <section class="server-details">
             <div class="server-details-header">
-                Server details
+                <span>Server details</span>
+
+                <span class="server-health-summary" data-health-summary>
+                    <i class="fa-solid fa-circle-minus"></i>
+                    Waiting for checks
+                </span>
             </div>
 
             <div class="server-details-body">
 
-                <!-- SYSTEM + HARDWARE -->
-                <div class="server-details-group">
-
-                    <!-- SYSTEM -->
-                    <div class="server-details-section">
-                        <div class="server-details-section-title">
-                            System
-                        </div>
-
-                        <div class="server-details-grid">
-
-                            <div class="server-detail">
-                                <span class="server-detail-label">Datetime</span>
-                                <span class="server-detail-value" data-serverstat="server_datetime"></span>
-                            </div>
-
-                            <div class="server-detail">
-                                <span class="server-detail-label">Timezone</span>
-                                <span class="server-detail-value" data-serverstat="server_timezone"></span>
-                            </div>
-
-                            <div class="server-detail">
-                                <span class="server-detail-label">Python</span>
-                                <code data-serverstat="python_version"></code>
-                            </div>
-
-                            <div class="server-detail">
-                                <span class="server-detail-label">A.R.M</span>
-                                <code data-serverstat="arm_version_local"></code>
-                            </div>
-
-                            <div class="server-detail">
-                                <span class="server-detail-label">Git</span>
-                                <code data-serverstat="git_commit"></code>
-                            </div>
-
-                            <div class="server-detail server-detail-update" data-serverstat-update>
-                                <span class="server-detail-label">Update</span>
-
-                                <span>
-                                    <a href="https://github.com/mhoek2/automatic-ripping-machine" target="_blank">
-                                        Update available
-                                    </a>
-
-                                    <code data-serverstat="arm_version_remote"></code>
-                                </span>
-                            </div>
-
-                        </div>
+                <!-- SYSTEM INFORMATION -->
+                <section class="server-section">
+                    <div class="server-section-heading">
+                        <span>System information</span>
                     </div>
 
-
-                    <!-- HARDWARE TRANSCODING -->
-                    <div class="server-details-section">
-                        <div class="server-details-section-title">
-                            Hardware transcoding
+                    <div class="server-info-grid">
+                        <div class="server-info-item">
+                            <span>Datetime</span>
+                            <code data-serverstat="server_datetime"></code>
                         </div>
 
-                        <div class="hardware-list">
+                        <div class="server-info-item">
+                            <span>Timezone</span>
+                            <code data-serverstat="server_timezone"></code>
+                        </div>
 
-                            <div class="hardware-item">
-                                <span class="hardware-name">
-                                    Intel QuickSync
-                                </span>
+                        <div class="server-info-item">
+                            <span>Python</span>
+                            <code data-serverstat="python_version"></code>
+                        </div>
 
-                                <span class="hardware-status"
-                                    data-hw-support="intel">
-                                    <span class="sysinfo-status"></span>
-                                    <span class="hardware-status-text"></span>
-                                </span>
+                        <div class="server-info-item">
+                            <span>ARM version</span>
+                            <code data-serverstat="arm_version_local"></code>
+                        </div>
+
+                        <div class="server-info-item">
+                            <span>Git commit</span>
+                            <code data-serverstat="git_commit"></code>
+                        </div>
+
+                        <div class="server-info-item" data-serverstat-update>
+                            <span>Update available</span>
+                            <div class="server-info-update">
+                                <a
+                                    href="https://github.com/mhoek2/automatic-ripping-machine"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >View project</a>
+                                <code data-serverstat="arm_version_remote"></code>
                             </div>
-
-                            <div class="hardware-item">
-                                <span class="hardware-name">
-                                    NVIDIA NVENC
-                                </span>
-
-                                <span class="hardware-status"
-                                    data-hw-support="nvidia">
-                                    <span class="sysinfo-status"></span>
-                                    <span class="hardware-status-text"></span>
-                                </span>
-                            </div>
-
-                            <div class="hardware-item">
-                                <span class="hardware-name">
-                                    AMD VCN
-                                </span>
-
-                                <span class="hardware-status"
-                                    data-hw-support="amd">
-                                    <span class="sysinfo-status"></span>
-                                    <span class="hardware-status-text"></span>
-                                </span>
-                            </div>
-
                         </div>
                     </div>
+                </section>
 
-                </div>
+
+                <!-- EXTERNAL TOOLS -->
+                <section class="server-section">
+                    <div class="server-section-heading">
+                        <span>External tools</span>
+                    </div>
+
+                    <div class="server-check-list" data-health-tools>
+                        <div class="sysinfo-empty-state">Waiting for checks…</div>
+                    </div>
+                </section>
+
+
+                <!-- HARDWARE TRANSCODING -->
+                <section class="server-section">
+                    <div class="server-section-heading">
+                        <span>Hardware transcoding</span>
+                    </div>
+
+                    <div class="server-check-list" data-hardware-list>
+                        <div class="server-check-row" data-hw-support="intel">
+                            <span class="server-check-name">Intel Quick Sync</span>
+                            <span class="server-check-status">
+                                <i class="fa-solid fa-circle-minus"></i>
+                                Waiting
+                            </span>
+                        </div>
+
+                        <div class="server-check-row" data-hw-support="nvidia">
+                            <span class="server-check-name">NVIDIA NVENC</span>
+                            <span class="server-check-status">
+                                <i class="fa-solid fa-circle-minus"></i>
+                                Waiting
+                            </span>
+                        </div>
+
+                        <div class="server-check-row" data-hw-support="amd">
+                            <span class="server-check-name">AMD VCN</span>
+                            <span class="server-check-status">
+                                <i class="fa-solid fa-circle-minus"></i>
+                                Waiting
+                            </span>
+                        </div>
+                    </div>
+                </section>
 
 
                 <!-- RIP STATISTICS -->
-                <div class="server-details-section">
-
-                    <div class="server-details-section-title">
-                        Rip statistics
+                <section class="server-section">
+                    <div class="server-section-heading">
+                        <span>Rip statistics</span>
                     </div>
 
                     <div class="rip-stats">
-
                         <div class="rip-stat">
-                            <div class="rip-stat-value"
-                                data-serverstat="total_rips"></div>
-                            <div class="rip-stat-label">
-                                Total rips
-                            </div>
+                            <div class="rip-stat-value" data-serverstat="total_rips">—</div>
+                            <div class="rip-stat-label">Total rips</div>
                         </div>
 
                         <div class="rip-stat">
-                            <div class="rip-stat-value"
-                                data-serverstat="movies_ripped"></div>
-                            <div class="rip-stat-label">
-                                Movies
-                            </div>
+                            <div class="rip-stat-value" data-serverstat="movies_ripped">—</div>
+                            <div class="rip-stat-label">Movies</div>
                         </div>
 
                         <div class="rip-stat">
-                            <div class="rip-stat-value"
-                                data-serverstat="series_ripped"></div>
-                            <div class="rip-stat-label">
-                                Series
-                            </div>
+                            <div class="rip-stat-value" data-serverstat="series_ripped">—</div>
+                            <div class="rip-stat-label">Series</div>
                         </div>
 
                         <div class="rip-stat">
-                            <div class="rip-stat-value"
-                                data-serverstat="cds_ripped"></div>
-                            <div class="rip-stat-label">
-                                Audio
-                            </div>
+                            <div class="rip-stat-value" data-serverstat="cds_ripped">—</div>
+                            <div class="rip-stat-label">Audio</div>
                         </div>
-
                     </div>
-                </div>
+                </section>
 
             </div>
-        </div>
+        </section>
         {% endif %}
 
     </div>
 </div>
 
 <script>
-    function loadServerStats( sysinfo_inited )
-    {
-        $.getJSON(`/serverstats?is_inited=${sysinfo_inited}`)
-            .done(function(response)
-            {
-                const data = response.data;
-
-                updateServerInfo(data);
-                updateServerUtil(data.serverutil);
-                updateServerStats(data);
-                updateHardwareSupport(data.hw_support);
-                updateServerVersion(data);
-            })
-            .fail(function(xhr, status, error)
-            {
-                console.error("Failed to load server stats:", status, error);
-            });
-    }
-
-
-    function updateServerInfo(data)
-    {
-        $('[data-server="name"]').text(data.server.name);
-        $('[data-server="description"]').text(data.server.description);
-        $('[data-server="cpu"]').text(data.server.cpu);
-    }
-
-
-    function updateServerUtil(util)
-    {
-        // CPU temperature
-        const $cpuTemp = $('[data-serverutil="cpu_temp"]');
-        const $cpuTempProgress = $('[data-progress="cpu_temp"]');
-
-        if (util.cpu_temp !== null && util.cpu_temp !== undefined)
-        {
-            $cpuTemp.text(util.cpu_temp + "°C");
-
-            $cpuTempProgress
-                .show()
-                .css("width", Math.min(util.cpu_temp, 100) + "%")
-                .removeClass("warning danger");
-
-            if (util.cpu_temp > 70)
-                $cpuTempProgress.addClass("danger");
-            else if (util.cpu_temp > 55)
-                $cpuTempProgress.addClass("warning");
-        }
-        else
-        {
-            $cpuTemp.text("Not reported");
-            $cpuTempProgress.hide();
-        }
-
-
-        // CPU usage
-        $('[data-serverutil="cpu_util"]')
-            .text(util.cpu_util + "%");
-
-        $('[data-progress="cpu_util"]')
-            .css("width", Math.min(util.cpu_util, 100) + "%")
-            .removeClass("warning danger");
-
-        if (util.cpu_util > 80)
-        {
-            $('[data-progress="cpu_util"]')
-                .addClass("danger");
-        }
-
-
-        // Memory
-        $('[data-serverutil="memory_used"]')
-            .text(util.memory_used + " GB");
-
-        $('[data-serverutil="memory_free"]')
-            .text(util.memory_free + " GB");
-
-        $('[data-serverutil="memory_percent"]')
-            .text(util.memory_percent + "%");
-
-        $('[data-progress="memory_percent"]')
-            .css("width", Math.min(util.memory_percent, 100) + "%")
-            .removeClass("warning danger");
-
-        if (util.memory_percent > 80)
-        {
-            $('[data-progress="memory_percent"]')
-                .addClass("danger");
-        }
-
-
-        // Transcode storage
-        $('[data-serverutil="storage_transcode_percent"]')
-            .text(util.storage_transcode_percent + "%");
-
-        $('[data-serverutil="storage_transcode_free"]')
-            .text(util.storage_transcode_free + " GB");
-
-        $('[data-progress="storage_transcode_percent"]')
-            .css(
-                "width",
-                Math.min(util.storage_transcode_percent, 100) + "%"
-            )
-            .removeClass("warning danger");
-
-        if (util.storage_transcode_percent > 80)
-        {
-            $('[data-progress="storage_transcode_percent"]')
-                .addClass("danger");
-        }
-
-
-        // Completed storage
-        $('[data-serverutil="storage_completed_percent"]')
-            .text(util.storage_completed_percent + "%");
-
-        $('[data-serverutil="storage_completed_free"]')
-            .text(util.storage_completed_free + " GB");
-
-        $('[data-progress="storage_completed_percent"]')
-            .css(
-                "width",
-                Math.min(util.storage_completed_percent, 100) + "%"
-            )
-            .removeClass("warning danger");
-
-        if (util.storage_completed_percent > 80)
-        {
-            $('[data-progress="storage_completed_percent"]')
-                .addClass("danger");
-        }
-    }
-
-
-    function updateServerStats(data)
-    {
-        $("[data-serverstat]").each(function()
-        {
-            const $element = $(this);
-            const key = $element.data("serverstat");
-
-            if (data[key] !== undefined)
-                $element.text(data[key]);
-        });
-    }
-
-
-    function updateHardwareSupport(hw)
-    {
-        ["intel", "nvidia", "amd"].forEach(function(type)
-        {
-            const $element = $('[data-hw-support="' + type + '"]');
-
-            if (!$element.length)
-                return;
-
-            const $status = $element.find(".sysinfo-status");
-            const $text = $element.find(".hardware-status-text");
-
-            $status.removeClass("ok fail");
-            $element.removeClass("supported unavailable");
-
-            if (hw[type])
-            {
-                $status.addClass("ok");
-                $element.addClass("supported");
-                $text.text("Supported");
-            }
-            else
-            {
-                $status.addClass("fail");
-                $element.addClass("unavailable");
-                $text.text("Unavailable");
-            }
-        });
-    }
-
-
-    function updateServerVersion(data)
-    {
-        const $update = $("[data-serverstat-update]");
-
-        if (!$update.length)
-            return;
-
-        if (data.updated)
-        {
-            $update.hide();
-            return;
-        }
-
-        $update.show();
-
-        $update
-            .find('[data-serverstat="arm_version_remote"]')
-            .text(data.arm_version_remote);
-    }
-
-
-    $(function()
-    {
-        let sysinfo_inited = false
-
-        setInterval(function(){
-            loadServerStats( sysinfo_inited );
-            sysinfo_inited = true
-        }, 5000);
-        
+    $(function() {
+        sysinfo.start();
     });
 </script>
-
 {% endblock %}
