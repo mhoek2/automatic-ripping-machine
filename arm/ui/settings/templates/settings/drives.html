@@ -63,7 +63,7 @@
                                     <div class="drive-field">
                                         <div class="drive-label">Current Job</div>
                                         <div class="drive-value">
-                                            <a href="/jobdetail?job_id={{ drive.job_current.job_id }}">
+                                            <a href="/#detail_job_id=0_{{ drive.job_current.job_id }}">
                                                 <span class="text-capitalize">{{ drive.job_current.video_type }}</span> - {{ drive.job_current.title }} - {{ drive.job_current.year }}
                                             </a>
                                         </div>
@@ -74,7 +74,7 @@
                                     <div class="drive-field">
                                         <div class="drive-label">Previous Job</div>
                                         <div class="drive-value">
-                                            <a href="/jobdetail?job_id={{ drive.job_previous.job_id }}">
+                                            <a href="/#detail_job_id=0_{{ drive.job_previous.job_id }}">
                                                 <span class="text-capitalize">{{ drive.job_previous.video_type }}</span> - {{ drive.job_previous.title }} - {{ drive.job_previous.year }}
                                             </a>
                                         </div>

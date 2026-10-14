@@ -27,12 +27,9 @@ function addNotification(title, body, notificationId, timestamp = null) {
         );
     }
     else{
-        const milliseconds = formatTimeToMilisecconds( timestamp )
-        notification.find(".notification-time").text(
-            formatRelativeTime(milliseconds)
-        );
+        const dateInfo = formatTimestamp(timestamp);
+        notification.find(".notification-time").text(dateInfo.relative);
     }
-
 
     $("#notification_container").append(notification);
 

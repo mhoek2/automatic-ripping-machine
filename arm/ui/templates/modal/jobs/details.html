@@ -1,0 +1,61 @@
+<div id="jobs-details-modal" class="arm-modal" aria-hidden="true">
+    <div class="arm-modal-backdrop" data-modal-close></div>
+    <div class="arm-modal-dialog job-details-dialog" role="dialog" aria-modal="true" aria-labelledby="job-details-title" tabindex="-1">
+        <div class="arm-modal-header">
+            <span class="job-details-header-label">Job details</span>
+            <button class="arm-modal-close" type="button" aria-label="Close dialog" data-modal-close>
+                <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+            </button>
+        </div>
+
+        <div class="arm-modal-body">
+            <div class="job-details-content">
+                <section class="job-details-overview">
+                    <div class="job-details-poster">
+                        <img id="job-details-poster" src="" alt="Movie poster">
+                    </div>
+                    <div class="job-details-info">
+                        <div class="job-details-title-row">
+                            <h2 id="job-details-title">Unknown title</h2>
+                            <div class="job-details-status" id="job-details-status" data-status="unknown"></div>
+                        </div>
+                        <p id="job-details-plot"></p>
+                        <div class="job-details-meta" id="job-details-meta"></div>
+                        <a id="job-details-log" href="#" class="arm-button arm-button-secondary">
+                            <i class="fa-solid fa-file-lines" aria-hidden="true"></i>
+                            View log
+                        </a>
+                    </div>
+                </section>
+
+                <section class="job-details-section progress-section">
+                    <div id="pipeline"></div>
+                    <div id="progress"></div>
+                </section>
+
+                <section class="job-details-section">
+                    <div id="tracks">
+                        <h3 class="tracks-heading">Tracks</h3>
+                        <div class="tracks-list"></div>
+                        <div class="tracks-actions"></div>
+                    </div>
+                </section>
+
+                {% if authenticated %}
+                    <details class="job-details-section job-details-disclosure">
+                        <summary>Technical details</summary>
+                        <div id="job-details-technical"></div>
+                    </details>
+                    <details class="job-details-section job-details-disclosure">
+                        <summary>Configuration</summary>
+                        <div id="job-details-config"></div>
+                    </details>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="arm-modal-footer">
+            <button class="arm-button arm-button-secondary" type="button" data-modal-close>Close</button>
+        </div>
+    </div>
+</div>

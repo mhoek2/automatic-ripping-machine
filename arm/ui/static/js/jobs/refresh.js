@@ -229,6 +229,11 @@ function refreshJobs( update_only = false ) {
                     `arm:modal-update_${ARM.modal.jobs.pipeline.modal}`,
                     {}
                 );
+
+                $(document).trigger(
+                    `arm:modal-update_${ARM.modal.jobs.details.modal}`,
+                    {}
+                );
             });
     });
 }

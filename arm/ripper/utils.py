@@ -101,7 +101,9 @@ def notify_entry(job):
     notification = Notifications(f"New Job: {job.job_id} has started. Disctype: {job.disctype}",
                                  f"New job has started to rip - {job.label},"
                                  f"{job.disctype} at {datetime.datetime.now()}")
+ 
     database_adder(notification)
+    
     if job.disctype in ["dvd", "bluray"]:
         if cfg.arm_config["UI_BASE_URL"] == "":
             display_address = (f"http://{check_ip()}:{job.config.WEBSERVER_PORT}")
@@ -110,11 +112,13 @@ def notify_entry(job):
         # Send the notifications
         notify(job, NOTIFY_TITLE,
                f"Found disc: {job.title}. Disc type is {job.disctype}. Main Feature is {job.config.MAINFEATURE}."
-               f"Edit entry here: {display_address}/jobdetail?job_id={job.job_id}")
+               f"Edit entry here: {display_address}/#detail_job_id=0_{job.job_id}")
     elif job.disctype == "music":
         notify(job, NOTIFY_TITLE, f"Found music CD: {job.label}. Ripping all tracks.")
+        
     elif job.disctype == "data":
         notify(job, NOTIFY_TITLE, "Found data disc.  Copying data.")
+        
     else:
         raise RipperException("Could not determine disc type")
 

@@ -39,6 +39,24 @@
 	transform: translateY(10px) scale(.98);
 	transition: transform .2s ease;
 }
+	.arm-modal-dialog::-webkit-scrollbar {
+		width: 10px;
+	}
+
+	.arm-modal-dialog::-webkit-scrollbar-track {
+		background: var(--color-scrollbar-track);
+		border-radius: 6px;
+	}
+
+	.arm-modal-dialog::-webkit-scrollbar-thumb {
+		background: var(--color-scrollbar-thumb);
+		border-radius: 6px;
+	}
+
+	.arm-modal-dialog::-webkit-scrollbar-thumb:hover {
+		background: var(--color-scrollbar-thumb-hover);
+	}
+
 
 .arm-modal.open .arm-modal-dialog {
 	transform: translateY(0) scale(1);
@@ -97,6 +115,9 @@
 	font-size: 18px;
 	font-weight: 600;
 	line-height: 1.4;
+}
+.arm-modal-body h3 {
+	color: var(--color-text)
 }
 
 .arm-modal-body p {

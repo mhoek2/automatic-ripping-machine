@@ -9,6 +9,12 @@ function getJobIds(job) {
 	};
 }
 
+function getActiveJob(job_id) {
+    return job_refresh.activeJobs.find(
+        job => String(job.job_id) === String(job_id)
+    ) ?? null;
+}
+
 function getJobTitle(job) {
     return `${job.title_manual !== "None" ? job.title_manual : job.title} (${job.year})`;
 }
@@ -26,6 +32,162 @@ function posterCheck(job) {
 
 function getStatusClass(status) {
     return `status-${status.toLowerCase().replace(/[^a-z0-9_-]/g, "")}`;
+}
+
+function renderTracks(job, root) {
+    const modal = $(root);
+    const tracks = job.tracks || [];
+    const container = modal.find('#tracks .tracks-list').empty();
+    const actions = modal.find('#tracks .tracks-actions').empty();
+    
+    const manual_edit = (__is_authenticated_simple() && job.manual_edit);
+
+    if (!tracks.length) {
+        container.append($('<p>').addClass('tracks-empty').text('No tracks found.'));
+        return;
+    }
+
+    $.each(tracks, function (_, track) {
+        const title = track.filename || `Track ${track.track_number}`;
+        const row = $('<div>').addClass('track-row');
+        const info = $('<div>').addClass('track-info');
+        const heading = $('<div>').addClass('track-heading');
+        const tags = $('<div>').addClass('track-tags');
+
+        heading.append($('<span>').addClass('track-number').text(String(track.track_number).padStart(2, '0')));
+        heading.append($('<strong>').addClass('track-title').text(title));
+
+        const addTag = (label, value, className = '') => {
+            if (value == null || value === '') return;
+            tags.append($('<span>').addClass(`track-tag ${className}`).text(label ? `${label}: ${value}` : value));
+        };
+
+        addTag('', formatTrackLength(track.length, job.video_type), 'track-tag-duration');
+        addTag('', track.fps ? `${track.fps} FPS` : null);
+        addTag('', track.aspect_ratio);
+        if (track.main_feature) addTag('', 'Main feature', 'track-tag-feature');
+
+        info.append(heading, tags);
+
+        const status = $('<span>')
+            .addClass(`track-status ${track.ripped ? 'is-ripped' : 'is-pending'}`)
+            .append($('<i>').addClass(`fa-solid ${track.ripped ? 'fa-check' : 'fa-circle-dot'}`).attr('aria-hidden', 'true'))
+            .append(document.createTextNode(track.ripped ? 'Ripped' : 'Not ripped'));
+
+        row.append(info, status);
+
+        if (!manual_edit && !track.process)
+            row.addClass("skip-track");
+
+        if (manual_edit) {
+            const checkbox = $('<input>', {
+                type: 'checkbox',
+                class: 'track-checkbox',
+                checked: Boolean(track.process),
+                'aria-label': `Process ${title}`
+            }).on('change', function () {
+                const input = this;
+                const local_job_id = getJobIds(job).jobId;
+
+                $.ajax({
+                    url: '/jobdetail_track',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    headers: {
+                        'X-CSRFToken': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    data: JSON.stringify({
+                        job_id: local_job_id,
+                        track_id: track.track_id,
+                        process: input.checked
+                    })
+                }).fail(() => {
+                    input.checked = !input.checked;
+                });
+            });
+
+            const label = $('<label>')
+                .addClass('arm-checkbox track-select')
+                .append(checkbox, $('<span>'));
+
+            row.prepend(label);
+        }
+
+        container.append(row);
+    });
+
+    if (manual_edit) {
+        $('<button>', {
+            type: 'button',
+            class: 'arm-button arm-button-primary track-start',
+            html: '<i class="fa-solid fa-play" aria-hidden="true"></i> Start ripping'
+        }).on('click', function () {
+            const local_job_id = getJobIds(job).jobId;
+
+            $.ajax({
+                url: '/jobdetail_ready',
+                method: 'POST',
+                contentType: 'application/json',
+                headers: {
+                    'X-CSRFToken': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: JSON.stringify({
+                    job_id: local_job_id,
+                })
+            }).fail(() => {
+                alert();
+            });
+        }).appendTo(actions);
+    }
+}
+
+function renderJobStatus(job) {
+    const status        = job.status;
+    const finished      = JOB_STATUS_FINISHED.has(status);
+    const failed        = status === JobState.FAILURE;
+    const successful    = status === JobState.SUCCESS;
+
+    const skipTranscode = [true, "true"].includes(String(job.config?.SKIP_TRANSCODE).toLowerCase());
+
+    const currentIndex = finished
+        ? JOB_PIPELINE_STAGES.length - 1
+        : JOB_PIPELINE_STAGES.findIndex(stage => stage.status === status);
+
+    const steps = JOB_PIPELINE_STAGES.map((stage, index) => {
+        const disabled = skipTranscode && ["waiting_transcode", "transcoding"].includes(stage.status);
+
+        let state = disabled ? "step-disabled" : "pipeline-pending";
+        let icon = stage.icon;
+
+        if (!disabled) {
+            if (finished && successful && index < currentIndex) {
+                state = "pipeline-done";
+                icon = "fa-check";
+            } else if (finished && failed && index === currentIndex) {
+                state = "pipeline-failed";
+                icon = "fa-xmark";
+            } else if (!finished && currentIndex !== -1 && index < currentIndex) {
+                state = "pipeline-done";
+                icon = "fa-check";
+            } else if (!finished && index === currentIndex) {
+                state = "pipeline-current";
+            }
+        }
+
+        return `
+            <div class="job-pipeline-step ${state}">
+                <span class="job-pipeline-icon">
+                    <i class="fa-solid ${icon}" aria-hidden="true"></i>
+                </span>
+                <span class="job-pipeline-label">${stage.label}</span>
+            </div>`;
+    }).join("");
+
+    return `
+        <div class="job-status-pipeline" data-status="${status}" aria-label="Job status pipeline">
+            ${steps}
+        </div>
+    `;
 }
 
 function renderProgress(job) {
@@ -163,26 +325,22 @@ function renderJob(job, authenticated) {
         ? `/jobdetail?job_id=${ids.jobId}`
         : `${job.server_url}/jobdetail?job_id=${ids.jobId}`;
 
-    const date = new Date(job.start_time);
-    const startDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
-    const startTime = `${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`;
+    const dateInfo = formatTimestamp(job.start_time);
 
     return `
         <article class="job-card" id="jobId${job.job_id}">
-            <a class="job-poster-link" href="${detailUrl}">
+            <a href="#" class="job-poster-link" data-modal="jobs_details" data-jobid="${job.job_id}">
                 ${posterCheck(job)}
             </a>
 
             <div class="job-content">
                 <header class="job-header">
                     <div>
-                        <h2 id="jobId${job.job_id}_title">${getJobTitle(job)}</h2>
+                        <h2 id="jobId${job.job_id}_title" data-modal="jobs_details" data-jobid="${job.job_id}">${getJobTitle(job)}</h2>
                         <span class="job-id">${job.job_id}</span>
                     </div>
 
-                    <span class="job-status ${statusClass}" id="jobId${job.job_id}_status" 
-                            data-modal='jobs_pipeline'
-                            data-jobid="${job.job_id}">
+                    <span class="job-status ${statusClass}" id="jobId${job.job_id}_status" data-modal='jobs_pipeline' data-jobid="${job.job_id}">
                         <span class="status-dot"></span>
                         <span class="status-text">${job.status}</span>
                     </span>
@@ -194,8 +352,7 @@ function renderJob(job, authenticated) {
 
                 <div class="job-footer">
                     <div class="job-time">
-                        <span><i class="fa-regular fa-calendar"></i> ${startDate}</span>
-                        <span><i class="fa-regular fa-clock"></i> ${startTime}</span>
+                        <span title="${dateInfo.title}"><i class="fa-regular fa-clock"></i> ${dateInfo.relative}</span>
                         <span><i class="fa-solid fa-stopwatch"></i> ${job.job_length || "Ongoing"}</span>
                     </div>
                     ${renderJobActions(job, ids, authenticated)}

@@ -91,41 +91,23 @@ function collectChildServers() {
     }
 }
 
-function formatTimeToMilisecconds(timestamp){
-    return new Date(
-        timestamp.replace(" ", "T").replace(/(\.\d{3})\d+$/, "$1")
-    ).getTime();
-}
+function formatTrackLength(length, videoType) {
+	if (length == null || length === '')
+		return 'Unknown duration';
 
-function formatRelativeTime(timestamp) {
-	const now = Date.now()
-    const seconds = Math.round((Number(timestamp) - now) / 1000);
-    const absSeconds = Math.abs(seconds);
+	let seconds = Number(length);
 
-    let value;
-    let unit;
+	if (!Number.isFinite(seconds))
+		return 'Unknown duration';
 
-    if (absSeconds < 60) {
-        value = seconds;
-        unit = "second";
-    } else if (absSeconds < 3600) {
-        value = Math.round(seconds / 60);
-        unit = "minute";
-    } else if (absSeconds < 86400) {
-        value = Math.round(seconds / 3600);
-        unit = "hour";
-    } else if (absSeconds < 2592000) {
-        value = Math.round(seconds / 86400);
-        unit = "day";
-    } else if (absSeconds < 31536000) {
-        value = Math.round(seconds / 2592000);
-        unit = "month";
-    } else {
-        value = Math.round(seconds / 31536000);
-        unit = "year";
-    }
+	if (videoType === 'Music')
+		seconds = Math.round(seconds / 1000);
 
-    return new Intl.RelativeTimeFormat("en", {
-        numeric: "auto"
-    }).format(value, unit);
+	const hours = Math.floor(seconds / 3600);
+	const minutes = Math.floor((seconds % 3600) / 60);
+	const remaining = Math.floor(seconds % 60);
+
+	return hours
+		? `${hours}:${String(minutes).padStart(2, '0')}:${String(remaining).padStart(2, '0')}`
+		: `${minutes}:${String(remaining).padStart(2, '0')}`;
 }

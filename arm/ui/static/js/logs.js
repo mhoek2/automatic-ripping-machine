@@ -1,6 +1,11 @@
 function startLogViewer(mode, logfile, interval = 3000, element_id = "#log_file_content") {
     const log_element = $(element_id);
 
+    if (!__is_authenticated_simple()) {
+        log_element.remove();
+        return;
+    }
+
     if (!logfile) {
         console.error(`Invalid log file: ${logfile}`);
         return;

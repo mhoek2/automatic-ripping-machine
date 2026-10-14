@@ -41,6 +41,29 @@ def serialize_job_results(jobs):
         job_log = os.path.join(cfg.arm_config['LOGPATH'], str(job.logfile))
         process_logfile(job_log, job, result)
 
+        tracks = job.tracks.all()
+        
+        result['tracks'] = [
+			{
+				'track_id': track.track_id,
+				'track_number': track.track_number,
+				'filename': track.filename,
+				'length': track.length,
+				'fps': track.fps,
+				'aspect_ratio': track.aspect_ratio,
+				'main_feature': track.main_feature,
+				'ripped': track.ripped,
+				'process': track.process,
+			}
+			for track in tracks
+		]
+        
+        result['manual_edit'] = (
+            job.manual_mode
+            and job.status == JobState.MANUAL_WAIT_STARTED.value
+            and not job.manual_start
+        )
+
         try:
             result['config'] = job.config.get_d()
         except AttributeError:
@@ -58,7 +81,7 @@ def serialize_job_results(jobs):
 def get_x_jobs(job_status):
     """Get successful, failed, or active jobs."""
     if job_status == "joblist":
-        jobs = db.session.query(Job).filter(~Job.finished).all()
+        jobs = Job.query.filter(~Job.finished).all()
     elif JobState(job_status) in JOB_STATUS_FINISHED:
         jobs = Job.query.filter_by(status=job_status).all()
     else:

@@ -1,0 +1,202 @@
+#tracks {
+    --track-border: var(--color-border);
+    --track-muted: var(--color-text-secondary);
+    --track-surface: var(--color-surface);
+    min-width: 0;
+}
+
+#tracks .tracks-heading {
+    margin: 0 0 1rem;
+    font-size: 1.1rem;
+    font-weight: 650;
+    letter-spacing: -0.02em;
+}
+
+#tracks .tracks-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+}
+
+#tracks .track-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    min-width: 0;
+    padding: 1rem;
+    border: 1px solid var(--track-border);
+    border-radius: 0.75rem;
+    background: var(--track-surface);
+    transition: border-color 150ms ease, background 150ms ease;
+}
+    #tracks .track-row.skip-track {
+        opacity: 0.3;
+    }
+
+    #tracks .track-row:not(.skip_track):hover {
+        border-color: var(--color-accent);
+    }
+
+#tracks .track-info {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 0.65rem;
+    min-width: 0;
+}
+
+#tracks .track-heading {
+    display: flex;
+    align-items: baseline;
+    gap: 0.65rem;
+    min-width: 0;
+}
+
+#tracks .track-number {
+    flex-shrink: 0;
+    color: var(--track-muted);
+    font-size: 0.8rem;
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+}
+
+#tracks .track-title {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+#tracks .track-tags {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+#tracks .track-tag {
+    display: inline-flex;
+    align-items: center;
+    min-height: 1.5rem;
+    padding: 0.2rem 0.55rem;
+    border: 1px solid var(--track-border);
+    border-radius: 0.4rem;
+    color: var(--track-muted);
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1.25;
+    white-space: nowrap;
+}
+
+#tracks .track-tag-duration {
+    background: var(--color-surface-secondary);
+    color: var(--color-text);
+    font-variant-numeric: tabular-nums;
+}
+
+#tracks .track-tag-feature {
+    border-color: color-mix(in srgb, var(--color-accent) 35%, var(--track-border));
+    background: color-mix(in srgb, var(--color-accent) 10%, transparent);
+    color: var(--color-accent);
+}
+
+#tracks .track-status {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.6rem;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+#tracks .track-status i {
+    font-size: 0.7rem;
+}
+
+#tracks .track-status.is-ripped {
+    border-color: color-mix(in srgb, #3fb950 30%, transparent);
+    background: color-mix(in srgb, #3fb950 12%, transparent);
+    color: #3fb950;
+}
+
+#tracks .track-status.is-pending {
+    border-color: var(--track-border);
+    background: var(--color-surface-secondary);
+    color: var(--track-muted);
+}
+
+#tracks .track-select {
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    cursor: pointer;
+}
+
+#tracks .track-checkbox {
+    width: 1rem;
+    height: 1rem;
+    margin: 0;
+    accent-color: var(--color-accent);
+    cursor: pointer;
+}
+
+#tracks .tracks-empty {
+    margin: 0;
+    padding: 1.5rem;
+    border: 1px dashed var(--track-border);
+    border-radius: 0.75rem;
+    color: var(--track-muted);
+    text-align: center;
+}
+
+#tracks .tracks-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+#tracks .track-start {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+@media (max-width: 600px) {
+    #tracks .track-row {
+        align-items: flex-start;
+        gap: 0.65rem;
+        padding: 0.75rem;
+    }
+
+    #tracks .track-heading {
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    #tracks .track-status {
+        gap: 0.3rem;
+        padding: 0.3rem 0.45rem;
+        font-size: 0.7rem;
+    }
+}
+
+@media (max-width: 400px) {
+    #tracks .track-row {
+        flex-wrap: wrap;
+    }
+
+    #tracks .track-info {
+        flex-basis: calc(100% - 2rem);
+    }
+
+    #tracks .track-status {
+        margin-left: auto;
+    }
+}

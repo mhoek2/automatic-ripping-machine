@@ -22,20 +22,20 @@
     scrollbar-color: var(--color-scrollbar-thumb) var(--color-scrollbar-track);
 }
 
-.log-output::-webkit-scrollbar {
-    width: 10px;
-}
+    .log-output::-webkit-scrollbar {
+        width: 10px;
+    }
 
-.log-output::-webkit-scrollbar-track {
-    background: var(--color-scrollbar-track);
-    border-radius: 6px;
-}
+    .log-output::-webkit-scrollbar-track {
+        background: var(--color-scrollbar-track);
+        border-radius: 6px;
+    }
 
-.log-output::-webkit-scrollbar-thumb {
-    background: var(--color-scrollbar-thumb);
-    border-radius: 6px;
-}
+    .log-output::-webkit-scrollbar-thumb {
+        background: var(--color-scrollbar-thumb);
+        border-radius: 6px;
+    }
 
-.log-output::-webkit-scrollbar-thumb:hover {
-    background: var(--color-scrollbar-thumb-hover);
-}
+    .log-output::-webkit-scrollbar-thumb:hover {
+        background: var(--color-scrollbar-thumb-hover);
+    }
