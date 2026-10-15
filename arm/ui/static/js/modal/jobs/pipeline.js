@@ -4,7 +4,6 @@ ARM.modal.jobs.pipeline = {
 	modal: "#jobs-pipeline-modal",
 	job_id: null,
 	log_viewer: null,
-	last_status: null,
 
 	open(options = {}) {
 		const _modal = ARM.modal.jobs.pipeline;
@@ -39,6 +38,13 @@ ARM.modal.jobs.pipeline = {
 		_modal.log_viewer = null;
 	},
 
+	renderJobProgressPipeline(job){
+		const _modal = ARM.modal.jobs.pipeline;
+
+		$(`${_modal.modal} .arm-modal-body #pipeline`).html(renderJobPipeline(job));
+		$(`${_modal.modal} .arm-modal-body #progress`).html(renderProgress(job));
+	},
+
 	update()
 	{
 		const _modal = ARM.modal.jobs.pipeline;
@@ -55,11 +61,7 @@ ARM.modal.jobs.pipeline = {
 
 		console.log(job);
 
-		if (job.status !== _modal.last_status) {
-			$(`${_modal.modal} .arm-modal-body #pipeline`).html(renderJobStatus(job));
-    		_modal.last_status = job.status;
-		}
-		$(`${_modal.modal} .arm-modal-body #progress`).html(renderProgress(job));
+		_modal.renderJobProgressPipeline(job);
 	}
 };
 

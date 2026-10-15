@@ -141,7 +141,7 @@ function renderTracks(job, root) {
     }
 }
 
-function renderJobStatus(job) {
+function renderJobPipeline(job) {
     const status        = job.status;
     const finished      = JOB_STATUS_FINISHED.has(status);
     const failed        = status === JobState.FAILURE;
@@ -154,24 +154,24 @@ function renderJobStatus(job) {
         : JOB_PIPELINE_STAGES.findIndex(stage => stage.status === status);
 
     const steps = JOB_PIPELINE_STAGES.map((stage, index) => {
-        const disabled = skipTranscode && ["waiting_transcode", "transcoding"].includes(stage.status);
+        const step_disabled = skipTranscode && ["waiting_transcode", "transcoding"].includes(stage.status);
 
-        let state = disabled ? "step-disabled" : "pipeline-pending";
+        let state = "pipeline-pending";
         let icon = stage.icon;
 
-        if (!disabled) {
-            if (finished && successful && index < currentIndex) {
-                state = "pipeline-done";
-                icon = "fa-check";
-            } else if (finished && failed && index === currentIndex) {
-                state = "pipeline-failed";
-                icon = "fa-xmark";
-            } else if (!finished && currentIndex !== -1 && index < currentIndex) {
-                state = "pipeline-done";
-                icon = "fa-check";
-            } else if (!finished && index === currentIndex) {
-                state = "pipeline-current";
-            }
+        if (step_disabled) {
+            state = "step-disabled";
+        } else if (finished && successful && index <= currentIndex) {
+            state = "pipeline-done";
+            icon = "fa-check";
+        } else if (finished && failed && index === currentIndex) {
+            state = "pipeline-failed";
+            icon = "fa-xmark";
+        } else if (!finished && currentIndex !== -1 && index < currentIndex) {
+            state = "pipeline-done";
+            icon = "fa-check";
+        } else if (!finished && index === currentIndex) {
+            state = "pipeline-current";
         }
 
         return `
@@ -238,7 +238,7 @@ function renderJobActions(job, ids, authenticated) {
             <button class="icon-button danger" type="button"
                 data-modal="confirm"
                 data-type="delete"
-                data-jobid="${ids.jobId}"
+                data-jobid="${job.job_id}"
                 data-href="json?job=${ids.jobId}&mode=delete"
                 data-tooltip="Delete Job">
                 <i class="fa-solid fa-trash"></i>
@@ -253,7 +253,7 @@ function renderJobActions(job, ids, authenticated) {
                 <button class="icon-button danger" type="button"
                     data-modal="confirm"
                     data-type="abandon"
-                    data-jobid="${ids.jobId}"
+                    data-jobid="${job.job_id}"
                     data-href="json?job=${ids.jobId}&mode=abandon"
                     data-tooltip="Abandon Job">
                     <i class="fa-solid fa-ban"></i>
@@ -305,7 +305,7 @@ function renderJobActions(job, ids, authenticated) {
 					<button type="button"
 						data-modal="confirm"
 						data-type="fixperms"
-						data-jobid="${ids.jobId}"
+						data-jobid="${job.job_id}"
 						data-href="json?mode=fixperms&job=${ids.jobId}">
 						<i class="fa-solid fa-wrench"></i>
 						<span>Fix Permissions</span>

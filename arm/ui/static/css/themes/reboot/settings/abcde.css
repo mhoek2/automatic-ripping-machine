@@ -1,0 +1,12 @@
+#abcde_settings {
+
+}
+
+    #abcde_settings form {
+        display:flex;
+        flex-direction: column;
+    }
+
+        #abcde_settings form textarea {
+            min-height:60vh
+        }

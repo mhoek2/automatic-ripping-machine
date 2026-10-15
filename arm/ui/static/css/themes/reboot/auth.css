@@ -62,31 +62,6 @@
     font-size: 11px;
 }
 
-.login-submit {
-    width: 100%;
-    height: 38px;
-    margin-top: 8px;
-    padding: 7px 14px;
-    border: 1px solid var(--color-accent);
-    border-radius: 5px;
-    background: var(--color-accent);
-    color: var(--color-text-inverse);
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background .15s ease, border-color .15s ease;
-}
-
-.login-submit:hover {
-    background: var(--color-accent-hover);
-    border-color: var(--color-accent-hover);
-}
-
-.login-submit:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px var(--color-info-bg);
-}
-
 @media (max-width: 480px) {
     .login-page {
         padding: 16px;
@@ -154,31 +129,6 @@
 	margin-top: 5px;
 	color: var(--color-danger);
 	font-size: 11px;
-}
-
-.update-password-submit {
-	width: 100%;
-	height: 38px;
-	margin-top: 4px;
-	padding: 7px 14px;
-	border: 1px solid var(--color-accent);
-	border-radius: 5px;
-	background: var(--color-accent);
-	color: var(--color-text-inverse);
-	font-size: 13px;
-	font-weight: 500;
-	cursor: pointer;
-	transition: background .15s ease, border-color .15s ease;
-}
-
-.update-password-submit:hover {
-	background: var(--color-accent-hover);
-	border-color: var(--color-accent-hover);
-}
-
-.update-password-submit:focus {
-	outline: none;
-	box-shadow: 0 0 0 2px var(--color-info-bg);
 }
 
 @media (max-width: 600px) {

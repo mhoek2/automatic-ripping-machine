@@ -99,12 +99,14 @@
     background: var(--color-success-bg);
 }
 
+.status-moving,
 .status-transcoding,
 .status-ripping,
 .status-active {
     color: var(--color-info);
     background: var(--color-info-bg);
 }
+
 
 .status-failed,
 .status-error {

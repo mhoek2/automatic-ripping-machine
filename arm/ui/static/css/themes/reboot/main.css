@@ -1,3 +1,8 @@
+*, html, body {
+    font-family: "Segoe UI", "Segoe UI Web (West European)", system-ui, -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif;
+}
+
+
 :root {
     /* Page */
     --color-background: #f5f6f8;
@@ -99,6 +104,7 @@ html[data-theme="dark"] {
 }
 
 
+
 body {
     overflow: hidden;
     background: var(--color-background);
@@ -117,6 +123,7 @@ body {
     height: 100vh;
     width: 100%;
     padding: 2em;
+    margin-bottom: 8em;
 }
 
 
@@ -194,6 +201,55 @@ body {
 	gap: 0.5rem;
 	white-space: nowrap;
 }
+
+
+#footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.25rem 1.5rem;
+    margin-top: auto;
+    color: var(--color-text-muted);
+    font-size: 0.875rem;
+    text-align: center;
+}
+
+#footer p {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    margin: 0;
+    line-height: 1.6;
+}
+
+#footer a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--color-text);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 150ms ease;
+}
+
+#footer a:hover,
+#footer a:focus-visible {
+    color: var(--color-accent);
+}
+
+#footer a i {
+    font-size: 1rem;
+}
+
+@media (max-width: 480px) {
+    #footer {
+        padding: 1rem;
+        font-size: 0.8125rem;
+    }
+}
+
 
 @media (max-width: 768px) {
 	.page-header {

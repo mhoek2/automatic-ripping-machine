@@ -135,22 +135,18 @@ function removeJobItem(job) {
  * @param serverIndex current server index count (added to the front of job id's)
  */
 function checkActiveJobs(data, serverIndex) {
-    // Loop through each active job
-    $.each(job_refresh.activeJobs, function (AJIndex) {
-        // Turn off job active and re-enable it later if we find it
-        job_refresh.activeJobs[AJIndex].active = false;
+	const results = Object.values(data.results || {});
 
-        // Loop through each result and search for our active job
-        $.each(data.results, function (_index, job) {
+	job_refresh.activeJobs.forEach(function (activeJob) {
+		const matchingJob = results.find(function (job) {
+			return String(activeJob.job_id) ===
+				`${serverIndex}_${job.job_id}`;
+		});
 
-            // We found a match for the current job id and the active job id
-            if (job_refresh.activeJobs[AJIndex].job_id === `${serverIndex}_${job.job_id}`) {
-
-                job_refresh.activeJobs[AJIndex].active = true;
-                return false;
-            }
-        });
-    });
+		activeJob.active = matchingJob
+			? !JOB_STATUS_FINISHED.has(matchingJob.status) // only mark unfinshed jobs active
+			: false;
+	});
 }
 
 /**
@@ -165,22 +161,29 @@ function refreshJobsSuccess(data, serverIndex, serverUrl, serverCount) {
     checkActiveJobs(data, serverIndex);
 
     $.each(data.results, function (_index, job) {
-        job.job_id = `${serverIndex}_${job.job_id}`;
-        job.ripper = (data.arm_name ? data.arm_name : "");
-        job.server_url = serverUrl;
-        job.active = true;
+        job.job_id      = `${serverIndex}_${job.job_id}`;
+        job.ripper      = (data.arm_name ? data.arm_name : "");
+        job.server_url  = serverUrl;
+        job.active      = !JOB_STATUS_FINISHED.has(job.status);
 
         const job_index = job_refresh.activeJobs.findIndex( e => e.job_id === job.job_id );
 
+        // exists
         if (job_index !== -1) {
             job_refresh.activeJobs[job_index] = job;
             updateJobItem(job);
         } 
+
+        // add to list
         else {
             job_refresh.activeJobs.push(job);
-            $(JOB_LIST_CONTAINER).append(
-                addJobItem(job, data.authenticated)
-            );
+
+            // only add unfinished jobs
+            if (!JOB_STATUS_FINISHED.has(job.status)) {
+                $(JOB_LIST_CONTAINER).append(
+                    addJobItem(job, data.authenticated)
+                );
+            }
         }
 
         serverCount--;
@@ -189,16 +192,21 @@ function refreshJobsSuccess(data, serverIndex, serverUrl, serverCount) {
     return serverCount;
 }
 
-function removeInactiveJobs() {
+function removeInactiveJobs(update_only = false) {
 	$.each(job_refresh.activeJobs, function (index, job) {
 		if (job && !job.active) {
-			removeJobItem(job);
+            if (!update_only)
+                setTimeout(() => removeJobItem(job), 200);
+
 			job_refresh.activeJobs.splice(index, 1);
 		}
 	});
 }
 
-function sortJobs() {
+function sortJobs(update_only = false) {
+    if (update_only)
+        return;
+
 	$(`${JOB_LIST_CONTAINER} .job-card`).sort(function (a, b) {
 		return a.id.localeCompare(b.id);
 	}).appendTo(JOB_LIST_CONTAINER);
@@ -219,21 +227,21 @@ function refreshJobs( update_only = false ) {
                 --i;
             })
             .always(function () {
-                if (!update_only) {
-                    removeInactiveJobs();
-                    sortJobs();
-                }
-
-                // Update job details modal.
+                // Update job pipeline modal.
                 $(document).trigger(
                     `arm:modal-update_${ARM.modal.jobs.pipeline.modal}`,
                     {}
                 );
 
+                // Update job details modal.
                 $(document).trigger(
                     `arm:modal-update_${ARM.modal.jobs.details.modal}`,
                     {}
                 );
+
+                // Sort jobs after updates are processed
+                sortJobs(update_only);
+                removeInactiveJobs(update_only);
             });
     });
 }

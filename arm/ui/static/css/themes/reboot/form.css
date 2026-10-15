@@ -98,3 +98,57 @@ select {
 	border-color: var(--color-accent);
 	box-shadow: 0 0 0 2px var(--color-info-bg);
 }
+
+/* Buttons */
+.arm-button {
+	all: unset;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 36px;
+	padding: 8px 15px;
+	border: 1px solid transparent;
+	border-radius: 6px;
+	font-family: inherit;
+	font-size: 12px;
+	font-weight: 600;
+	cursor: pointer;
+	transition: background .15s ease, border-color .15s ease, color .15s ease;
+}
+
+.arm-button:focus-visible,
+.arm-modal-close:focus-visible {
+	outline: 2px solid var(--color-accent);
+	outline-offset: 2px;
+}
+
+.arm-button-secondary {
+	border-color: var(--color-border-strong);
+	background: var(--color-control);
+	color: var(--color-text);
+}
+
+.arm-button-secondary:hover {
+	background: var(--color-control-hover);
+}
+
+.arm-button-danger {
+	border-color: var(--color-danger);
+	background: var(--color-danger);
+	color: var(--color-text-inverse);
+}
+
+.arm-button-danger:hover {
+	filter: brightness(.9);
+}
+
+.arm-button-primary {
+	border-color: var(--color-accent);
+	background: var(--color-accent);
+	color: var(--color-text-inverse);
+}
+
+.arm-button-primary:hover {
+	border-color: var(--color-accent-hover);
+	background: var(--color-accent-hover);
+}

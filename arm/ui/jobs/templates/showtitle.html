@@ -27,8 +27,8 @@
     </div>
 
     <div class="title-details-footer">
-        <a href="titlesearch?job_id={{ job_id }}" class="title-details-button title-details-button-secondary">New Search</a>
-        <a href="{{ url_for('route_jobs.updatetitle', title=results['Title'], year=results['Year'], imdbID=results['imdbID'], type=results['Type'], poster=results['Poster'], job_id=job_id) }}" class="title-details-button title-details-button-primary">Update Title</a>
+        <a class="arm-button arm-button-secondary" href="titlesearch?job_id={{ job_id }}" >New Search</a>
+        <a class="arm-button arm-button-primary" href="{{ url_for('route_jobs.updatetitle', title=results['Title'], year=results['Year'], imdbID=results['imdbID'], type=results['Type'], poster=results['Poster'], job_id=job_id) }}">Update Title</a>
     </div>
 
 </div>

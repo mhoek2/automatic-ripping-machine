@@ -5,14 +5,6 @@
 
 {% block content %}
 
-<style>
-.popover {
-    white-space: pre-line;
-}
-.popover-body,.popover-header {
-    white-space: pre-wrap;
-}
-</style>
 <!-- We keep this here incase we need it later -->
 <div class="alert alert-success d-none" role="alert" id="success">
   <h4 class="alert-heading">Settings were saved successfully</h4>
@@ -110,15 +102,13 @@
 {{ super() }}
 <script type="application/javascript">
 	$(function () {
-		$(".popovers").popover({
-			trigger: "hover",
-		});
-	{% if form.errors %}
-		{% for k in form.errors %}
-			$("[name='{{k}}']").addClass("is-invalid");
-		{% endfor %}
-	{% endif %}
-	activeTab("ui_settings");
+		activeTab("ui_settings");
+
+		{% if form.errors %}
+			{% for k in form.errors %}
+				$("[name='{{k}}']").addClass("is-invalid");
+			{% endfor %}
+		{% endif %}
 	});
 </script>
 {% endblock %}

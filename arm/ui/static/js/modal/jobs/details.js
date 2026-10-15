@@ -5,7 +5,6 @@ ARM.modal.jobs.details = {
 	inited: null,
 	job_id: null,
 	log_viewer: null,
-	last_status: null,
 	request: null,
 	data: null,
 
@@ -17,9 +16,6 @@ ARM.modal.jobs.details = {
 			return;
 
 		const job = getActiveJob(job_id);
-
-		if (!job)
-			return;
 
 		_modal.job_id = job_id;
 		_modal.data = null;
@@ -79,6 +75,7 @@ ARM.modal.jobs.details = {
 
 				content.removeClass("is-loading");
 				console.error("Failed to load job details", xhr);
+				//_modal.close();
 			})
 			.always(function () {
 				content.removeClass("is-loading");
@@ -90,6 +87,8 @@ ARM.modal.jobs.details = {
 		const _modal = ARM.modal.jobs.details;
 		const job = data.job;
 		const modal = $(_modal.modal);
+
+		console.log(job);
 
 		modal.find("#job-details-title").text(
 			`${job.title || "Unknown title"}${job.year ? ` (${job.year})` : ""}`
@@ -107,13 +106,15 @@ ARM.modal.jobs.details = {
 
 		_modal.renderStatus(job);
 		_modal.renderMeta(job);
+		_modal.renderJobProgressPipeline(job);
+
 		renderTracks(job, _modal.modal);
 
 		if (!__is_authenticated_simple())
 			return;
-
+	
 		_modal.renderTable("#job-details-technical", data.technical?.job || {});
-		_modal.renderTable("#job-details-config", data.technical?.config || {});
+		_modal.renderTable("#job-details-config", job.config || {});
 	},
 
 	renderStatus(job) {
@@ -159,6 +160,13 @@ ARM.modal.jobs.details = {
 		});
 	},
 
+	renderJobProgressPipeline(job) {
+		const _modal = ARM.modal.jobs.details;
+
+		$(`${_modal.modal} .arm-modal-body #pipeline`).html(renderJobPipeline(job));
+		$(`${_modal.modal} .arm-modal-body #progress`).html(renderProgress(job));
+	},
+
 	renderTable(selector, values) {
 		const table = $('<table>').addClass('job-details-table');
 
@@ -186,21 +194,15 @@ ARM.modal.jobs.details = {
 		const job = getActiveJob(_modal.job_id);
 
 		if (!job) {
-			ARM.modal.hide(_modal.modal);
 			return;
 		}
 
 		console.log(job);
 
-		if (job.status !== _modal.last_status) {
-			$(`${_modal.modal} .arm-modal-body #pipeline`).html(renderJobStatus(job));
-    		_modal.last_status = job.status;
-		}
-		$(`${_modal.modal} .arm-modal-body #progress`).html(renderProgress(job));
+		_modal.renderStatus(job);
+		_modal.renderJobProgressPipeline(job);
 
 		renderTracks(job, _modal.modal);
-
-		_modal.renderStatus(job);
 	}
 };
 
@@ -208,8 +210,6 @@ $(function () {
 	const _modal = ARM.modal.jobs.details;
 
 	function __openJobDetails(job_id) {
-		console.log(typeof job_id);
-
 		if (!job_id) 
 			return;
 
@@ -229,8 +229,6 @@ $(function () {
 
 		__openJobDetails(String(param_job_id));
 	}
-
-
 
 	$(document).on("click", "[data-modal='jobs_details']", function () {
 		__openJobDetails($(this).attr("data-jobid"));

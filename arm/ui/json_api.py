@@ -81,7 +81,14 @@ def serialize_job_results(jobs):
 def get_x_jobs(job_status):
     """Get successful, failed, or active jobs."""
     if job_status == "joblist":
-        jobs = Job.query.filter(~Job.finished).all()
+        cutoff = datetime.datetime.now() - datetime.timedelta(hours=3)
+        
+        jobs = Job.query.filter(
+            db.or_(
+                ~Job.finished,
+                Job.start_time >= cutoff,
+            )
+        ).all()
     elif JobState(job_status) in JOB_STATUS_FINISHED:
         jobs = Job.query.filter_by(status=job_status).all()
     else:
@@ -405,75 +412,56 @@ def search(search_query):
         'authenticated' : authenticated_state()
     }
 
+
 def delete_job(job_id, mode):
-    """
-    json api version of delete jobs\n
-    :param job_id: job id to delete || str "all"/"title"
-    :param str mode: should always be 'delete'
-    :return: json/dict to be returned if success or fail
-    """
+    """Delete a job and its related database records."""
     try:
-        json_return = {}
-        app.logger.debug(f"job_id= {job_id}")
-        # Find the job the user wants to delete
-        if mode == 'delete' and job_id is not None:
-            # User wants to wipe the whole database
-            # Make a backup and everything
-            # The user can only access this by typing it manually
-            if job_id == 'all':
-                #  # if this gets put in final, the DB will need optimised
-                #  if os.path.isfile(cfg.arm_config['DBFILE']):  # noqa: S125
-                #    # Make a backup of the database file
-                #    cmd = f"cp {cfg.arm_config['DBFILE']} {cfg.arm_config['DBFILE'])}.bak"
-                #    app.logger.info(f"cmd  -  {cmd}")
-                #    os.system(cmd)
-                #  Track.query.delete()
-                #  Job.query.delete()
-                #  Config.query.delete()
-                #  db.session.commit()
-                app.logger.debug("Admin is requesting to delete all jobs from database!!! No deletes went to db")
-                json_return = {'success': True, 'job': job_id, 'mode': mode}
-            elif job_id == "title":
-                #  The user can only access this by typing it manually
-                #  This shouldn't be left on when on a full server
-                # This causes db corruption!
-                # logfile = request.args['title']
-                # Job.query.filter_by(title=logfile).delete()
-                # db.session.commit()
-                # app.logger.debug("Admin is requesting to delete all jobs with (x) title.")
-                json_return = {'success': True, 'job': job_id, 'mode': mode}
-                # Not sure this is the greatest way of handling this
-            else:
-                try:
-                    post_value = int(job_id)
-                    app.logger.debug(f"Admin requesting delete job {job_id} from database!")
-                except ValueError:
-                    app.logger.debug("Admin is requesting to delete a job but didnt provide a valid job ID")
-                    notification = Notifications(f"Job: {job_id} couldn't be Deleted!",
-                                                 "Couldn't find a job with that ID")
-                    db.session.add(notification)
-                    db.session.commit()
-                    return {'success': False, 'job': 'invalid', 'mode': mode, 'error': 'Not a valid job'}
-                else:
-                    app.logger.debug("No errors: job_id=" + str(post_value))
-                    drive_utils.job_cleanup(job_id)
-                    Track.query.filter_by(job_id=job_id).delete()
-                    Job.query.filter_by(job_id=job_id).delete()
-                    Config.query.filter_by(job_id=job_id).delete()
-                    notification = Notifications(f"Job: {job_id} was Deleted!",
-                                                 f'Job with id: {job_id} was successfully deleted from the database')
-                    db.session.add(notification)
-                    db.session.commit()
-                    app.logger.debug(f"Admin deleting  job {job_id} was successful")
-                    json_return = {'success': True, 'job': job_id, 'mode': mode}
-    # If we run into problems with the database changes
-    # error out to the log and roll back
+        app.logger.debug(f"job_id={job_id}")
+
+        if mode != 'delete' or job_id is None:
+            return {'success': False, 'error': 'Invalid request', 'mode': mode}
+
+        if job_id == 'all':
+            app.logger.warning("Delete-all requested; no jobs were deleted")
+            return {'success': True, 'job': job_id, 'mode': mode}
+
+        if job_id == 'title':
+            app.logger.warning("Delete-by-title requested; no jobs were deleted")
+            return {'success': True, 'job': job_id, 'mode': mode}
+
+        try:
+            post_value = int(job_id)
+        except (ValueError, TypeError):
+            return {'success': False, 'job': 'invalid', 'mode': mode, 'error': 'Not a valid job ID'}
+
+        job = Job.query.filter_by(job_id=post_value).first()
+
+        if job is None:
+            app.logger.warning(f"Cannot delete job {post_value}: job not found")
+            return {'success': False, 'job': post_value, 'mode': mode, 'error': 'Job not found'}
+
+        app.logger.info(f"Deleting job {post_value}")
+
+        drive_utils.job_cleanup(post_value)
+        Track.query.filter_by(job_id=post_value).delete()
+        Config.query.filter_by(job_id=post_value).delete()
+        db.session.delete(job)
+
+        notification = Notifications(
+            f"Job: {post_value} was Deleted!",
+            f"Job with id: {post_value} was successfully deleted from the database"
+        )
+        db.session.add(notification)
+        db.session.commit()
+
+        app.logger.info(f"Job {post_value} was successfully deleted")
+        return {'success': True, 'job': post_value, 'mode': mode}
+
     except Exception as err:
         db.session.rollback()
-        app.logger.error(f"Error:db-1 {err}")
-        json_return = {'success': False}
+        app.logger.exception(f"Error deleting job {job_id}: {err}")
+        return {'success': False, 'job': job_id, 'mode': mode, 'error': 'Failed to delete job'}
 
-    return json_return
 
 
 def generate_log(logpath, job_id):

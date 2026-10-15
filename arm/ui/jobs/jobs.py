@@ -63,18 +63,21 @@ def jobdetail_api():
 			for column in model.__table__.columns
 		}
 
-	tracks = job.tracks.all()
+	job_info = json_api.serialize_job_results([job])
+	if len(job_info) is not 1:
+		return jsonify(success=False, error='Invalid job info'), 404
+    
+	job_info = job_info[0]
 
     # this should be stored in the database once, and updated when changing title manually ..
 	meta = ui_utils.metadata_selector("get_details", job.title, job.year, job.imdb_id)
  	 
 	if meta and 'Error' not in meta:
-		job.plot = meta['Plot'] if 'Plot' in meta else "There was a problem getting the plot"
-		job.background = meta['background_url'] if 'background_url' in meta else None
+		plot = meta['Plot'] if 'Plot' in meta else "There was a problem getting the plot"
+		background = meta['background_url'] if 'background_url' in meta else None
 	
-    #
-    #job.plot = " is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since 1966, when designers at Letraset and James Mosley, the librarian at St Bride Printing Library in London, took a 1914 Cicero translation and scrambled it to make dummy text for Letraset's Body Type sheets. It has survived not only many decades, but also the leap into el"
-	#job.background = ""
+	#plot = " is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since 1966, when designers at Letraset and James Mosley, the librarian at St Bride Printing Library in London, took a 1914 Cicero translation and scrambled it to make dummy text for Letraset's Body Type sheets. It has survived not only many decades, but also the leap into el"
+	#background = ""
 
 	authenticated = ui_utils.authenticated_state()
 
@@ -82,45 +85,12 @@ def jobdetail_api():
         authenticated=authenticated,
 		success=True,
 		job={
-			'job_id': job.job_id,
-			'title': job.title,
-			'year': job.year,
-			'status': job.status,
-			'video_type': job.video_type,
-			'disctype': job.disctype,
-			#'disc': job.disc,
-			'label': job.label,
-			'start_time': serialize_value(job.start_time),
-			'stop_time': serialize_value(job.stop_time),
-			'job_length': serialize_value(job.job_length),
-			'logfile': job.logfile,
-			'poster_url': job.poster_url,
-			'plot': job.plot,
-			'background': job.background,
-			'manual_mode': job.manual_mode,
-			'manual_edit': (
-				job.manual_mode
-				and job.status == JobState.MANUAL_WAIT_STARTED.value
-				and not job.manual_start
-			),
-            "tracks": [
-                {
-                    'track_id': track.track_id,
-                    'track_number': track.track_number,
-                    'filename': track.filename,
-                    'length': track.length,
-                    'fps': track.fps,
-                    'aspect_ratio': track.aspect_ratio,
-                    'main_feature': track.main_feature,
-                    'ripped': track.ripped,
-                    'process': track.process,
-                }
-                for track in tracks
-            ],
+            **job_info,
+			'plot': plot,
+			'background': background,
 		},
 		technical={
 			'job': serialize_columns(job),
-			'config': serialize_columns(job.config) if job.config else {},
 		} if authenticated else -1,
 	)
 
@@ -270,8 +240,9 @@ def gettitle():
     dvd_info = ui_utils.metadata_selector("get_details", None, None, imdb_id)
     
     return render_template('showtitle.html', 
-        results = dvd_info, 
-        job_id   = job_id
+        authenticated   = ui_utils.authenticated_state(),           
+        results         = dvd_info, 
+        job_id          = job_id
     )
 
 
@@ -323,22 +294,6 @@ def updatetitle():
     db.session.commit()
 
     return redirect("/")
-
-
-@route_jobs.route('/activerips')
-@login_required
-def rips():
-    """
-    This no longer works properly because of the 'transcoding' status
-    """
-    active_jobs = Job.query.filter_by(~Job.finished)
-
-    return render_template('activerips.html', 
-        authenticated    = ui_utils.authenticated_state(),
-        title            = 'Active rips', 
-        jobs             = active_jobs
-    )
-
 
 @route_jobs.route('/changeparams')
 @login_required

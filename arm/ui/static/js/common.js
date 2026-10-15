@@ -68,7 +68,7 @@ const JOB_PIPELINE_STAGES = [
 	{ status: "waiting_transcode", label: "Waiting to transcode", icon: "fa-hourglass-half" },
 	{ status: "transcoding", label: "Transcoding", icon: "fa-film" },
 	{ status: "moving", label: "Moving", icon: "fa-upload" },
-	{ status: "finished", label: "Finished", icon: "fa-flag-checkered" }
+	{ status: "success", label: "Finished", icon: "fa-flag-checkered" }
 ];
 
 /**

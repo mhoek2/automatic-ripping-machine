@@ -73,31 +73,6 @@
     display: block;
 }
 
-.custom-title-submit {
-    width: 100%;
-    height: 38px;
-    margin-top: 4px;
-    padding: 7px 14px;
-    border: 1px solid var(--color-accent);
-    border-radius: 5px;
-    background: var(--color-accent);
-    color: var(--color-text-inverse);
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background .15s ease, border-color .15s ease;
-}
-
-.custom-title-submit:hover {
-    background: var(--color-accent-hover);
-    border-color: var(--color-accent-hover);
-}
-
-.custom-title-submit:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px var(--color-info-bg);
-}
-
 @media (max-width: 600px) {
     .custom-title-page {
         padding: 20px 12px;
