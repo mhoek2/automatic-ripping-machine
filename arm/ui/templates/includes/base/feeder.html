@@ -42,7 +42,7 @@
 
     .feeder-dropdown {
         position: absolute;
-        top: calc(100% + 0.15rem);
+        top: calc(100% - 0.15rem);
         left: 0;
         z-index: 100;
         display: none;
@@ -115,66 +115,15 @@
 		</label>
 		<div class="feeder-dropdown" id="feeder-global"></div>
 	</div>
+<!--
+	<div class="feeder-group">
+		<input type="checkbox" id="feeder-global-toggle" class="feeder-toggle">
+		<label for="feeder-global-toggle" class="feeder-dropdown-label">
+			<i class="fa-solid fa-globe"></i>
+			Manual
+			<i class="fa-solid fa-chevron-down feeder-chevron"></i>
+		</label>
+		<div class="feeder-dropdown" id="feeder-simulate"></div>
+	</div>
+-->
 </div>
-
-<script>
-    function send_feeder_cmd(action) {
-        $.ajax({
-            url: "/feeder",
-            method: "GET",
-            data: { action },
-            dataType: "json"
-        })
-        .done(function(result) {
-            console.log("Feeder:", result);
-        })
-        .fail(function(xhr) {
-            console.error("Feeder failed:", xhr.responseJSON || xhr.statusText);
-        });
-    }
-
-    const FEEDER_GROUPS = {
-        ripping: [
-            JobState.MANUAL_WAIT_STARTED,
-            JobState.IDLE,
-            JobState.VIDEO_RIPPING,
-            JobState.VIDEO_WAITING,
-            JobState.VIDEO_INFO,
-            JobState.AUDIO_RIPPING
-        ],
-        transcoding: [
-            JobState.TRANSCODE_ACTIVE,
-            JobState.TRANSCODE_WAITING
-        ],
-        global: [
-            JobState.SUCCESS,
-            JobState.FAILURE,
-            JobState.POSTPROCESSING_MOVING,
-            "clear",
-        ]
-    };
-
-    function renderFeederGroup(group, states) {
-        const container = $(`#feeder-${group}`);
-        const uniqueStates = [...new Set(states)];
-
-        uniqueStates.forEach(state => {
-            container.append(
-                $("<button>", {
-                    type: "button",
-                    text: state,
-                    "data-feeder-action": state
-                })
-            );
-        });
-    }
-
-    Object.entries(FEEDER_GROUPS).forEach(([group, states]) => {
-        renderFeederGroup(group, states);
-    });
-
-    $(document).on("click", "[data-feeder-action]", function() {
-        const state = $(this).attr("data-feeder-action");
-        send_feeder_cmd(state);
-    });
-</script>
