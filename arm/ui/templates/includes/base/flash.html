@@ -1,0 +1,28 @@
+<!-- Flash -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="flash-messages" aria-live="polite">
+            {% for category, message in messages %}
+                {% set category = 'info' if category == 'message' else category %}
+                <div class="flash-alert flash-{{ category }}" role="alert">
+                    <span class="flash-icon" aria-hidden="true">
+                        {% if category == 'success' %}
+                            <i class="fa-solid fa-check"></i>
+                        {% elif category in ['error', 'danger'] %}
+                            <i class="fa-solid fa-xmark"></i>
+                        {% elif category == 'warning' %}
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                        {% else %}
+                            <i class="fa-solid fa-circle-info"></i>
+                        {% endif %}
+                    </span>
+
+                    <div class="flash-content">{{ message }}</div>
+                    <button class="flash-close" type="button" aria-label="Dismiss notification" onclick="this.parentElement.remove()">
+                        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                    </button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}

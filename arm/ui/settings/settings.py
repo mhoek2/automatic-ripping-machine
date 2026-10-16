@@ -297,12 +297,20 @@ def server_info():
         drive.name = str(form_drive.name.data).strip()
         drive.drive_mode = str(form_drive.drive_mode.data).strip()
         db.session.commit()
-        flash(f"Updated Drive {drive.name} details", "success")
-        # Return to the systeminfo page (refresh page)
+        
+        flash(f"Updated Drive {drive.name} settings", "success")
+        ripper_utils.notify(None, "ARM notification", f"Updated drive settings for: {drive.name}({drive.mount})", send_remote=False)
+
         return redirect(url_for(REDIRECT_SETTINGS))
     else:
-        flash("Error: Unable to update drive details", "error")
-        # Return for GET
+        app.logger.warning("Form validation failed: %s", form_drive.errors)
+        app.logger.warning("Submitted form data: %s", request.form)
+        errors = "; ".join(f"{field}: {', '.join(messages)}" for field, messages in form_drive.errors.items())
+
+        message = f"Failed to update drive settings: \n{errors}"
+        flash(message, "error")
+        ripper_utils.notify(None, "ARM notification", message, send_remote=False)
+
         return redirect(url_for(REDIRECT_SETTINGS))
 
 
@@ -410,9 +418,8 @@ def testapprise():
     Overview - Send a test notification to Apprise.
     """
     # Send a sample notification
-    message = "This is a notification by the ARM-Notification Test!"
-    if cfg.arm_config["UI_BASE_URL"] and cfg.arm_config["WEBSERVER_PORT"]:
-        message = message + f" Server URL: http://{cfg.arm_config['UI_BASE_URL']}:{cfg.arm_config['WEBSERVER_PORT']}"
+    message = f"This is a notification by the ARM-Notification Test! {ripper_utils.get_server_url()}"
+    
     ripper_utils.notify(None, "ARM notification", message)
     flash("Test notification sent ", "success")
     return redirect(url_for(REDIRECT_SETTINGS))

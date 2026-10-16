@@ -206,14 +206,15 @@ from flask import jsonify
 
 @app.route("/feeder")
 def feeder():
-    command = request.args.get("action", "")
+    data = request.args.to_dict()
+    command = data.get("action", "completed")
 
     print(f"FEEDER: {command}", flush=True)
 
     result = subprocess.run([
         "python3",
         "/opt/arm/dev/feeder/feeder.py",
-        command,
+        json.dumps(data),
     ])
 
     if result.returncode != 0:

@@ -2,7 +2,6 @@
     font-family: "Segoe UI", "Segoe UI Web (West European)", system-ui, -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif;
 }
 
-
 :root {
     /* Page */
     --color-background: #f5f6f8;
@@ -103,12 +102,11 @@ html[data-theme="dark"] {
     --color-scrollbar-thumb-hover: #666;
 }
 
-
-
 body {
     overflow: hidden;
     background: var(--color-background);
     color: var(--color-text);
+    margin: 0;
 }
 
 .base_container {

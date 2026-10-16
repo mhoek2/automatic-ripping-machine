@@ -8,6 +8,8 @@
                         <div class="drive-card">
                             <form id="systemForm{{ drive.drive_id }}" name="systemForm{{ drive.drive_id }}" action="/systeminfo" method="post">
                                 {{ form_drive.hidden_tag() }}
+                                <input type="hidden" name="id" value="{{ drive.drive_id }}">
+
                                 <div class="drive-header">
                                     <div class="drive-title">
                                         {{ drive.name }}
@@ -103,7 +105,7 @@
 
                                 <div class="drive-footer">
                                     <button type="submit" class="drive-button drive-button-primary" name="submit">Update</button>
-                                    <a href="drive/manual/{{ drive.drive_id }}" class="drive-button drive-button-secondary">Manual</a>
+                                    <a href="drive/manual/{{ drive.drive_id }}" class="drive-button drive-button-secondary">Manual Start</a>
                                     <a href="drive/remove/{{ drive.drive_id }}" class="drive-button drive-button-danger">Remove</a>
                                 </div>
                             </form>
