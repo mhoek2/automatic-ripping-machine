@@ -623,7 +623,7 @@ def put_track(job, t_no, seconds, aspect, fps, mainfeature, source, filename="",
         chapters=chapters,
         filesize=filesize
     )
-    job_track.ripped = (seconds > int(job.config.MINLENGTH))
+
     database_adder(job_track)
 
 

@@ -740,6 +740,7 @@ def makemkv(job):
 
 _MAKEMKV_TRACK_ADDED = re.compile(r"File (?P<filename>.+\.mkv) was added")
 _MAKEMKV_TRACK_SUFFIX = re.compile(r"_t\d+\.mkv$")
+_MAKEMKV_SAVING_TITLE = re.compile(r'^PRGC:5017,(?P<title_index>\d+),"Saving to MKV file"$')
 _MAKEMKV_TRACK_SKIPPED = re.compile(
     r"^Title #(?P<track_number>\d+) has length of \d+ seconds "
     r"which is less than minimum title length of \d+ seconds "
@@ -750,6 +751,12 @@ def find_skip_message(message):
     """Parse a MakeMKV message indicating that a title was skipped."""
     match = _MAKEMKV_TRACK_SKIPPED.match(message.strip())
     return int(match.group("track_number")) if match else None
+
+
+def find_saving_message(message):
+    match = _MAKEMKV_SAVING_TITLE.match(message.strip())
+    return int(match.group("title_index")) if match else None
+
 
 def mark_track_skipped(job, track_number):
     """Mark a MakeMKV-skipped track as not processing."""
@@ -789,6 +796,7 @@ def process_all_tracks(job, rawpath):
     # Mark all tracks as processing while MakeMKV runs.
     for track in job.tracks:
         track.process = True
+        track.status = "ripping"
     db.session.commit()
 
     # create rip command
@@ -826,9 +834,15 @@ def process_single_track(job, track, rawpath):
     cmd = create_makemkv_cmd(job, rawpath, track.track_number) # single track
 
     logging.debug("Starting to rip single track.")
+    track.status = "ripping"
+    db.session.commit()
+    
     collections.deque(run(cmd, OutputType.MSG), maxlen=0)
 
+    # perhaps make mark_ripped_from_disk() usable here
     track.ripped = True
+    track.status = "ripped"
+    
     db.session.commit()
 
 def process_single_tracks(job, rawpath, mode: str):
