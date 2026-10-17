@@ -35,6 +35,7 @@ class Track(db.Model):
         self.source = source
         self.basename = basename
         self.filename = filename
+        self.status = "waiting"
         self.ripped = False
         self.process = False
         self.chapters = chapters

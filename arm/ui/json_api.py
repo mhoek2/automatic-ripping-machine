@@ -52,6 +52,7 @@ def serialize_job_results(jobs):
 				'fps': track.fps,
 				'aspect_ratio': track.aspect_ratio,
 				'main_feature': track.main_feature,
+				'status': track.status,
 				'ripped': track.ripped,
 				'process': track.process,
 			}

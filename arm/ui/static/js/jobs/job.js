@@ -62,9 +62,11 @@ function renderTracks(job, root) {
             tags.append($('<span>').addClass(`track-tag ${className}`).text(label ? `${label}: ${value}` : value));
         };
 
+        console.log(track);
         addTag('', formatTrackLength(track.length, job.video_type), 'track-tag-duration');
         addTag('', track.fps ? `${track.fps} FPS` : null);
         addTag('', track.aspect_ratio);
+        addTag('', track.status);
         if (track.main_feature) addTag('', 'Main feature', 'track-tag-feature');
 
         info.append(heading, tags);
