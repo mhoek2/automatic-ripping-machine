@@ -12,7 +12,7 @@ from sqlalchemy.orm import class_mapper
 
 from arm.ui import app, db
 from arm.models.job import Job, JobState
-from arm.models.track import Track
+from arm.models.track import Track, TrackState
 from arm.models.system_drives import SystemDrives, CDS
 from arm.models.config import Config
 
@@ -80,9 +80,6 @@ class Feeder:
                 chapters=item["chapters"],
                 filesize=item["filesize"],
             )
-            track.status = "success"
-            track.ripped = True
-            track.process = False
             track.orig_filename = filename
             track.new_filename = filename
             track.error = None
@@ -136,7 +133,7 @@ class Feeder:
     def stage_reading_disc_info(self):
         time.sleep(3.0)
         
-        self.tracks = self.__make_tracks()
+        self.tracks : list[Track] = self.__make_tracks()
         db.session.add_all(self.tracks)
         db.session.commit()
         
@@ -148,12 +145,26 @@ class Feeder:
         self.__append_makemkv_progress(0)
         self.__append_jobfile("INFO", "MakeMKV: Ripping main feature")
 
-        for progress in (100, 250, 400, 600, 800, 1000):
-            time.sleep(3.0)
-            self.__append_makemkv_progress(progress)
-            self.__append_jobfile("INFO", f"MakeMKV: Ripping progress {progress / 10:.1f}%")
+        # tracks
+        for track in self.tracks:
+            track.process = True
+        db.session.commit()
 
-        self.__append_jobfile("INFO", "MakeMKV: Main feature rip completed")
+        for track in self.tracks:
+            print(f"[{datetime.now().strftime('%H:%M:%S')}] Start rip for track: #{track.track_number} - {track.basename}")
+
+            track.status = TrackState.TRACK_RIPPING
+            db.session.commit()
+            
+            for progress in (100, 250, 400, 600, 800, 1000):
+                time.sleep(2.0)
+                self.__append_makemkv_progress(progress)
+                self.__append_jobfile("INFO", f"MakeMKV: Ripping progress {progress / 10:.1f}%")
+                self.__append_jobfile("INFO", "MakeMKV: rip completed")
+
+            track.ripped = True
+            track.status = TrackState.TRACK_RIPPED
+            db.session.commit()
 
     def stage_transcode_waiting(self):
         self.__append_jobfile("INFO", "ARM: Waiting for transcoding slot")
@@ -315,7 +326,7 @@ class Feeder:
                 print(f"Job ID {drive.job_id_current} not found.")
                 return
         
-            print(f"Starting simulation for: {job.title} [{total_duration_seconds}s total duration]")
+            print(f"[{datetime.now().strftime('%H:%M:%S')}] Starting simulation for: {job.title} [{total_duration_seconds}s total duration]")
             
             for stage in self.SIMULATION_STAGES:
                 job.status = stage["state"]
