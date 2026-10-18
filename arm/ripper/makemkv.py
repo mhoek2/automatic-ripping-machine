@@ -22,6 +22,7 @@ from time import sleep, time
 import arm.config.config as cfg
 from arm.models import SystemDrives, Track
 from arm.models.job import JobState
+from arm.models.track import TrackState
 from arm.ripper import utils
 from arm.ripper.utils import notify
 from arm.ui import db
@@ -683,8 +684,9 @@ def makemkv_mkv(job, rawpath):
     else:
         process_single_tracks(job, rawpath, 'auto')
 
-    # confirm ripped tracks
-    mark_ripped_from_disk(job, rawpath)
+    # confirm processed tracks ripped and saved successfully
+    for track in job.tracks:
+        confirm_track_saved(track, rawpath)
 
 
 def makemkv(job):
@@ -738,6 +740,38 @@ def makemkv(job):
     logging.info(f"Exiting MakeMKV processing with return value of: {rawpath}")
     return rawpath
 
+def confirm_track_saved(track : Track, rawpath) -> bool:
+    """Confirm ripped track by checking the output file."""
+    if not track.process:
+        return False
+
+    message = ""
+    
+    if not track.filename:
+        track.ripped = False
+        message = f"Track #{track.track_number} has no output filename."
+   
+    else:
+        filepath = os.path.join(rawpath, track.filename)     
+        track.ripped = os.path.isfile(filepath) and os.path.getsize(filepath) > 0
+
+        if not track.ripped:
+            message = f"Track #{track.track_number} output file is missing or empty: {filepath}"
+
+    # track exists on disk
+    if track.ripped:
+        track.status = TrackState.TRACK_RIPPED
+
+    # no track found
+    else:
+        track.status = TrackState.TRACK_FAILURE
+        logging.warning(message)
+
+    track.error = message
+    db.session.commit()
+
+    return track.ripped
+
 _MAKEMKV_TRACK_ADDED = re.compile(r"File (?P<filename>.+\.mkv) was added")
 _MAKEMKV_TRACK_SUFFIX = re.compile(r"_t\d+\.mkv$")
 _MAKEMKV_SAVING_TITLE = re.compile(r'^PRGC:5017,(?P<title_index>\d+),"Saving to MKV file"$')
@@ -758,7 +792,7 @@ def find_saving_message(message):
     return int(match.group("title_index")) if match else None
 
 
-def mark_track_skipped(job, track_number):
+def mark_track_skipped(job, rawpath, track_number):
     """Mark a MakeMKV-skipped track as not processing."""
     track = next(
         (track for track in job.tracks if track.track_number == track_number),
@@ -767,13 +801,16 @@ def mark_track_skipped(job, track_number):
     if not track:
         return
 
-    track.process = False
-    track.status = "skipped"
+    message = f"Track #{track_number} did not meet minimum length, skipping."
+
+    track.process   = False
+    track.status    = TrackState.TRACK_SKIPPED
+    track.error     = message
     
-    logging.info("Track #%s did not meet minimum length, skipping.", track_number)
+    logging.info(message)
     db.session.commit()
     
-def mark_track_ripped(job, message):
+def mark_track_ripped(job, rawpath, message):
     """Mark a track as ripped based on a MakeMKV FILE_ADDED message."""
     match = _MAKEMKV_TRACK_ADDED.search(message)
     if not match:
@@ -784,35 +821,33 @@ def mark_track_ripped(job, message):
 
     for track in job.tracks:
         if _MAKEMKV_TRACK_SUFFIX.sub("", track.filename or "") == prefix:
-            track.ripped = True
-            track.status = "ripped"
-            logging.info("Track %s ripped: %s", track.track_number, filename)
-            return True
+            return confirm_track_saved( track, rawpath )
 
     logging.debug("FILE_ADDED for '%s' did not match any track", filename)
     return False
 
 def process_all_tracks(job, rawpath):
-    # Mark all tracks as processing while MakeMKV runs.
+    # Mark all tracks as processing before MakeMKV runs.
     for track in job.tracks:
         track.process = True
-        track.status = "ripping"
+        track.status = TrackState.TRACK_RIPPING
     db.session.commit()
 
+    logging.info("Process all tracks from disc.")
+    
     # create rip command
     cmd = create_makemkv_cmd(job, rawpath)  # all
 
-    logging.info("Process all tracks from disc.")
     # run and process live feed
     for msg in run(cmd, OutputType.MSG):
         message = getattr(msg, "message", "")
         code = getattr(msg, "code", False)
 
         if code and int(code) == MessageID.FILE_ADDED:
-            mark_track_ripped(job, message)
+            mark_track_ripped(job, rawpath, message)
 
         if skip := find_skip_message(message):
-            mark_track_skipped(job, skip)
+            mark_track_skipped(job, rawpath, skip)
  
 def process_single_track(job, track, rawpath):
     """Rip a single track using MakeMKV.
@@ -822,55 +857,55 @@ def process_single_track(job, track, rawpath):
         track: arm.models.track.Track
         rawpath: Output directory for the ripped track
     """
-    logging.info(
-        f"Processing track #{track.track_number}. "
-        f"Length is {track.length} seconds."
-    )
+    track.status = TrackState.TRACK_RIPPING
+    db.session.commit()
 
-    filepathname = os.path.join(rawpath, track.filename)
-    logging.info(f"Ripping track #{track.track_number} to {shlex.quote(filepathname)}")
-
+    filepath = os.path.join(rawpath, track.filename)
+    logging.info(f"Ripping track #{track.track_number} with lenght of {track.length} seconds to {shlex.quote(filepath)}")
+    
     # create rip command
     cmd = create_makemkv_cmd(job, rawpath, track.track_number) # single track
-
-    logging.debug("Starting to rip single track.")
-    track.status = "ripping"
-    db.session.commit()
-    
     collections.deque(run(cmd, OutputType.MSG), maxlen=0)
 
-    # perhaps make mark_ripped_from_disk() usable here
-    track.ripped = True
-    track.status = "ripped"
-    
-    db.session.commit()
+    # post check if file is ripped and saved
+    # checked again for all tracks after all tracks are done in makemkv_mkv()
+    confirm_track_saved( track, rawpath)
 
 def process_single_tracks(job, rawpath, mode: str):
     """Process single tracks by MakeMKV one at a time."""
 
     for track in job.tracks:
+        message = None
+        
         # disabled track manually?
         if track.process is False:
-            logging.info("Track #%s disabled by user — skipping rip.", track.track_number,)
-            track.process = False
-            db.session.commit()
-            continue
+            message = f"Track #{track.track_number} disabled by user — skipping rip."
 
-        if mode == "auto":
+        # in auto mode, lets check allowed min and max lenghts
+        elif mode == "auto":
             if track.length < int(job.config.MINLENGTH):
-                logging.info("Track #%s of %s. Length (%s) is less than minimum length (%s). Skipping.", track.track_number, job.no_of_titles - 1, track.length, job.config.MINLENGTH,)
+                message = f"Track #{track.track_number} of {job.no_of_titles - 1}. Length ({track.length}) is less than minimum length ({job.config.MINLENGTH}). Skipping."
                 track.process = False
 
             elif track.length > int(job.config.MAXLENGTH):
-                logging.info("Track #%s of %s. Length (%s) is greater than maximum length (%s). Skipping.", track.track_number, job.no_of_titles - 1, track.length, job.config.MAXLENGTH,)
+                message = f"Track #{track.track_number} of {job.no_of_titles - 1}. Length ({track.length}) is greater than maximum length ({job.config.MAXLENGTH}). Skipping."
                 track.process = False
 
             else:
                 track.process = True
 
-        if track.process:
-            process_single_track(job, track, rawpath)
+        if message:
+            track.error = message
+            logging.info(message)
 
+        db.session.commit()
+        
+        if not track.process:
+            continue
+
+        process_single_track(job, track, rawpath)
+
+    # redundancy
     db.session.commit()
 
 def process_manual_tracks(job, rawpath):
@@ -902,21 +937,6 @@ def process_main_feature(job, rawpath):
     else:
         logging.info( f"Processing track #{track.track_number} as mainfeature. "f"Length is {track.length}s")
         process_single_track(job, track, rawpath)
-
-def mark_ripped_from_disk(job, rawpath):
-    """Confirm ripped tracks by checking their output files."""
-    for track in job.tracks:
-        if not track.filename:
-            continue
-
-        filepath = os.path.join(rawpath, track.filename)
-        
-        track.ripped = os.path.isfile(filepath) and os.path.getsize(filepath) > 0
-        track.status = "ripped" if track.ripped else "unconfirmed"
-        db.session.commit()
-
-        if not track.ripped:
-            logging.warning("Track #%s output file is missing or empty: %s", track.track_number, filepath)
 
 def create_makemkv_cmd(job, rawpath, track_number=None):
     cmd = ["mkv"]

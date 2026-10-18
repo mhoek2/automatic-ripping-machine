@@ -12,6 +12,7 @@ import arm.config.config as cfg
 from arm.ripper import utils
 from arm.ui import app, db  # noqa E402
 from arm.models.job import JobState
+from arm.models.track import TrackState
 
 PROCESS_COMPLETE = "FFMPEG processing complete"
 
@@ -253,14 +254,14 @@ def ffmpeg_main_feature(src_path, out_path, job):
         run_transcode_cmd(src_path, out_file_path, job)
         logging.info("FFMPEG call successful")
         # Update the status of the job as succeeded
-        track.status = "success"
+        track.status = TrackState.TRACK_SUCCESS
     except subprocess.CalledProcessError as ffmpeg_error:
         # If it fails mark the job as failed and log it
         err = f"Call to FFMPEG failed with code: {ffmpeg_error.returncode}"
         logging.error(err)
-        track.status = "fail"
+        track.status = TrackState.TRACK_FAILURE
         track.error = job.errors = err
-        job.status = "fail"
+        job.status = JobState.FAILURE
         db.session.commit()
         raise
 
@@ -316,11 +317,11 @@ def ffmpeg_all(src_path, base_path, job):
             try:
                 # Transcode the title
                 run_transcode_cmd(src_path, out_file_path, job)
-                track.status = "success"
+                track.status = TrackState.TRACK_SUCCESS
             except subprocess.CalledProcessError as ff_error:
                 err = f"FFMPEG encoding of title {track.track_number} failed with code: {ff_error.returncode}"
                 logging.error(err)
-                track.status = "fail"
+                track.status = TrackState.TRACK_FAILURE
                 track.error = err
                 db.session.commit()
                 raise
@@ -450,7 +451,7 @@ def ffmpeg_mkv(src_path, base_path, job):
             run_transcode_cmd(src_files_path, file_path_name, job)
             logging.info("FFmpeg call successful")
             if track is not None:
-                track.status = "success"
+                track.status = TrackState.TRACK_SUCCESS
                 db.session.commit()
             else:
                 logging.debug("No matching DB track found to mark success")
@@ -459,10 +460,10 @@ def ffmpeg_mkv(src_path, base_path, job):
             err = f"Call to FFmpeg failed with code: {ff_error.returncode}"
             logging.error(err)
             if track is not None:
-                track.status = "fail"
+                track.status = TrackState.TRACK_FAILURE
                 track.error = err
             job.errors = err
-            job.status = "fail"
+            job.status = JobState.FAILURE
             db.session.commit()
             raise
 
