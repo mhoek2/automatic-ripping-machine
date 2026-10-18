@@ -124,29 +124,50 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: .65rem 1rem;
 }
+    .job-meta-item {
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: .15rem;
+        font-size: .82rem;
+        overflow: hidden;
+    }
+        .job-meta-label {
+            color: var(--color-text-subtle);
+            font-size: .68rem;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+        }
+        .job-meta-item > span:last-child {
+            color: var(--color-text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .job-meta-item .job-mode-badge {
+            display: inline-flex;
+            align-self: flex-start;
+            align-items: center;
+            padding: .15rem .45rem;
+            border: 1px solid transparent;
+            border-radius: .3rem;
+            font-size: .72rem;
+            font-weight: 600;
+            line-height: 1.4;
+            white-space: nowrap;
+        }
 
-.job-meta-item {
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    gap: .15rem;
-    font-size: .82rem;
-    overflow: hidden;
-}
+        .job-meta-item .job-mode-auto {
+            color: var(--color-success);
+            background: var(--color-success-bg);
+            border-color: color-mix(in srgb, var(--color-success) 25%, transparent);
+        }
 
-.job-meta-item > span:last-child {
-    color: var(--color-text);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.job-meta-label {
-    color: var(--color-text-subtle);
-    font-size: .68rem;
-    text-transform: uppercase;
-    letter-spacing: .05em;
-}
+        .job-meta-item .job-mode-manual {
+            color: var(--color-info);
+            background: var(--color-info-bg);
+            border-color: color-mix(in srgb, var(--color-info) 25%, transparent);
+        }
 
 .job-progress {
     margin-top: auto;

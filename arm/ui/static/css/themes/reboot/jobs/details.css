@@ -45,7 +45,7 @@
     overflow: hidden;
     border: 1px solid var(--color-border);
     border-radius: 0.75rem;
-    background: var(--color-surface-secondary);
+    background: var(--color-surface-raised);
     box-shadow: 0 8px 24px rgb(0 0 0 / 18%);
 }
 
@@ -64,6 +64,11 @@
     min-width: 0;
     padding: 0.35rem 0;
 }
+
+    #jobs-details-modal .job-details-info #job-external-meta {
+        margin: 0.5em 0;
+    }
+
 
 #jobs-details-modal .job-details-title-row {
     display: flex;
@@ -93,7 +98,7 @@
     padding: 0.35rem 0.65rem;
     border: 1px solid var(--color-border);
     border-radius: 999px;
-    background: var(--color-surface-secondary);
+    background: var(--color-surface-raised);
     color: var(--color-text-secondary);
     font-size: 0.75rem;
     font-weight: 650;
@@ -137,7 +142,7 @@
     padding: 0.65rem 0.8rem;
     border: 1px solid var(--color-border);
     border-radius: 0.6rem;
-    background: var(--color-surface-secondary);
+    background: var(--color-surface-raised);
 }
 
 #jobs-details-modal .job-details-meta-label {

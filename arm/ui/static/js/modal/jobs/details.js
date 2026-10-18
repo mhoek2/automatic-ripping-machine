@@ -104,7 +104,9 @@ ARM.modal.jobs.details = {
 			.attr("href", job.logfile ? `/logs?logfile=${encodeURIComponent(job.logfile)}&mode=tail` : "#")
 			.toggle(!!job.logfile);
 
+
 		_modal.renderStatus(job);
+		_modal.renderExternalMeta(job);
 		_modal.renderMeta(job);
 		_modal.renderJobProgressPipeline(job);
 
@@ -125,17 +127,35 @@ ARM.modal.jobs.details = {
 			.attr("data-status", (job.status || "unknown").toLowerCase());
 	},
 
+	renderExternalMeta(job){
+		const _modal = ARM.modal.jobs.details;
+		$(`${_modal.modal} #job-external-meta`).html("");
+
+		if (job.imdb_id && job.imdb_id !== 'None') {
+			const imdbLink = $('<a>')
+				.addClass('imdb-link')
+				.attr('href', `https://www.imdb.com/title/${job.imdb_id}/`)
+				.attr('target', '_blank')
+				.attr('rel', 'noopener noreferrer')
+				.attr('aria-label', 'View on IMDb')
+				.text('IMDb');
+
+			$(`${_modal.modal} #job-external-meta`).append(imdbLink);
+		}
+	},
+
 	renderMeta(job) {
 		const meta = $("#job-details-meta").empty();
 
 		const dateInfo = formatTimestamp(job.start_time);
 
 		const fields = [
-			["Disc type", 	job.disctype],
-			["Video type", 	job.video_type],
-			["Disc label", 	job.label],
-			["Duration", 	job.job_length],
-			["Started", 	dateInfo.relative]
+			["Ripping mode",	job.manual_mode === "True" ? "Manual" : "Auto"],
+			["Disc type", 		job.disctype],
+			["Video type", 		job.video_type],
+			["Disc label", 		job.label],
+			["Duration", 		job.job_length],
+			["Started", 		dateInfo.relative]
 		];
 
 		fields.forEach(([label, value]) => {

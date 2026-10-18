@@ -1,0 +1,21 @@
+.imdb-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.1rem 0.35rem;
+    border-radius: 0.25rem;
+    background: #f5c518;
+    color: #000;
+    font-size: 0.7rem;
+    font-weight: 800;
+    line-height: 1.4;
+    text-decoration: none;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.imdb-link:hover {
+    background: #e3b616;
+    color: #000;
+    text-decoration: none;
+}

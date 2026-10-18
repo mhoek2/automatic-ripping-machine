@@ -66,18 +66,25 @@ function renderTracks(job, root) {
         addTag('', formatTrackLength(track.length, job.video_type), 'track-tag-duration');
         addTag('', track.fps ? `${track.fps} FPS` : null);
         addTag('', track.aspect_ratio);
-        addTag('', track.status);
         if (track.main_feature) addTag('', 'Main feature', 'track-tag-feature');
 
         info.append(heading, tags);
 
-        const status = $('<span>')
-            .addClass(`track-status ${track.ripped ? 'is-ripped' : 'is-pending'}`)
+        // rip status
+        const rip_status = $('<span>')
+            .addClass(`track-tag track-tag-rip-status ${track.ripped ? 'is-ripped' : 'is-pending'}`)
             .append($('<i>').addClass(`fa-solid ${track.ripped ? 'fa-check' : 'fa-circle-dot'}`).attr('aria-hidden', 'true'))
             .append(document.createTextNode(track.ripped ? 'Ripped' : 'Not ripped'));
+        info.find('.track-tags').append(rip_status);
 
-        row.append(info, status);
+        // track status
+        const track_status = track.status || TrackState.TRACK_WAITING;
+        const status_label = $('<span>')
+            .addClass(`track-status track-tag-status-${track_status.replace(/[^a-z0-9-]/gi, '').toLowerCase()}`)
+            .text(track_status);
+        row.append(info, status_label);
 
+        // skip
         if (!manual_edit && !track.process)
             row.addClass("skip-track");
 
@@ -217,6 +224,12 @@ function renderProgress(job) {
 function renderJobMeta(job, ids) {
     return `
         <div class="job-meta">
+            <div class="job-meta-item">
+                <span class="job-meta-label">Ripping Mode</span>
+                <span data-field="mode" class="job-mode-badge ${job.manual_mode === "True" ? "job-mode-manual" : "job-mode-auto"}">
+                    ${job.manual_mode === "True" ? "Manual" : "Auto"}
+                </span>
+            </div>
             <div class="job-meta-item"><span class="job-meta-label">Type</span><span data-field="video_type">${job.video_type}</span></div>
             <div class="job-meta-item"><span class="job-meta-label">Year</span><span data-field="year">${job.year}</span></div>
             <div class="job-meta-item"><span class="job-meta-label">Device</span><span data-field="devpath">${job.devpath}</span></div>

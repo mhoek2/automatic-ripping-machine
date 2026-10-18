@@ -9,33 +9,42 @@ let activeServers = [];
 
 const JOB_LIST_CONTAINER = "#joblist";
 
+// arm/models/track.py
+const TrackState = Object.freeze({
+    TRACK_SUCCESS	: "success",
+    TRACK_FAILURE	: "fail",
+    TRACK_WAITING	: "waiting",
+    TRACK_RIPPING	: "ripping",
+    TRACK_RIPPED 	: "ripped",
+    TRACK_SKIPPED	: "skipped"
+})
 
 // arm/models/job.py
 const JobState = Object.freeze({
 	// Job Finished States
-	SUCCESS: "success",
-	FAILURE: "fail",
+	SUCCESS					: "success",
+	FAILURE					: "fail",
 
 	// Manual wait
-	MANUAL_WAIT_STARTED: "waiting",
+	MANUAL_WAIT_STARTED		: "waiting",
 
 	// Job Initialized or Pending
-	IDLE: "active",
+	IDLE					: "active",
 
 	// Video Ripping States
-	VIDEO_RIPPING: "ripping",
-	VIDEO_WAITING: "waiting",
-	VIDEO_INFO: "info",
+	VIDEO_RIPPING			: "ripping",
+	VIDEO_WAITING			: "waiting",
+	VIDEO_INFO				: "info",
 
 	// Audio Ripping States
-	AUDIO_RIPPING: "ripping",
+	AUDIO_RIPPING			: "ripping",
 
 	// Transcoding States
-	TRANSCODE_ACTIVE: "transcoding",
-	TRANSCODE_WAITING: "waiting_transcode",
+	TRANSCODE_ACTIVE		: "transcoding",
+	TRANSCODE_WAITING		: "waiting_transcode",
 
 	// Postprocessing states
-	POSTPROCESSING_MOVING: "moving"
+	POSTPROCESSING_MOVING	: "moving"
 });
 
 const JOB_STATUS_FINISHED = new Set([

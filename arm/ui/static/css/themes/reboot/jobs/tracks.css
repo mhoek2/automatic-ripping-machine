@@ -33,7 +33,7 @@
         opacity: 0.3;
     }
 
-    #tracks .track-row:not(.skip_track):hover {
+    #tracks .track-row:not(.skip-track):hover {
         border-color: var(--color-accent);
     }
 
@@ -77,6 +77,7 @@
 
 #tracks .track-tag {
     display: inline-flex;
+    gap: 0.15em;
     align-items: center;
     min-height: 1.5rem;
     padding: 0.2rem 0.55rem;
@@ -90,7 +91,7 @@
 }
 
 #tracks .track-tag-duration {
-    background: var(--color-surface-secondary);
+    background: var(--color-surface-raised);
     color: var(--color-text);
     font-variant-numeric: tabular-nums;
 }
@@ -101,32 +102,57 @@
     color: var(--color-accent);
 }
 
+/* Track status */
 #tracks .track-status {
     display: inline-flex;
     flex-shrink: 0;
     align-items: center;
     gap: 0.4rem;
     padding: 0.35rem 0.6rem;
-    border: 1px solid transparent;
+    border: 1px solid var(--track-border);
     border-radius: 999px;
+    background: var(--color-surface-raised);
+    color: var(--track-muted);
     font-size: 0.75rem;
     font-weight: 600;
+    text-transform: capitalize;
     white-space: nowrap;
 }
 
-#tracks .track-status i {
-    font-size: 0.7rem;
+#tracks .track-status.track-tag-status-success,
+#tracks .track-status.track-tag-status-ripped {
+    border-color: color-mix(in srgb, var(--color-success) 30%, transparent);
+    background: var(--color-success-bg);
+    color: var(--color-success);
 }
 
-#tracks .track-status.is-ripped {
-    border-color: color-mix(in srgb, #3fb950 30%, transparent);
-    background: color-mix(in srgb, #3fb950 12%, transparent);
-    color: #3fb950;
+#tracks .track-status.track-tag-status-fail {
+    border-color: color-mix(in srgb, var(--color-danger) 30%, transparent);
+    background: var(--color-danger-bg);
+    color: var(--color-danger);
 }
 
-#tracks .track-status.is-pending {
+#tracks .track-status.track-tag-status-ripping {
+    border-color: color-mix(in srgb, var(--color-accent) 30%, transparent);
+    background: color-mix(in srgb, var(--color-accent) 10%, transparent);
+    color: var(--color-accent);
+}
+
+#tracks .track-status.track-tag-status-waiting,
+#tracks .track-status.track-tag-status-skipped {
+    color: var(--color-text-muted);
+}
+
+/* rip status */
+#tracks .track-tag-rip-status {
+    border-color: color-mix(in srgb, var(--color-success) 30%, var(--track-border));
+    background: var(--color-success-bg);
+    color: var(--color-success);
+}
+
+#tracks .track-tag-rip-status.is-pending {
     border-color: var(--track-border);
-    background: var(--color-surface-secondary);
+    background: var(--color-surface-raised);
     color: var(--track-muted);
 }
 
