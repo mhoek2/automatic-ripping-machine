@@ -152,7 +152,7 @@ function renderTracks(job, root) {
 
 function renderJobPipeline(job) {
     const status        = job.status;
-    const finished      = JOB_STATUS_FINISHED.has(status);
+    const finished      = JobStateGroup.FINISHED.has(status);
     const failed        = status === JobState.FAILURE;
     const successful    = status === JobState.SUCCESS;
 
@@ -248,7 +248,7 @@ function renderJobActions(job, ids, authenticated) {
     let actions= "";
 
     // job has finished, failed or succesfull
-    if (JOB_STATUS_FINISHED.has(job.status)) {
+    if (JobStateGroup.FINISHED.has(job.status)) {
         actions += `
             <button class="icon-button danger" type="button"
                 data-modal="confirm"
@@ -287,7 +287,7 @@ function renderJobActions(job, ids, authenticated) {
     `;
 
     // title actions
-	if (!JOB_STATUS_POSTPROCESSING.has(job.status) && !JOB_STATUS_FINISHED.has(job.status) && job.video_type !== "Music") {
+	if (!JobStateGroup.POSTPROCESSING.has(job.status) && !JobStateGroup.FINISHED.has(job.status) && job.video_type !== "Music") {
 		actions += `
 			<a class="icon-button"
 				href="titlesearch?job_id=${ids.jobId}"

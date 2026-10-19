@@ -15,7 +15,7 @@ from time import time, strftime, gmtime
 
 import arm.config.config as cfg
 from arm.models.config import Config
-from arm.models.job import Job, JobState, JOB_STATUS_FINISHED
+from arm.models.job import Job, JobState
 from arm.models.notifications import Notifications
 from arm.models.track import Track
 from arm.models.ui_settings import UISettings
@@ -90,7 +90,7 @@ def get_x_jobs(job_status):
                 Job.start_time >= cutoff,
             )
         ).all()
-    elif JobState(job_status) in JOB_STATUS_FINISHED:
+    elif JobState(job_status) in JobState.JOB_STATUS_FINISHED:
         jobs = Job.query.filter_by(status=job_status).all()
     else:
         raise ValueError(f"{job_status} is not a valid option")

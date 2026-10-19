@@ -27,7 +27,7 @@ function _addJobs( data ){
 	$.each(data.results, function (_index, job) {
 		job.job_id = `0_${job.job_id}`;	// force local server
 
-        if (!JOB_STATUS_FINISHED.has(job.status))
+        if (!JobStateGroup.FINISHED.has(job.status))
 		    job_refresh?.activeJobs?.push(job);
 
 		$(JOB_LIST_CONTAINER).append(

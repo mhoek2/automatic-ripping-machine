@@ -144,7 +144,7 @@ function checkActiveJobs(data, serverIndex) {
 		});
 
 		activeJob.active = matchingJob
-			? !JOB_STATUS_FINISHED.has(matchingJob.status) // only mark unfinshed jobs active
+			? !JobStateGroup.FINISHED.has(matchingJob.status) // only mark unfinshed jobs active
 			: false;
 	});
 }
@@ -164,7 +164,7 @@ function refreshJobsSuccess(data, serverIndex, serverUrl, serverCount) {
         job.job_id      = `${serverIndex}_${job.job_id}`;
         job.ripper      = (data.arm_name ? data.arm_name : "");
         job.server_url  = serverUrl;
-        job.active      = !JOB_STATUS_FINISHED.has(job.status);
+        job.active      = !JobStateGroup.FINISHED.has(job.status);
 
         const job_index = job_refresh.activeJobs.findIndex( e => e.job_id === job.job_id );
 
@@ -179,7 +179,7 @@ function refreshJobsSuccess(data, serverIndex, serverUrl, serverCount) {
             job_refresh.activeJobs.push(job);
 
             // only add unfinished jobs
-            if (!JOB_STATUS_FINISHED.has(job.status)) {
+            if (!JobStateGroup.FINISHED.has(job.status)) {
                 $(JOB_LIST_CONTAINER).append(
                     addJobItem(job, data.authenticated)
                 );

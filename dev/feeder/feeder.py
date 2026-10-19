@@ -10,8 +10,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from sqlalchemy.orm import class_mapper
 
+import arm.config.config as cfg
 from arm.ui import app, db
-from arm.models.job import Job, JobState
+from arm.models.job import Job, JobState, JobStateGroup
 from arm.models.track import Track, TrackState
 from arm.models.system_drives import SystemDrives, CDS
 from arm.models.config import Config
@@ -20,7 +21,6 @@ import re
 from time import strftime
 
 from movies import MOVIES
-
 
 class Feeder:
     SIMULATION_STAGES = [
@@ -215,7 +215,12 @@ class Feeder:
             "MAINFEATURE": True,
             "DEST_EXT": ".mkv",
         }
-        return Config(values, self.job.job_id)
+        
+        # custom config
+        #return Config(values, self.job.job_id)
+
+        # dev/config/arm.yaml
+        return Config(cfg.arm_config, self.job.job_id)
 
     def make_job(self):
         # Bypass ARM's Job.__init__() because it probes real hardware.
@@ -329,6 +334,10 @@ class Feeder:
             print(f"[{datetime.now().strftime('%H:%M:%S')}] Starting simulation for: {job.title} [{total_duration_seconds}s total duration]")
             
             for stage in self.SIMULATION_STAGES:
+                if self.config.SKIP_TRANSCODE and JobState(stage["state"]) in JobStateGroup.TRANSCODING:
+                    print(f"[{datetime.now().strftime('%H:%M:%S')}] Transcoding is disabled, skipping transcode")
+                    continue
+                  
                 job.status = stage["state"]
                 job.stage = stage["name"]
                 

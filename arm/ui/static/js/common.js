@@ -47,37 +47,39 @@ const JobState = Object.freeze({
 	POSTPROCESSING_MOVING	: "moving"
 });
 
-const JOB_STATUS_FINISHED = new Set([
-	JobState.SUCCESS,
-	JobState.FAILURE
-]);
+const JobStateGroup = Object.freeze({
+    FINISHED: new Set([
+        JobState.SUCCESS,
+        JobState.FAILURE,
+    ]),
 
-const JOB_STATUS_RIPPING = new Set([
-	JobState.AUDIO_RIPPING,
-	JobState.VIDEO_RIPPING,
-	JobState.MANUAL_WAIT_STARTED,
-	JobState.VIDEO_WAITING,
-	JobState.VIDEO_INFO
-]);
+    RIPPING: new Set([
+        JobState.AUDIO_RIPPING,
+        JobState.VIDEO_RIPPING,
+        JobState.MANUAL_WAIT_STARTED,
+        JobState.VIDEO_WAITING,
+        JobState.VIDEO_INFO,
+    ]),
 
-const JOB_STATUS_TRANSCODING = new Set([
-	JobState.TRANSCODE_ACTIVE,
-	JobState.TRANSCODE_WAITING
-]);
+    TRANSCODING: new Set([
+        JobState.TRANSCODE_ACTIVE,
+        JobState.TRANSCODE_WAITING,
+    ]),
 
-const JOB_STATUS_POSTPROCESSING = new Set([
-	JobState.POSTPROCESSING_MOVING,
-]);
+    POSTPROCESSING: new Set([
+        JobState.POSTPROCESSING_MOVING,
+    ]),
+});
 
 const JOB_PIPELINE_STAGES = [
-	{ status: "active", label: "Active", icon: "fa-circle-play" },
-	{ status: "waiting", label: "Waiting", icon: "fa-clock" },
-	{ status: "info", label: "Disc Info", icon: "fa-compact-disc" },
-	{ status: "ripping", label: "Ripping", icon: "fa-download" },
-	{ status: "waiting_transcode", label: "Waiting to transcode", icon: "fa-hourglass-half" },
-	{ status: "transcoding", label: "Transcoding", icon: "fa-film" },
-	{ status: "moving", label: "Moving", icon: "fa-upload" },
-	{ status: "success", label: "Finished", icon: "fa-flag-checkered" }
+	{ status: "active",             label: "Active",                icon: "fa-circle-play"      },
+	{ status: "waiting",            label: "Waiting",               icon: "fa-clock"            },
+	{ status: "info",               label: "Disc Info",             icon: "fa-compact-disc"     },
+	{ status: "ripping",            label: "Ripping",               icon: "fa-download"         },
+	{ status: "waiting_transcode",  label: "Waiting to transcode",  icon: "fa-hourglass-half"   },
+	{ status: "transcoding",        label: "Transcoding",           icon: "fa-film"             },
+	{ status: "moving",             label: "Moving",                icon: "fa-upload"           },
+	{ status: "success",            label: "Finished",              icon: "fa-flag-checkered"   }
 ];
 
 /**
