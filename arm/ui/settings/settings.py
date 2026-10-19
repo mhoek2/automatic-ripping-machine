@@ -163,8 +163,10 @@ def save_settings():
     # Load up the comments.json, so we can comment the arm.yaml
     comments = ui_utils.generate_comments()
     success = False
+    message = "Failed to update [Ripper] settings!"
     arm_cfg = {}
     form = SettingsForm()
+
     if form.validate_on_submit():
         # Build the new arm.yaml with updated values from the user
         arm_cfg = ui_utils.build_arm_cfg(request.form.to_dict(), comments)
@@ -174,13 +176,18 @@ def save_settings():
                 settings_file.write(arm_cfg)
                 settings_file.close()
             success = True
+            message = "Updated [Ripper] settings!"
             importlib.reload(cfg)
             # Set the ARM Log level to the config
             app.logger.info(f"Setting log level to: {cfg.arm_config['LOGLEVEL']}")
             app.logger.setLevel(cfg.arm_config['LOGLEVEL'])
         except OSError as e:
             # arm.yaml is read-only
-            app.logger.error(f"{cfg.arm_config_path} is read-only", exc_info=e)
+            message += f" - {cfg.arm_config_path} is read-only"
+            app.logger.error(message, exc_info=e)
+
+    # notification
+    ripper_utils.notify(None, "ARM Settings", message, send_remote=False)
 
     return {'success': success, 'settings': cfg.arm_config, 'form': 'arm ripper settings'}
 
@@ -197,6 +204,7 @@ def save_ui_settings():
     """
     form = UiSettingsForm()
     success = False
+    message = f"Failed to update [UI] settings!"
     arm_ui_cfg = UISettings.query.get(1)
     if form.validate_on_submit():
         use_icons = (str(form.use_icons.data).strip().lower() == "true")
@@ -210,6 +218,11 @@ def save_ui_settings():
         arm_ui_cfg.notify_refresh = format(form.notify_refresh.data)
         db.session.commit()
         success = True
+        message = "Updated [UI] settings!"
+
+    # notification
+    ripper_utils.notify(None, "ARM Settings", message, send_remote=False)
+
     # Masking the jinja update, otherwise an error is thrown
     # sqlalchemy.orm.exc.DetachedInstanceError: Instance <UISettings at 0x7f294c109fd0>
     # app.jinja_env.globals.update(armui_cfg=arm_ui_cfg)
@@ -225,6 +238,7 @@ def save_abcde():
     Overview - Save 'abcde Config' page settings to the database. Not a user page
     """
     success = False
+    message = "Failed to update [ABCDE] settings!"
     abcde_cfg_str = ""
     form = AbcdeForm()
     if form.validate():
@@ -238,10 +252,15 @@ def save_abcde():
                 abcde_file.write(clean_abcde_str)
                 abcde_file.close()
             success = True
+            message = "Updated [ABCDE] settings!"
             # Update the abcde config
             cfg.abcde_config = clean_abcde_str
         except OSError as e:
-            app.logger.error(f"{cfg.abcde_config_path} is read-only", exc_info=e)
+            message += f" - {cfg.abcde_config_path} is read-only"
+            app.logger.error(message, exc_info=e)
+
+    # notification
+    ripper_utils.notify(None, "ARM Settings", message, send_remote=False)
 
     # If we get to here, there was no post-data
     return {'success': success,
@@ -258,6 +277,8 @@ def save_apprise_cfg():
     Overview - Save 'Apprise Config' page settings to database. Not a user page
     """
     success = False
+    message = "Failed to update [APPRISE] settings!"
+
     # Since we can't be sure of any values, we can't validate it
     if request.method == 'POST':
         # Save updated apprise.yaml
@@ -268,10 +289,15 @@ def save_apprise_cfg():
                 settings_file.write(apprise_cfg)
                 settings_file.close()
             success = True
+            message = "Updated [APPRISE] settings!"
             importlib.reload(cfg)
         except OSError as e:
-            app.logger.error(f"{cfg.apprise_config_path} is read-only", exc_info=e)
-    # If we get to here there was no post data
+            message += f" - {cfg.apprise_config_path} is read-only"
+            app.logger.error(message, exc_info=e)
+
+    # notification
+    ripper_utils.notify(None, "ARM Settings", message, send_remote=False)
+
     return {'success': success, 'settings': cfg.apprise_config, 'form': 'Apprise config'}
 
 
