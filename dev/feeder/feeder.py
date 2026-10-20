@@ -158,13 +158,21 @@ class Feeder:
         self.__append_jobfile("INFO", "MakeMKV: Ripping main feature")
 
         for track in self.tracks:
-            track.process = True
+            # auto-mode marks all tracks to process first.
+            if not self.job.manual_mode:
+                track.process = True
+
+            if not track.process:
+                track.status = TrackState.TRACK_SKIPPED    
         db.session.commit()
 
         track_duration = duration / len(self.tracks) 
 
         for track in self.tracks:
             print(f"[{datetime.now().strftime('%H:%M:%S')}] Start rip for track: #{track.track_number} - {track.basename}")
+
+            if not track.process:
+                continue
 
             track.status = TrackState.TRACK_RIPPING
             db.session.commit()
