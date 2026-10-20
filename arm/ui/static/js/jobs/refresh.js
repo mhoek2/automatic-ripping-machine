@@ -86,11 +86,17 @@ function updateJobItem(job) {
     const title = card.find("[data-field='title'], #jobId" + job.job_id + "_title");
     const poster = card.find(".job-poster");
     const status = card.find(`#jobId${job.job_id}_status`);
+    const start_time = card.find(`#jobId${job.job_id}_start_time`);
+    const dateInfo = formatTimestamp(job.start_time);
 
     const jobTitle = getJobTitle(job);
     if (title.length && title.text() !== jobTitle) {
         title.text(jobTitle);
     }
+
+    if (start_time.length && start_time.text() !== dateInfo.relative) {
+        start_time.text(dateInfo.relative);
+    } 
 
     if (poster.length && job.poster_url !== "None" && job.poster_url !== "N/A" && poster.attr("src") !== job.poster_url) {
         poster.attr("src", job.poster_url);
@@ -212,6 +218,58 @@ function sortJobs(update_only = false) {
 	}).appendTo(JOB_LIST_CONTAINER);
 }
 
+function createPlaceholderJob() {
+    return {
+        job_id: "placeholder",
+        status: "waiting",
+        active: true,
+        manual_mode: "False",
+        start_time: Date.now(),
+        job_length: "Ongoing",
+        title: "Waiting for job...",
+        year: "",
+        video_type: "",
+        devpath: "",
+        imdb_id: "",
+        config: {
+            RIPMETHOD: "",
+            MAINFEATURE: "",
+            MINLENGTH: "",
+            MAXLENGTH: ""
+        },
+        tracks: []
+    };
+}
+job_placeholder = null
+function addJobPlaceholder( update_only ) {
+    if (update_only) 
+        return;
+
+    numActiveJobs = 0;
+
+    $.each(job_refresh.activeJobs, function (index, job) {
+        if (job && job.active)
+            numActiveJobs++;
+    });
+
+    if (numActiveJobs <= 0) {
+        if (!job_placeholder || !job_placeholder.length) {
+            authenticated = false;
+
+            $("#joblist").append(
+                renderJob(createPlaceholderJob(), authenticated, true)
+            );
+
+            job_placeholder = $("#joblist .job-card[data-placeholder]");
+        }
+    } else if (job_placeholder && job_placeholder.length) {
+        job_placeholder.remove();
+        job_placeholder = null;
+    }
+
+    console.log(`num jobs ${numActiveJobs}`);
+}
+
 /**
  * Function set as an interval to update all jobs from api
  */
@@ -242,6 +300,7 @@ function refreshJobs( update_only = false ) {
                 // Sort jobs after updates are processed
                 sortJobs(update_only);
                 removeInactiveJobs(update_only);
+                addJobPlaceholder(update_only);
             });
     });
 }

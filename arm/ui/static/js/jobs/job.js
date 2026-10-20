@@ -24,6 +24,9 @@ function getRipperName(job, ids) {
 }
 
 function posterCheck(job) {
+    if (typeof job.poster_url === "undefined")
+        return ``;
+
     const image = job.poster_url !== "None" && job.poster_url !== "N/A"
         ? job.poster_url
         : `/static/img/${job.video_type === "Music" ? "music.png" : "none.png"}`;
@@ -332,7 +335,7 @@ function renderJobActions(job, ids, authenticated) {
 	return actions;
 }
 
-function renderJob(job, authenticated) {
+function renderJob(job, authenticated, placeholder=false) {
     const ids = getJobIds(job);
     const statusClass = getStatusClass(job.status);
 
@@ -343,7 +346,7 @@ function renderJob(job, authenticated) {
     const dateInfo = formatTimestamp(job.start_time);
 
     return `
-        <article class="job-card" id="jobId${job.job_id}">
+        <article class="job-card" ${placeholder ? 'data-placeholder' : ''} id="jobId${job.job_id}">
             <a href="#" class="job-poster-link" data-modal="jobs_details" data-jobid="${job.job_id}">
                 ${posterCheck(job)}
             </a>
@@ -367,8 +370,8 @@ function renderJob(job, authenticated) {
 
                 <div class="job-footer">
                     <div class="job-time">
-                        <span title="${dateInfo.title}"><i class="fa-regular fa-clock"></i> ${dateInfo.relative}</span>
-                        <span><i class="fa-solid fa-stopwatch"></i> ${job.job_length || "Ongoing"}</span>
+                        <span title="${dateInfo.title}"><i class="fa-regular fa-clock"></i> <span id="jobId${job.job_id}_start_time">${dateInfo.relative}</span></span>
+                        <span><i class="fa-solid fa-stopwatch"></i> ${(job.job_length && job.job_length !== "None") ? job.job_length : "Ongoing"}</span>
                     </div>
                     ${renderJobActions(job, ids, authenticated)}
                 </div>

@@ -10,9 +10,13 @@ function formatDateTitle(timestamp) {
 }
 
 function formatTimeToMilisecconds(timestamp) {
+    if (typeof timestamp === "number") return timestamp;
+    if (typeof timestamp !== "string") return NaN;
+
     const date = new Date(
         timestamp.replace(" ", "T").replace(/(\.\d{3})\d+$/, "$1")
     );
+
     return date.getTime();
 }
 
