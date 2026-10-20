@@ -103,12 +103,12 @@ function updateJobItem(job) {
     }
 
     if (status.length) {
-        status.attr("class", `job-status ${getStatusClass(job.status)}`);
+        status.attr("class", `job-status ${getStatusClass(job)}`);
         status.find(".status-text").text(job.status);
     }
 /*
     if (status.length) {
-        const newClass = `job-status ${getStatusClass(job.status)}`;
+        const newClass = `job-status ${getStatusClass(job)}`;
         status.attr("class", newClass);
         status.find(".status-dot").after(document.createTextNode(` ${job.status}`));
         status.contents().filter(function () { return this.nodeType === 3; }).remove();

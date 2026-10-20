@@ -119,6 +119,26 @@
     background: var(--color-warning-bg);
 }
 
+.status-manual-edit-pending {
+    color: var(--color-action-required);
+    background: var(--color-action-required-bg);
+    animation: statu-manual-edit-pulse 1.8s ease-in-out infinite;
+}
+
+.status-manual-starting {
+    color: var(--color-action-starting);
+    background: var(--color-action-starting-bg);
+    animation: status-starting-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes statu-manual-edit-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 transparent; }
+    50% { box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-action-required) 35%, transparent); }
+}
+@keyframes status-starting-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 transparent; }
+    50% { box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-action-starting) 35%, transparent); }
+}
 .job-meta {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));

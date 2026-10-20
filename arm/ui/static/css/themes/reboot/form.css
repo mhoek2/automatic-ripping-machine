@@ -116,6 +116,12 @@ select {
 	cursor: pointer;
 	transition: background .15s ease, border-color .15s ease, color .15s ease;
 }
+    .arm-button:disabled {
+        opacity: .5;
+        cursor: not-allowed;
+        filter: none;
+        pointer-events: none;
+    }
 
 .arm-button:focus-visible,
 .arm-modal-close:focus-visible {

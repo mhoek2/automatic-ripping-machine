@@ -121,10 +121,13 @@ ARM.modal.jobs.details = {
 
 	renderStatus(job) {
 		const modal = $(ARM.modal.jobs.details.modal);
+        const status = modal.find(`.job-status`);
+        const statusClass = getStatusClass(job);
 
-		modal.find("#job-details-status")
-			.text(job.status || "Unknown")
-			.attr("data-status", (job.status || "unknown").toLowerCase());
+        if (status.length) {
+            status.attr("class", `job-status ${statusClass}`);
+            status.find(".status-text").text(job.status);
+        }
 	},
 
 	renderExternalMeta(job){
@@ -150,7 +153,7 @@ ARM.modal.jobs.details = {
 		const dateInfo = formatTimestamp(job.start_time);
 
 		const fields = [
-			["Ripping mode",	job.manual_mode === "True" ? "Manual" : "Auto"],
+			["Ripping mode",	safe_bool(job.manual_mode) ? "Manual" : "Auto"],
 			["Disc type", 		job.disctype],
 			["Video type", 		job.video_type],
 			["Disc label", 		job.label],

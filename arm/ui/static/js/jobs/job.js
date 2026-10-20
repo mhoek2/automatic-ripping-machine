@@ -33,8 +33,17 @@ function posterCheck(job) {
     return `<img class="job-poster" src="${image}" alt="${getJobTitle(job)}">`;
 }
 
-function getStatusClass(status) {
-    return `status-${status.toLowerCase().replace(/[^a-z0-9_-]/g, "")}`;
+function getStatusClass(job) {
+
+    let status = `status-${job.status.toLowerCase().replace(/[^a-z0-9_-]/g, "")}`
+    // waiting for user input
+    if (safe_bool(job.manual_edit))
+        status += ` status-manual-edit-pending`;
+
+    if (safe_bool(job.manual_start) && job.status.toLowerCase() === JobState.VIDEO_WAITING)
+        status += ` status-manual-starting`;
+
+    return status;
 }
 
 function renderTracks(job, root) {
@@ -49,6 +58,8 @@ function renderTracks(job, root) {
         container.append($('<p>').addClass('tracks-empty').text('No tracks found.'));
         return;
     }
+
+    let num_tracks_to_process = 0;
 
     $.each(tracks, function (_, track) {
         const title = track.filename || `Track ${track.track_number}`;
@@ -91,6 +102,9 @@ function renderTracks(job, root) {
         if (!manual_edit && !track.process)
             row.addClass("skip-track");
 
+        if (track.process)
+            num_tracks_to_process++;
+
         if (manual_edit) {
             const checkbox = $('<input>', {
                 type: 'checkbox',
@@ -127,14 +141,19 @@ function renderTracks(job, root) {
 
         container.append(row);
     });
-
     if (manual_edit) {
         $('<button>', {
             type: 'button',
             class: 'arm-button arm-button-primary track-start',
+            disabled: num_tracks_to_process <= 0,
             html: '<i class="fa-solid fa-play" aria-hidden="true"></i> Start ripping'
         }).on('click', function () {
             const local_job_id = getJobIds(job).jobId;
+
+            if (num_tracks_to_process <= 0) {
+                console.log("no tracks selected");
+                return;
+            }
 
             $.ajax({
                 url: '/jobdetail_ready',
@@ -229,8 +248,8 @@ function renderJobMeta(job, ids) {
         <div class="job-meta">
             <div class="job-meta-item">
                 <span class="job-meta-label">Ripping Mode</span>
-                <span data-field="mode" class="job-mode-badge ${job.manual_mode === "True" ? "job-mode-manual" : "job-mode-auto"}">
-                    ${job.manual_mode === "True" ? "Manual" : "Auto"}
+                <span data-field="mode" class="job-mode-badge ${safe_bool(job.manual_mode) ? "job-mode-manual" : "job-mode-auto"}">
+                    ${safe_bool(job.manual_mode) ? "Manual" : "Auto"}
                 </span>
             </div>
             <div class="job-meta-item"><span class="job-meta-label">Type</span><span data-field="video_type">${job.video_type}</span></div>
@@ -337,7 +356,7 @@ function renderJobActions(job, ids, authenticated) {
 
 function renderJob(job, authenticated, placeholder=false) {
     const ids = getJobIds(job);
-    const statusClass = getStatusClass(job.status);
+    const statusClass = getStatusClass(job);
 
     const detailUrl = ids.local
         ? `/jobdetail?job_id=${ids.jobId}`

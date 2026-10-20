@@ -122,3 +122,17 @@ function formatTrackLength(length, videoType) {
 		? `${hours}:${String(minutes).padStart(2, '0')}:${String(remaining).padStart(2, '0')}`
 		: `${minutes}:${String(remaining).padStart(2, '0')}`;
 }
+
+function safe_bool(state)
+{
+    if (typeof state === "undefined")
+        return false
+
+    if (typeof state === "string")
+        return state.trim().toLowerCase() === "true";
+
+    if (typeof state === "boolean")
+        return state;
+
+    return false;
+}

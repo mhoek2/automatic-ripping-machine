@@ -62,6 +62,7 @@ def serialize_job_results(jobs):
         result['manual_edit'] = (
             job.manual_mode
             and job.status == JobState.MANUAL_WAIT_STARTED.value
+            and len(tracks) > 0
             and not job.manual_start
         )
 
