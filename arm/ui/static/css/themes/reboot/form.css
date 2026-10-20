@@ -46,6 +46,7 @@ select {
 	width: fit-content;
 	margin: 0;
 	cursor: pointer;
+    gap: 0.3em;
 }
 
 .arm-checkbox input[type="checkbox"] {

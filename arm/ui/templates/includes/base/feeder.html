@@ -10,6 +10,7 @@
 
     .feeder-group {
         position: relative;
+        display: flex;
     }
 
     .feeder-toggle {
@@ -86,6 +87,13 @@
 </style>
 
 <div class="feeder-container">
+    <div class="feeder-group">
+        <label class="arm-checkbox">
+            <div>Manual Drive </div>
+            <input type="checkbox" id="feeder_drive_mode">
+            <span></span>
+        </label>
+    </div>
 	<div class="feeder-group">
 		<input type="checkbox" id="feeder-ripping-toggle" class="feeder-toggle">
 		<label for="feeder-ripping-toggle" class="feeder-dropdown-label">
