@@ -879,6 +879,7 @@ def process_single_tracks(job, rawpath, mode: str):
         
         # disabled track manually?
         if track.process is False:
+            track.status    = TrackState.TRACK_SKIPPED
             message = f"Track #{track.track_number} disabled by user — skipping rip."
 
         # in auto mode, lets check allowed min and max lenghts
