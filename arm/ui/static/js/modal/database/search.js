@@ -26,9 +26,27 @@ ARM.modal.database.search = {
 $(function() {
 	const search = ARM.modal.database.search;
 
-	$(document).on("click", "[data-modal='search']", function() 
+    $("#search_query").on("keydown", function(e){
+        if (e.key === "Enter") {
+            e.preventDefault();
+            $("#search_container [data-modal='search']").trigger("click");
+        }
+    }); 
+
+	$(document).on("click", "#search_container [data-modal='search']", function() 
 	{
-		ARM.modal.database.search.open();
+        if ($("#search_container input").is(':hidden'))
+		    ARM.modal.database.search.open();
+
+        else {
+            const search_input = $("#search_container input");
+            if(!search_input.length) return;
+
+            query = search_input.val().trim();
+            if (query.length < 3) return;
+
+            $(document).trigger("arm:database-search", [query]);
+        }
 	});
 
 	search.form.on("submit", function(e) 
