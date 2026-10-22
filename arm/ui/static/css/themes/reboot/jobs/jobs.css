@@ -19,7 +19,6 @@
 
 .job-card:hover {
     border-color: var(--color-border-strong);
-    transform: translateY(-1px);
 }
 
 .job-poster-link {
@@ -67,6 +66,7 @@
 }
 
 .job-status {
+    position: relative;
     flex-shrink: 0;
     display: inline-flex;
     align-items: center;
@@ -80,6 +80,18 @@
     text-transform: uppercase;
     cursor:pointer;
     transition: transform 100ms ease-in-out;
+}
+
+.job-status.status-manual-edit-pending::after,
+.job-status.status-manual-starting::after {
+    content: attr(data-manual-info);
+    position: absolute;
+    bottom: -2em;
+    right: 0;
+    left: 0;
+    text-align: center;
+    text-wrap: nowrap;
+    font-size: .62rem;
 }
 
 .job-status:hover {
@@ -254,6 +266,12 @@
     display: flex;
     align-items: center;
     gap: .35rem;
+}
+
+#job_actions {
+    display: flex;
+    gap: 0.4em;
+    align-items: center;
 }
 
 .icon-button {

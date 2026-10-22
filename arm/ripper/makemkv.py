@@ -18,6 +18,7 @@ import shlex
 import shutil
 import subprocess
 from time import sleep, time
+from datetime import datetime
 
 import arm.config.config as cfg
 from arm.models import SystemDrives, Track
@@ -910,8 +911,9 @@ def process_single_tracks(job, rawpath, mode: str):
     db.session.commit()
 
 def process_manual_tracks(job, rawpath):
-    # Set job status to waiting
+    # Stop/hold job and set status to waiting
     job.status = JobState.VIDEO_WAITING.value
+    job.stop_time = datetime.now()
     db.session.commit()
 
     # Process Tracks
@@ -919,6 +921,7 @@ def process_manual_tracks(job, rawpath):
     if manual_wait(job): 
         # Response from user provided, process requested tracks
         job.status = JobState.VIDEO_RIPPING.value
+        job.stop_time = None
         db.session.commit()
         process_single_tracks(job, rawpath, 'manual')
     else:

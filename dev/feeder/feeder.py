@@ -195,8 +195,9 @@ class Feeder:
         if self.job.manual_mode:
             print(f"[{datetime.now().strftime('%H:%M:%S')}] Use manual mode")
             
-            # Set job status to waiting
+            # Stop/hold job and set status to waiting
             self.job.status = JobState.VIDEO_WAITING.value
+            self.job.stop_time = datetime.now()
             db.session.commit()
 
             # Process Tracks
@@ -204,6 +205,7 @@ class Feeder:
             if manual_wait(self.job): 
                 # Response from user provided, process requested tracks
                 self.job.status = JobState.VIDEO_RIPPING.value
+                self.job.stop_time = None # reset
                 db.session.commit()
 
                 self.__process_tracks(duration)

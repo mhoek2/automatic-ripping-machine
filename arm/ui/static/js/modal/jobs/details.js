@@ -105,7 +105,7 @@ ARM.modal.jobs.details = {
 			.toggle(!!job.logfile);
 
 
-		_modal.renderStatus(job);
+		_modal.renderStatusBadge(job);
 		_modal.renderExternalMeta(job);
 		_modal.renderMeta(job);
 		_modal.renderJobProgressPipeline(job);
@@ -119,16 +119,14 @@ ARM.modal.jobs.details = {
 		_modal.renderTable("#job-details-config", job.config || {});
 	},
 
-	renderStatus(job) {
-		const modal = $(ARM.modal.jobs.details.modal);
-        const status = modal.find(`.job-status`);
-        const statusClass = getStatusClass(job);
+	renderStatusBadge(job) {
+		const _modal = $(ARM.modal.jobs.details.modal);
+        if (!_modal.length) return;
 
-        if (status.length) {
-            status.attr("class", `job-status ${statusClass}`);
-            status.find(".status-text").text(job.status);
-        }
-	},
+        const status = _modal.find("#job_status_badge_wrapper");
+        if (status.length)
+            status.html(renderJobStatusBadge(job));
+    },
 
 	renderExternalMeta(job){
 		const _modal = ARM.modal.jobs.details;
@@ -222,7 +220,7 @@ ARM.modal.jobs.details = {
 
 		console.log(job);
 
-		_modal.renderStatus(job);
+		_modal.renderStatusBadge(job);
 		_modal.renderJobProgressPipeline(job);
 
 		renderTracks(job, _modal.modal);

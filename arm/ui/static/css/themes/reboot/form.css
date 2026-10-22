@@ -159,3 +159,57 @@ select {
 	border-color: var(--color-accent-hover);
 	background: var(--color-accent-hover);
 }
+
+
+/* Icon button */
+.icon-button {
+    position: relative;
+    width: 34px;
+    height: 34px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--color-border-strong);
+    border-radius: 6px;
+    background: var(--color-control);
+    color: var(--color-text-muted);
+    text-decoration: none;
+    cursor: pointer;
+    transition: background .15s ease, color .15s ease, border-color .15s ease;
+}
+
+.icon-button:hover {
+    background: var(--color-control-hover);
+    border-color: var(--color-border-strong);
+    color: var(--color-text);
+}
+
+.icon-button.danger:hover {
+    color: var(--color-danger);
+    border-color: var(--color-danger);
+    background: var(--color-danger-bg);
+}
+
+.icon-button[data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    z-index: 100;
+    left: 50%;
+    bottom: calc(100% + 7px);
+    transform: translateX(-50%);
+    padding: .35rem .55rem;
+    border-radius: 4px;
+    background: var(--color-tooltip);
+    color: var(--color-tooltip-text);
+    white-space: nowrap;
+    font-size: .7rem;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity .12s ease;
+}
+
+.icon-button[data-tooltip]:hover::after {
+    opacity: 1;
+    visibility: visible;
+}
