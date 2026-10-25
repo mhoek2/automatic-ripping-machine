@@ -1,0 +1,244 @@
+/* Job card skeleton placeholder */
+article.job-card[data-placeholder] {
+    cursor: default;
+    border-color: var(--color-border);
+    box-shadow: none;
+    animation: none;
+    opacity: 0.5;
+}
+
+article.job-card[data-placeholder]:hover {
+    border-color: var(--color-border);
+    transform: none;
+}
+
+article.job-card[data-placeholder] .job-poster-link {
+    background: var(--color-surface-raised);
+    overflow: hidden;
+}
+
+article.job-card[data-placeholder] .job-poster {
+    min-height: 260px;
+    background: linear-gradient(
+        110deg,
+        var(--color-surface-raised) 25%,
+        var(--color-surface-hover) 45%,
+        var(--color-surface-raised) 65%
+    );
+    background-size: 250% 100%;
+    animation: job-placeholder-shimmer 2.8s ease-in-out infinite;
+}
+
+/* Shared skeleton block */
+article.job-card[data-placeholder] .job-header h2::before,
+article.job-card[data-placeholder] .job-id::before,
+article.job-card[data-placeholder] .job-status::before,
+article.job-card[data-placeholder] .job-meta-label::before,
+article.job-card[data-placeholder] .job-meta-item > span:last-child::before,
+article.job-card[data-placeholder] .job-progress-header span::before,
+article.job-card[data-placeholder] .job-progress-meta span::before,
+article.job-card[data-placeholder] .job-time span::before,
+article.job-card[data-placeholder] .job-actions > *::before {
+    content: "";
+    display: block;
+    height: .7em;
+    border-radius: 4px;
+    background: linear-gradient(
+        110deg,
+        var(--color-surface-raised) 25%,
+        var(--color-surface-hover) 45%,
+        var(--color-surface-raised) 65%
+    );
+    background-size: 250% 100%;
+    animation: job-placeholder-shimmer 2.8s ease-in-out infinite;
+}
+
+/* Header */
+article.job-card[data-placeholder] .job-header h2 {
+    font-size: 0;
+    line-height: 1.3;
+}
+
+article.job-card[data-placeholder] .job-header h2::before {
+    width: 68%;
+    height: 1rem;
+}
+
+article.job-card[data-placeholder] .job-id {
+    font-size: 0;
+}
+
+article.job-card[data-placeholder] .job-id::before {
+    width: 32%;
+    height: .55rem;
+    margin-top: .35rem;
+}
+
+article.job-card[data-placeholder] .job-status {
+    width: 78px;
+    height: 25px;
+    padding: 0;
+    background: transparent;
+    cursor: default;
+}
+
+article.job-card[data-placeholder] .job-status:hover {
+    transform: none;
+}
+
+article.job-card[data-placeholder] .job-status .status-dot,
+article.job-card[data-placeholder] .job-status .status-text {
+    display: none;
+}
+
+article.job-card[data-placeholder] .job-status::before {
+    width: 100%;
+    height: 100%;
+    border-radius: 999px;
+}
+
+/* Metadata */
+article.job-card[data-placeholder] .job-meta-label {
+    font-size: 0;
+}
+
+article.job-card[data-placeholder] .job-meta-label::before {
+    width: 48%;
+    height: .5rem;
+    margin-bottom: .2rem;
+    opacity: .7;
+}
+
+article.job-card[data-placeholder] .job-meta-item .job-mode-badge {
+    background: var(--color-surface-raised);
+    border: 0;
+}
+article.job-card[data-placeholder] .job-meta-item > span:last-child {
+    font-size: 0;
+    color: transparent;
+    overflow: visible;
+}
+
+article.job-card[data-placeholder] .job-meta-item > span:last-child::before {
+    width: 76%;
+    height: .7rem;
+}
+
+article.job-card[data-placeholder] .job-meta-item:nth-child(3n + 2) > span:last-child::before {
+    width: 56%;
+}
+
+article.job-card[data-placeholder] .job-meta-item:nth-child(3n) > span:last-child::before {
+    width: 88%;
+}
+
+/* Progress */
+article.job-card[data-placeholder] .job-progress-header,
+article.job-card[data-placeholder] .job-progress-meta {
+    font-size: 0;
+}
+
+article.job-card[data-placeholder] .job-progress-header span::before {
+    width: 95px;
+}
+
+article.job-card[data-placeholder] .job-progress-header span:last-child::before {
+    width: 35px;
+}
+
+article.job-card[data-placeholder] .progress-track {
+    background: var(--color-surface-raised);
+}
+
+article.job-card[data-placeholder] .progress-value {
+    width: 35% !important;
+    background: var(--color-border-strong);
+    opacity: .45;
+    animation: job-placeholder-progress 3s ease-in-out infinite alternate;
+}
+
+article.job-card[data-placeholder] .job-progress-meta span::before {
+    width: 65px;
+    height: .5rem;
+    opacity: .65;
+}
+
+article.job-card[data-placeholder] .job-progress-meta span:last-child::before {
+    width: 85px;
+}
+
+/* Footer */
+article.job-card[data-placeholder] .job-time {
+    gap: .8rem;
+}
+
+article.job-card[data-placeholder] .job-time span {
+    font-size: 0;
+}
+
+article.job-card[data-placeholder] .job-time span::before {
+    width: 75px;
+    height: .65rem;
+}
+
+article.job-card[data-placeholder] .job-time span:last-child::before {
+    width: 55px;
+}
+
+/* Actions */
+article.job-card[data-placeholder] .job-actions {
+    gap: .35rem;
+}
+
+article.job-card[data-placeholder] .job-actions > * {
+    width: 34px;
+    height: 34px;
+    border-color: var(--color-border);
+    background: var(--color-surface-raised);
+    box-shadow: none;
+    pointer-events: none;
+    color: transparent;
+}
+
+article.job-card[data-placeholder] .job-actions > *::before {
+    width: 14px;
+    height: 14px;
+    margin: auto;
+    opacity: .6;
+}
+
+/* Gentle shimmer */
+@keyframes job-placeholder-shimmer {
+    0% {
+        background-position: 100% 0;
+    }
+    100% {
+        background-position: -100% 0;
+    }
+}
+
+@keyframes job-placeholder-progress {
+    from {
+        width: 20%;
+    }
+    to {
+        width: 55%;
+    }
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    article.job-card[data-placeholder] *,
+    article.job-card[data-placeholder] *::before,
+    article.job-card[data-placeholder] *::after {
+        animation: none !important;
+    }
+}
+
+/* Keep the poster compact on mobile, matching real cards */
+@media (max-width: 650px) {
+    article.job-card[data-placeholder] .job-poster {
+        min-height: 0;
+        height: 220px;
+    }
+}

@@ -15,7 +15,7 @@ from time import time, strftime, gmtime
 
 import arm.config.config as cfg
 from arm.models.config import Config
-from arm.models.job import Job, JobState, JOB_STATUS_FINISHED
+from arm.models.job import Job, JobState
 from arm.models.notifications import Notifications
 from arm.models.track import Track
 from arm.models.ui_settings import UISettings
@@ -52,6 +52,7 @@ def serialize_job_results(jobs):
 				'fps': track.fps,
 				'aspect_ratio': track.aspect_ratio,
 				'main_feature': track.main_feature,
+				'status': track.status,
 				'ripped': track.ripped,
 				'process': track.process,
 			}
@@ -61,6 +62,7 @@ def serialize_job_results(jobs):
         result['manual_edit'] = (
             job.manual_mode
             and job.status == JobState.MANUAL_WAIT_STARTED.value
+            and len(tracks) > 0
             and not job.manual_start
         )
 
@@ -89,7 +91,7 @@ def get_x_jobs(job_status):
                 Job.start_time >= cutoff,
             )
         ).all()
-    elif JobState(job_status) in JOB_STATUS_FINISHED:
+    elif JobState(job_status) in JobState.JOB_STATUS_FINISHED:
         jobs = Job.query.filter_by(status=job_status).all()
     else:
         raise ValueError(f"{job_status} is not a valid option")

@@ -10,17 +10,19 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from sqlalchemy.orm import class_mapper
 
-from arm.ui import app, db
-from arm.models.job import Job, JobState
-from arm.models.track import Track
+import arm.config.config as cfg
+from arm.ui import app, db, constants
+from arm.models.job import Job, JobState, JobStateGroup
+from arm.models.track import Track, TrackState
 from arm.models.system_drives import SystemDrives, CDS
 from arm.models.config import Config
+from arm.ripper.makemkv import manual_wait
+from arm.ripper import utils
 
 import re
 from time import strftime
 
 from movies import MOVIES
-
 
 class Feeder:
     SIMULATION_STAGES = [
@@ -53,6 +55,7 @@ class Feeder:
         
         self.command        = self.data.get("action", "completed")
         self.drive_mount    = self.data.get("drive", -1)
+        self.drive_mode     = self.data.get("drive_mode", False)
 
         if self.command not in self.FEEDER_SCENARIOS:
             raise SystemExit(f"Unknown scenario: {self.command}\nUse: {', '.join(self.FEEDER_SCENARIOS)}")
@@ -61,6 +64,9 @@ class Feeder:
             raise SystemExit(f"Invalid drive: {self.drive_mount} - command: {self.command}")
   
         self.run()  
+
+    def _job_notificaton(self, job, message):
+        utils.notify(job, constants.NOTIFY_TITLE, message)
 
     def __make_tracks(self):
         tracks = []
@@ -80,9 +86,6 @@ class Feeder:
                 chapters=item["chapters"],
                 filesize=item["filesize"],
             )
-            track.status = "success"
-            track.ripped = True
-            track.process = False
             track.orig_filename = filename
             track.new_filename = filename
             track.error = None
@@ -90,11 +93,11 @@ class Feeder:
             
         return tracks
 
-    def __make_progress_log(self):
+    def __make_progress_log(self, job):
         progress_dir = Path("/home/arm/logs") / "progress"  
         progress_dir.mkdir(parents=True, exist_ok=True)
         
-        progress_path = progress_dir / f"{self.job.job_id}.log"
+        progress_path = progress_dir / f"{job.job_id}.log"
         progress_path.write_text("", encoding="utf-8")
         
         return str(progress_path)
@@ -126,48 +129,154 @@ class Feeder:
             log_file.write(f"{timestamp} [{level}] {message}\n")
 
     # stages
-    def stage_initializing(self):
+    def stage_initializing(self, duration : float ):
         self.__append_jobfile("INFO", "ARM: Starting title identification")
         self.__append_jobfile("INFO", "ARM: Title identification completed")
+        
+        time.sleep(duration)
 
-    def stage_manual_wait(self):
+    def stage_manual_wait(self, duration : float ):
         self.__append_jobfile("INFO", "ARM: Waiting for manual intervention")
 
-    def stage_reading_disc_info(self):
+        time.sleep(duration)
+
+    def stage_reading_disc_info(self, duration : float ):
         time.sleep(3.0)
         
-        self.tracks = self.__make_tracks()
+        self.tracks : list[Track] = self.__make_tracks()
         db.session.add_all(self.tracks)
         db.session.commit()
         
         self.__append_jobfile("INFO", "ARM: Reading disc information")
         self.__append_jobfile("INFO", "ARM: Found 3 titles on disc")
 
-    def stage_ripping(self):
+        time.sleep(duration)
+
+    def __process_tracks(self, duration : float ):
         self.__append_jobfile("INFO", "MakeMKV: Starting disc rip")
         self.__append_makemkv_progress(0)
         self.__append_jobfile("INFO", "MakeMKV: Ripping main feature")
 
-        for progress in (100, 250, 400, 600, 800, 1000):
-            time.sleep(3.0)
-            self.__append_makemkv_progress(progress)
-            self.__append_jobfile("INFO", f"MakeMKV: Ripping progress {progress / 10:.1f}%")
+        for track in self.tracks:
+            # auto-mode marks all tracks to process first.
+            if not self.job.manual_mode:
+                track.process = True
 
-        self.__append_jobfile("INFO", "MakeMKV: Main feature rip completed")
+            if not track.process:
+                track.status = TrackState.TRACK_SKIPPED    
+        db.session.commit()
 
-    def stage_transcode_waiting(self):
+        track_duration = duration / len(self.tracks) 
+
+        for track in self.tracks:
+            print(f"[{datetime.now().strftime('%H:%M:%S')}] Start rip for track: #{track.track_number} - {track.basename}")
+
+            if not track.process:
+                continue
+
+            track.status = TrackState.TRACK_RIPPING
+            db.session.commit()
+            
+            for progress in (100, 250, 400, 600, 800, 1000):
+                time.sleep(track_duration)
+                self.__append_makemkv_progress(progress)
+                self.__append_jobfile("INFO", f"MakeMKV: Ripping progress {progress / 10:.1f}%")
+                self.__append_jobfile("INFO", "MakeMKV: rip completed")
+
+            track.ripped = True
+            track.status = TrackState.TRACK_RIPPED
+            db.session.commit()
+
+        if self.config.NOTIFY_RIP:
+            self._job_notificaton(self.job, f"{self.job.title} {constants.RIPPING_COMPLETE}")
+
+    def stage_ripping(self, duration : float ):
+        # mimics: arm.ripper.makemkv.process_manual_tracks()
+        if self.job.manual_mode:
+            print(f"[{datetime.now().strftime('%H:%M:%S')}] Use manual mode")
+            
+            # Stop/hold job and set status to waiting
+            self.job.status = JobState.VIDEO_WAITING.value
+            self.job.stop_time = datetime.now()
+            db.session.commit()
+
+            # Process Tracks
+            # Notify user: tracks are ready and wait for 30 minutes
+            if manual_wait(self.job): 
+                # Response from user provided, process requested tracks
+                self.job.status = JobState.VIDEO_RIPPING.value
+                self.job.stop_time = None # reset
+                db.session.commit()
+
+                self.__process_tracks(duration)
+            else:
+                title = "ARM is Sad - Job Abandoned"
+                message = "You left me alone in the cold and dark, I forgot who I was. Your job has been abandoned."
+                utils.notify(self.job, title, message)
+        
+        # auto mode
+        else:
+            self.__process_tracks(duration)
+
+    def stage_transcode_waiting(self, duration : float ):
         self.__append_jobfile("INFO", "ARM: Waiting for transcoding slot")
 
-    def stage_transcoding(self):
+        time.sleep(duration)
+
+    def stage_transcoding(self, duration : float ):
         self.__append_jobfile("INFO", "HandBrake: Reading source")
         for progress in (12.5, 37.5, 62.5, 100):
             self.__append_jobfile("INFO", f"HandBrake: Encoding: {progress}%")
             time.sleep(1.5)
 
-    def stage_postprocessing(self):
+        if self.config.NOTIFY_TRANSCODE:
+            self._job_notificaton(self.job, f"{self.job.title} {constants.TRANSCODE_COMPLETE}")
+        
+        self.track.status = JobState.IDLE.value # why ??
+        db.session.commit()
+
+        time.sleep(duration)
+
+    def stage_postprocessing(self, duration : float ):
         self.__append_jobfile("INFO", "ARM: Moving completed files")
         self.__append_jobfile("INFO", "ARM: Output files verified")
         self.__append_jobfile("INFO", "ARM: Job completed successfully")
+
+        time.sleep(duration)
+
+    def __finish_job(self, final_outcome):
+        if final_outcome == JobState.SUCCESS.value:
+            self.job.status = JobState.SUCCESS.value
+            self.job.stage = "Job completed successfully"
+            self.job.ejected = True
+            self.drive.tray = CDS.DISC_OK
+
+            # time - logic: arm/ripper/main.py
+            self.job.stop_time = datetime.now()
+            if self.job.start_time:
+                job_length = self.job.stop_time - self.job.start_time
+                minutes, seconds = divmod(job_length.seconds + job_length.days * 86400, 60)
+                hours, minutes = divmod(minutes, 60)
+                self.job.job_length = f'{hours:d}:{minutes:02d}:{seconds:02d}'
+            else:
+                self.job.job_length = "0:00:00"
+
+            self._job_notificaton(self.job, f"{self.job.title} {constants.PROCESS_COMPLETE}")
+
+        # failure
+        else:
+            self.job.status = JobState.FAILURE.value
+            self.job.stage = "Job failed"
+            self.job.errors = "Mock simulation failure"
+            self.drive.tray = CDS.DISC_ERROR
+            self._job_notificaton(self.job,
+                            f" {self.job.title} processing completed with errors. "
+                            f"Title(s) {self.job.errors} failed to complete. "
+                )
+            
+        self.drive.job_id_previous = self.job.job_id
+        self.drive.job_id_current = None
+        db.session.commit()
 
     def make_drive(self, drive_mount_id):
         drive = SystemDrives()
@@ -187,10 +296,10 @@ class Feeder:
         drive.tray = CDS.DISC_OK
         drive.name = "Mock Blu-ray Drive"
         drive.description = "ARM development virtual drive"
-        drive.drive_mode = "auto"
+        drive.drive_mode = self.drive_mode
         return drive
 
-    def make_config(self):
+    def make_config(self, job):
         values = {
             "VIDEOTYPE": "bluray",
             "MINLENGTH": "600",
@@ -204,7 +313,12 @@ class Feeder:
             "MAINFEATURE": True,
             "DEST_EXT": ".mkv",
         }
-        return Config(values, self.job.job_id)
+        
+        # custom config
+        #return Config(values, self.job.job_id)
+
+        # dev/config/arm.yaml
+        return Config(cfg.arm_config, job.job_id)
 
     def make_job(self):
         # Bypass ARM's Job.__init__() because it probes real hardware.
@@ -221,9 +335,9 @@ class Feeder:
         job.arm_version = "dev"
         job.crc_id = f"MOCK-{self.movie['imdb_id']}"
         job.logfile = self.log_path
-        job.start_time = now - timedelta(minutes=42)
-        job.stop_time = now if finished else None
-        job.job_length = "00:42:00"
+        job.start_time = now# - timedelta(minutes=42)
+        #job.stop_time = now if finished else None
+        #job.job_length = "00:42:00"
 
         job.status = self.status
         job.stage = "Mock development job"
@@ -264,7 +378,7 @@ class Feeder:
         job.pid_hash = 1
         job.is_iso = False
         job.manual_start = False
-        job.manual_mode = False
+        job.manual_mode = False if self.drive.drive_mode == "auto" else True
 
         return job
 
@@ -285,74 +399,71 @@ class Feeder:
         db.session.flush()
 
         self.log_path = self.__make_logfile()
-        self.job = self.make_job()
-        db.session.add(self.job)
+        job = self.make_job()
+        db.session.add(job)
         db.session.flush()
 
-        self.drive.job_id_current = self.job.job_id
+        self.drive.job_id_current = job.job_id
 
-        self.config = self.make_config()
+        self.config = self.make_config( job )
         db.session.add(self.config)
         db.session.commit()
 
-        self.progress_path = self.__make_progress_log()
+        self.progress_path = self.__make_progress_log(job)
         
-        print(f"Created job {self.job.job_id}: {self.movie['title']} [{self.job.status}]")
+        print(f"Created job {job.job_id}: {self.movie['title']} [{job.status}]")
         print(f"IMDb: {self.movie['imdb_id']}")
         print(f"Drive: {self.drive.mount} (tray: {self.drive.tray.name})")
         print(f"Logfile: {self.log_path}")
 
     def run_simulation(self, total_duration_seconds: int, final_outcome: str = JobState.SUCCESS.value, target_state: str = None):
-        with app.app_context():
-            drive = SystemDrives.query.filter_by(mount=self.drive_mount).first()
-            if not drive or not drive.job_id_current:
-                print("No active job found in the mock drive. Run your feeder populate script first!")
-                return
+        drive = SystemDrives.query.filter_by(
+            mount=self.drive_mount
+        ).first()
 
-            # fetch job from drive, instead of using self.job.. 
-            job = db.session.get(Job, drive.job_id_current)
-            if not job:
-                print(f"Job ID {drive.job_id_current} not found.")
+        if not drive or not drive.job_id_current:
+            print("No active job found in the mock drive. Run your feeder populate script first!")
+            return
+
+        # fetch job from drive
+        self.drive = drive
+        self.job = db.session.get(Job, self.drive.job_id_current)
+    
+        if not self.job:
+            print(f"Job ID {self.drive.job_id_current} not found.")
+            return
+        
+        self.config = Config.query.filter_by(job_id=self.job.job_id).first()
+
+
+        print(f"[{datetime.now().strftime('%H:%M:%S')}] Starting simulation for: {self.job.title} [{total_duration_seconds}s total duration]")
+        
+        for stage in self.SIMULATION_STAGES:
+            if self.config.SKIP_TRANSCODE and JobState(stage["state"]) in JobStateGroup.TRANSCODING:
+                print(f"[{datetime.now().strftime('%H:%M:%S')}] Transcoding is disabled, skipping transcode")
+                continue
+                
+            self.job.status = stage["state"]
+            self.job.stage = stage["name"]
+            
+            db.session.commit()
+            print(f"[{datetime.now().strftime('%H:%M:%S')}] State -> {stage['name']}")
+
+            duration = total_duration_seconds * stage["weight"]
+            # call stage function
+            getattr(self, stage["function"])(duration)
+            
+            if target_state == stage["state"]:
+                print(f"Simulation stopped at requested state: {stage['state']}")
                 return
         
-            print(f"Starting simulation for: {job.title} [{total_duration_seconds}s total duration]")
-            
-            for stage in self.SIMULATION_STAGES:
-                job.status = stage["state"]
-                job.stage = stage["name"]
-                
-                db.session.commit()
-                print(f"[{datetime.now().strftime('%H:%M:%S')}] State -> {stage['name']}")
+        finished_time = datetime.now()
+        self.job.stop_time = finished_time
+        self.job.job_length = str(finished_time - self.job.start_time)
+        
+        self.__finish_job(final_outcome)
 
-                # call stage function
-                getattr(self, stage["function"])()
-                
-                if target_state == stage["state"]:
-                    print(f"Simulation stopped at requested state: {stage['state']}")
-                    return
-
-                time.sleep(total_duration_seconds * stage["weight"])
-                
-            finished_time = datetime.now()
-            job.stop_time = finished_time
-            job.job_length = str(finished_time - job.start_time)
-            
-            if final_outcome == JobState.SUCCESS.value:
-                job.status = JobState.SUCCESS.value
-                job.stage = "Job completed successfully"
-                job.ejected = True
-                drive.tray = CDS.DISC_OK
-            else:
-                job.status = JobState.FAILURE.value
-                job.stage = "Job failed"
-                job.errors = "Mock simulation failure"
-                drive.tray = CDS.DISC_ERROR
-                
-            drive.job_id_previous = job.job_id
-            drive.job_id_current = None
-            db.session.commit()
-            
-            print(f"[{datetime.now().strftime('%H:%M:%S')}] Simulation finished with status: {job.status}")
+        print(f"[{datetime.now().strftime('%H:%M:%S')}] Simulation finished with status: {self.job.status}")
 
     def run( self ):
           with app.app_context():

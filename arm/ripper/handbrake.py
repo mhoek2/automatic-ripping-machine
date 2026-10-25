@@ -11,6 +11,7 @@ import arm.config.config as cfg
 from arm.ripper import utils
 from arm.ui import app, db  # noqa E402
 from arm.models.job import JobState
+from arm.models.track import TrackState
 
 PROCESS_COMPLETE = "Handbrake processing complete"
 
@@ -34,7 +35,7 @@ def run_handbrake_command(cmd, track=None, track_number=None):
         ).decode("utf-8")
         logging.debug(f"Handbrake exit code: {hand_brake_output}")
         if track:
-            track.status = "success"
+            track.status = TrackState.TRACK_SUCCESS
         return hand_brake_output
     except subprocess.CalledProcessError as hb_error:
         if track_number:
@@ -44,7 +45,7 @@ def run_handbrake_command(cmd, track=None, track_number=None):
             err = f"Call to handbrake failed with code: {hb_error.returncode}({hb_error.output})"
         logging.error(err)
         if track:
-            track.status = "fail"
+            track.status = TrackState.TRACK_FAILURE
             track.error = err
         raise subprocess.CalledProcessError(hb_error.returncode, cmd)
 

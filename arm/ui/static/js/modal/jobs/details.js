@@ -104,7 +104,9 @@ ARM.modal.jobs.details = {
 			.attr("href", job.logfile ? `/logs?logfile=${encodeURIComponent(job.logfile)}&mode=tail` : "#")
 			.toggle(!!job.logfile);
 
-		_modal.renderStatus(job);
+
+		_modal.renderStatusBadge(job);
+		_modal.renderExternalMeta(job);
 		_modal.renderMeta(job);
 		_modal.renderJobProgressPipeline(job);
 
@@ -117,12 +119,30 @@ ARM.modal.jobs.details = {
 		_modal.renderTable("#job-details-config", job.config || {});
 	},
 
-	renderStatus(job) {
-		const modal = $(ARM.modal.jobs.details.modal);
+	renderStatusBadge(job) {
+		const _modal = $(ARM.modal.jobs.details.modal);
+        if (!_modal.length) return;
 
-		modal.find("#job-details-status")
-			.text(job.status || "Unknown")
-			.attr("data-status", (job.status || "unknown").toLowerCase());
+        const status = _modal.find("#job_status_badge_wrapper");
+        if (status.length)
+            status.html(renderJobStatusBadge(job));
+    },
+
+	renderExternalMeta(job){
+		const _modal = ARM.modal.jobs.details;
+		$(`${_modal.modal} #job-external-meta`).html("");
+
+		if (job.imdb_id && job.imdb_id !== 'None') {
+			const imdbLink = $('<a>')
+				.addClass('imdb-link')
+				.attr('href', `https://www.imdb.com/title/${job.imdb_id}/`)
+				.attr('target', '_blank')
+				.attr('rel', 'noopener noreferrer')
+				.attr('aria-label', 'View on IMDb')
+				.text('IMDb');
+
+			$(`${_modal.modal} #job-external-meta`).append(imdbLink);
+		}
 	},
 
 	renderMeta(job) {
@@ -131,11 +151,12 @@ ARM.modal.jobs.details = {
 		const dateInfo = formatTimestamp(job.start_time);
 
 		const fields = [
-			["Disc type", 	job.disctype],
-			["Video type", 	job.video_type],
-			["Disc label", 	job.label],
-			["Duration", 	job.job_length],
-			["Started", 	dateInfo.relative]
+			["Ripping mode",	safe_bool(job.manual_mode) ? "Manual" : "Auto"],
+			["Disc type", 		job.disctype],
+			["Video type", 		job.video_type],
+			["Disc label", 		job.label],
+			["Duration", 		job.job_length],
+			["Started", 		dateInfo.relative]
 		];
 
 		fields.forEach(([label, value]) => {
@@ -199,7 +220,7 @@ ARM.modal.jobs.details = {
 
 		console.log(job);
 
-		_modal.renderStatus(job);
+		_modal.renderStatusBadge(job);
 		_modal.renderJobProgressPipeline(job);
 
 		renderTracks(job, _modal.modal);

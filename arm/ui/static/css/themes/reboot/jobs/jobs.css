@@ -19,7 +19,6 @@
 
 .job-card:hover {
     border-color: var(--color-border-strong);
-    transform: translateY(-1px);
 }
 
 .job-poster-link {
@@ -67,6 +66,7 @@
 }
 
 .job-status {
+    position: relative;
     flex-shrink: 0;
     display: inline-flex;
     align-items: center;
@@ -80,6 +80,18 @@
     text-transform: uppercase;
     cursor:pointer;
     transition: transform 100ms ease-in-out;
+}
+
+.job-status.status-manual-edit-pending::after,
+.job-status.status-manual-starting::after {
+    content: attr(data-manual-info);
+    position: absolute;
+    bottom: -2em;
+    right: 0;
+    left: 0;
+    text-align: center;
+    text-wrap: nowrap;
+    font-size: .62rem;
 }
 
 .job-status:hover {
@@ -119,34 +131,74 @@
     background: var(--color-warning-bg);
 }
 
+.status-manual-edit-pending {
+    color: var(--color-action-required);
+    background: var(--color-action-required-bg);
+    animation: statu-manual-edit-pulse 1.8s ease-in-out infinite;
+}
+
+.status-manual-starting {
+    color: var(--color-action-starting);
+    background: var(--color-action-starting-bg);
+    animation: status-starting-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes statu-manual-edit-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 transparent; }
+    50% { box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-action-required) 35%, transparent); }
+}
+@keyframes status-starting-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 transparent; }
+    50% { box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-action-starting) 35%, transparent); }
+}
 .job-meta {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: .65rem 1rem;
 }
+    .job-meta-item {
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: .15rem;
+        font-size: .82rem;
+        overflow: hidden;
+    }
+        .job-meta-label {
+            color: var(--color-text-subtle);
+            font-size: .68rem;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+        }
+        .job-meta-item > span:last-child {
+            color: var(--color-text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .job-meta-item .job-mode-badge {
+            display: inline-flex;
+            align-self: flex-start;
+            align-items: center;
+            padding: .15rem .45rem;
+            border: 1px solid transparent;
+            border-radius: .3rem;
+            font-size: .72rem;
+            font-weight: 600;
+            line-height: 1.4;
+            white-space: nowrap;
+        }
+            .job-meta-item .job-mode-badge .job-mode-auto {
+                color: var(--color-success);
+                background: var(--color-success-bg);
+                border-color: color-mix(in srgb, var(--color-success) 25%, transparent);
+            }
 
-.job-meta-item {
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    gap: .15rem;
-    font-size: .82rem;
-    overflow: hidden;
-}
-
-.job-meta-item > span:last-child {
-    color: var(--color-text);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.job-meta-label {
-    color: var(--color-text-subtle);
-    font-size: .68rem;
-    text-transform: uppercase;
-    letter-spacing: .05em;
-}
+            .job-meta-item .job-mode-badge .job-mode-manual {
+                color: var(--color-info);
+                background: var(--color-info-bg);
+                border-color: color-mix(in srgb, var(--color-info) 25%, transparent);
+            }
 
 .job-progress {
     margin-top: auto;
@@ -214,6 +266,12 @@
     display: flex;
     align-items: center;
     gap: .35rem;
+}
+
+#job_actions {
+    display: flex;
+    gap: 0.4em;
+    align-items: center;
 }
 
 .icon-button {

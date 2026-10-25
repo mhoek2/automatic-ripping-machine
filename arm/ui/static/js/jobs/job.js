@@ -1,12 +1,20 @@
 function getJobIds(job) {
-	const id = String(job.job_id);
+	const id                = String(job.job_id);
 	const [serverId, jobId] = id.split("_");
 
 	return {
-		serverId: jobId === undefined ? "0" : serverId,
-		jobId: jobId ?? id,
-		local: jobId === undefined || serverId === "0"
+		serverId    : jobId === undefined ? "0" : serverId,
+		jobId       : jobId ?? id,
+		local       : jobId === undefined || serverId === "0"
 	};
+}
+
+function getManualWaitTimeRemaining(job) {
+    const milliseconds = formatTimeToMilisecconds(job.stop_time);
+
+    if (Number.isNaN(milliseconds)) return { relative: "", title: "" };
+
+    return formatCountdown(milliseconds + 30 * 60 * 1000);
 }
 
 function getActiveJob(job_id) {
@@ -24,14 +32,66 @@ function getRipperName(job, ids) {
 }
 
 function posterCheck(job) {
+    if (typeof job.poster_url === "undefined")
+        return ``;
+
     const image = job.poster_url !== "None" && job.poster_url !== "N/A"
         ? job.poster_url
         : `/static/img/${job.video_type === "Music" ? "music.png" : "none.png"}`;
     return `<img class="job-poster" src="${image}" alt="${getJobTitle(job)}">`;
 }
 
-function getStatusClass(status) {
-    return `status-${status.toLowerCase().replace(/[^a-z0-9_-]/g, "")}`;
+function jobHasProgress(job) {
+    let status = false;
+    // HandBrake has the disc/files and should be outputting stage and eta
+    if (job.status === "transcoding") {
+        status = true;
+    }
+    // MakeMKV has the disc and should be outputting stage and eta
+    if (job.status === "ripping" && job.stage) {
+        status = true;
+    }
+    // abcde is ripping the audio disc and is outputting stage and eta
+    if (job.disctype === "music" && job.stage) {
+        status = true;
+    }
+
+    return status;
+}
+
+function getStatusClass(job) {
+    let status = `status-${job.status.toLowerCase().replace(/[^a-z0-9_-]/g, "")}`
+    
+    // waiting for user input
+    if (safe_bool(job.manual_edit) && !safe_bool(job.manual_start))
+        status += ` status-manual-edit-pending`;
+
+    if (safe_bool(job.manual_start) && job.status.toLowerCase() === JobState.VIDEO_WAITING)
+        status += ` status-manual-starting`;
+
+    return status;
+}
+
+function renderJobStatusBadge(job) {
+    const statusClass = getStatusClass(job);
+
+    let manual_info = ``;
+
+    if (safe_bool(job.manual_edit) && !safe_bool(job.manual_start))
+        manual_info = getManualWaitTimeRemaining(job).relative;
+
+    if (safe_bool(job.manual_start) && job.status.toLowerCase() === JobState.VIDEO_WAITING)
+        manual_info = `Starting soon`;
+
+    return `
+        <span class="job-status ${statusClass}" 
+                data-manual-info='${manual_info}'
+                data-modal='jobs_pipeline' 
+                data-jobid="${job.job_id}">
+            <span class="status-dot"></span>
+            <span class="status-text">${job.status}</span>
+        </span>
+    `;
 }
 
 function renderTracks(job, root) {
@@ -40,12 +100,15 @@ function renderTracks(job, root) {
     const container = modal.find('#tracks .tracks-list').empty();
     const actions = modal.find('#tracks .tracks-actions').empty();
     
-    const manual_edit = (__is_authenticated_simple() && job.manual_edit);
+    const manual_time_remaining = getManualWaitTimeRemaining(job);
+    const manual_edit = job.manual_edit && !manual_time_remaining.expired && (__is_authenticated_simple());
 
     if (!tracks.length) {
         container.append($('<p>').addClass('tracks-empty').text('No tracks found.'));
         return;
     }
+
+    let num_tracks_to_process = 0;
 
     $.each(tracks, function (_, track) {
         const title = track.filename || `Track ${track.track_number}`;
@@ -62,6 +125,7 @@ function renderTracks(job, root) {
             tags.append($('<span>').addClass(`track-tag ${className}`).text(label ? `${label}: ${value}` : value));
         };
 
+        console.log(track);
         addTag('', formatTrackLength(track.length, job.video_type), 'track-tag-duration');
         addTag('', track.fps ? `${track.fps} FPS` : null);
         addTag('', track.aspect_ratio);
@@ -69,15 +133,26 @@ function renderTracks(job, root) {
 
         info.append(heading, tags);
 
-        const status = $('<span>')
-            .addClass(`track-status ${track.ripped ? 'is-ripped' : 'is-pending'}`)
+        // rip status
+        const rip_status = $('<span>')
+            .addClass(`track-tag track-tag-rip-status ${track.ripped ? 'is-ripped' : 'is-pending'}`)
             .append($('<i>').addClass(`fa-solid ${track.ripped ? 'fa-check' : 'fa-circle-dot'}`).attr('aria-hidden', 'true'))
             .append(document.createTextNode(track.ripped ? 'Ripped' : 'Not ripped'));
+        info.find('.track-tags').append(rip_status);
 
-        row.append(info, status);
+        // track status
+        const track_status = track.status || TrackState.TRACK_WAITING;
+        const status_label = $('<span>')
+            .addClass(`track-status track-tag-status-${track_status.replace(/[^a-z0-9-]/gi, '').toLowerCase()}`)
+            .text(track_status);
+        row.append(info, status_label);
 
+        // skip
         if (!manual_edit && !track.process)
             row.addClass("skip-track");
+
+        if (track.process)
+            num_tracks_to_process++;
 
         if (manual_edit) {
             const checkbox = $('<input>', {
@@ -116,13 +191,25 @@ function renderTracks(job, root) {
         container.append(row);
     });
 
-    if (manual_edit) {
+    if (manual_time_remaining.expired && job.manual_edit)
+        $('<div>', {
+            class: 'flash-alert flash-danger',
+            html: '<i class="fa-solid fa-triangle-exclamation"></i> Waiting for manual input expired!'
+        }).appendTo(container);
+    
+    else if (manual_edit) {
         $('<button>', {
             type: 'button',
             class: 'arm-button arm-button-primary track-start',
+            disabled: num_tracks_to_process <= 0,
             html: '<i class="fa-solid fa-play" aria-hidden="true"></i> Start ripping'
         }).on('click', function () {
             const local_job_id = getJobIds(job).jobId;
+
+            if (num_tracks_to_process <= 0) {
+                console.log("no tracks selected");
+                return;
+            }
 
             $.ajax({
                 url: '/jobdetail_ready',
@@ -143,7 +230,7 @@ function renderTracks(job, root) {
 
 function renderJobPipeline(job) {
     const status        = job.status;
-    const finished      = JOB_STATUS_FINISHED.has(status);
+    const finished      = JobStateGroup.FINISHED.has(status);
     const failed        = status === JobState.FAILURE;
     const successful    = status === JobState.SUCCESS;
 
@@ -191,30 +278,36 @@ function renderJobPipeline(job) {
 }
 
 function renderProgress(job) {
-    if (!hasProgress(job)) return "";
+    if (!jobHasProgress(job)) return "";
 
     return `
         <div class="job-progress" data-job-status="${job.status}">
             <div class="job-progress-header">
-                <span id="jobId${job.job_id}_stage">${job.stage}</span>
-                <span id="jobId${job.job_id}_percent">${job.progress}%</span>
+                <span id="job_stage">${job.stage}</span>
+                <span id="job_percent">${job.progress}%</span>
             </div>
             <div class="progress-track">
-                <div id="jobId${job.job_id}_progress_bar" class="progress-value" style="width:${job.progress_round}%"></div>
+                <div id="job_progress_bar" class="progress-value" style="width:${job.progress_round}%"></div>
             </div>
             <div class="job-progress-meta">
-                <span id="jobId${job.job_id}_eta">ETA ${job.eta || "Unknown"}</span>
+                <span id="_eta">ETA ${job.eta || "Unknown"}</span>
                 ${job.status === "transcoding" ? `
-                    <span id="jobId${job.job_id}_cur_fps">${job.cur_fps || 0} FPS</span>
-                    <span id="jobId${job.job_id}_avg_fps">AVG ${job.avg_fps || 0} FPS</span>
+                    <span id="job_cur_fps">${job.cur_fps || 0} FPS</span>
+                    <span id="job_avg_fps">AVG ${job.avg_fps || 0} FPS</span>
                 ` : ""}
             </div>
         </div>`;
 }
 
 function renderJobMeta(job, ids) {
-    return `
+    let meta= `
         <div class="job-meta">
+            <div class="job-meta-item">
+                <span class="job-meta-label">Ripping Mode</span>
+                <span data-field="mode" class="job-mode-badge ${safe_bool(job.manual_mode) ? "job-mode-manual" : "job-mode-auto"}">
+                    ${safe_bool(job.manual_mode) ? "Manual" : "Auto"}
+                </span>
+            </div>
             <div class="job-meta-item"><span class="job-meta-label">Type</span><span data-field="video_type">${job.video_type}</span></div>
             <div class="job-meta-item"><span class="job-meta-label">Year</span><span data-field="year">${job.year}</span></div>
             <div class="job-meta-item"><span class="job-meta-label">Device</span><span data-field="devpath">${job.devpath}</span></div>
@@ -222,7 +315,12 @@ function renderJobMeta(job, ids) {
             <div class="job-meta-item"><span class="job-meta-label">Method</span><span data-field="ripmethod">${job.config.RIPMETHOD}</span></div>
             <div class="job-meta-item"><span class="job-meta-label">Feature</span><span data-field="mainfeature">${job.config.MAINFEATURE}</span></div>
             <div class="job-meta-item"><span class="job-meta-label">Length</span><span data-field="length">${job.config.MINLENGTH} – ${job.config.MAXLENGTH}</span></div>
-        </div>`;
+    `;
+
+    return `
+        ${meta}
+        </div>
+    `;
 }
 
 function renderJobActions(job, ids, authenticated) {
@@ -233,7 +331,7 @@ function renderJobActions(job, ids, authenticated) {
     let actions= "";
 
     // job has finished, failed or succesfull
-    if (JOB_STATUS_FINISHED.has(job.status)) {
+    if (JobStateGroup.FINISHED.has(job.status)) {
         actions += `
             <button class="icon-button danger" type="button"
                 data-modal="confirm"
@@ -272,7 +370,7 @@ function renderJobActions(job, ids, authenticated) {
     `;
 
     // title actions
-	if (!JOB_STATUS_POSTPROCESSING.has(job.status) && !JOB_STATUS_FINISHED.has(job.status) && job.video_type !== "Music") {
+	if (!JobStateGroup.POSTPROCESSING.has(job.status) && !JobStateGroup.FINISHED.has(job.status) && job.video_type !== "Music") {
 		actions += `
 			<a class="icon-button"
 				href="titlesearch?job_id=${ids.jobId}"
@@ -317,18 +415,12 @@ function renderJobActions(job, ids, authenticated) {
 	return actions;
 }
 
-function renderJob(job, authenticated) {
-    const ids = getJobIds(job);
-    const statusClass = getStatusClass(job.status);
-
-    const detailUrl = ids.local
-        ? `/jobdetail?job_id=${ids.jobId}`
-        : `${job.server_url}/jobdetail?job_id=${ids.jobId}`;
-
-    const dateInfo = formatTimestamp(job.start_time);
+function renderJob(job, authenticated, placeholder=false) {
+    const ids       = getJobIds(job);
+    const dateInfo  = formatTimestamp(job.start_time);
 
     return `
-        <article class="job-card" id="jobId${job.job_id}">
+        <article class="job-card" ${placeholder ? 'data-placeholder' : ''} id="jobId${job.job_id}">
             <a href="#" class="job-poster-link" data-modal="jobs_details" data-jobid="${job.job_id}">
                 ${posterCheck(job)}
             </a>
@@ -340,25 +432,72 @@ function renderJob(job, authenticated) {
                         <span class="job-id">${job.job_id}</span>
                     </div>
 
-                    <span class="job-status ${statusClass}" id="jobId${job.job_id}_status" data-modal='jobs_pipeline' data-jobid="${job.job_id}">
-                        <span class="status-dot"></span>
-                        <span class="status-text">${job.status}</span>
-                    </span>
+                    <div id="job_status_badge_wrapper">
+                        ${renderJobStatusBadge(job)}
+                    </div>
                 </header>
 
                 ${renderJobMeta(job, ids)}
 
-                <div id="jobId${job.job_id}_progress_section">${renderProgress(job)}</div>
+                <div id="job_progress_section">${renderProgress(job)}</div>
 
                 <div class="job-footer">
                     <div class="job-time">
-                        <span title="${dateInfo.title}"><i class="fa-regular fa-clock"></i> ${dateInfo.relative}</span>
-                        <span><i class="fa-solid fa-stopwatch"></i> ${job.job_length || "Ongoing"}</span>
+                        <span title="${dateInfo.title}"><i class="fa-regular fa-clock"></i> <span id="job_start_time">${dateInfo.relative}</span></span>
+                        <span><i class="fa-solid fa-stopwatch"></i> ${(job.job_length && job.job_length !== "None") ? job.job_length : "Ongoing"}</span>
                     </div>
-                    ${renderJobActions(job, ids, authenticated)}
+                    <div id="job_actions">
+                        ${renderJobActions(job, ids, authenticated)}
+                    </div>
                 </div>
             </div>
         </article>`;
+}
+
+function updateJobItem(job, authenticated) {
+    const _card = $(`#jobId${job.job_id}`);
+    if (!_card.length) return;
+
+    const ids           = getJobIds(job);
+    const dateInfo      = formatTimestamp(job.start_time);
+    const jobTitle      = getJobTitle(job);
+
+    const title         = _card.find("[data-field='title'], #jobId" + job.job_id + "_title");
+    const poster        = _card.find(".job-poster");
+    const status        = _card.find("#job_status_badge_wrapper");
+    const start_time    = _card.find(`#job_start_time`);
+    const progress      = _card.find(`#job_progress_section`);
+    const actions       = _card.find(`#job_actions`);
+
+    if (title.length && title.text() !== jobTitle)
+        title.text(jobTitle);
+
+    if (start_time.length && start_time.text() !== dateInfo.relative)
+        start_time.text(dateInfo.relative);
+
+    if (poster.length && job.poster_url !== "None" && job.poster_url !== "N/A" && poster.attr("src") !== job.poster_url)
+        poster.attr("src", job.poster_url);
+
+    if (progress.length)
+        progress.html(renderProgress(job)); 
+
+    if (status.length)
+        status.html(renderJobStatusBadge(job));
+
+    if (actions.length)
+        actions.html(renderJobActions(job, ids, authenticated)); 
+
+    _card.find("[data-field='year']").text(job.year);
+    _card.find("[data-field='video_type']").text(job.video_type);
+    _card.find("[data-field='devpath']").text(job.devpath);
+    _card.find("[data-field='ripper']").text(getRipperName(job, getJobIds(job)));
+    _card.find("[data-field='ripmethod']").text(job.config.RIPMETHOD);
+    _card.find("[data-field='mainfeature']").text(job.config.MAINFEATURE);
+    _card.find("[data-field='length']").text(`${job.config.MINLENGTH} – ${job.config.MAXLENGTH}`);
+}
+
+function removeJobItem(job) {
+    $("#jobId" + job.job_id).remove();
 }
 
 function addJobItem(job, authenticated) {

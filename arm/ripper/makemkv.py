@@ -18,10 +18,12 @@ import shlex
 import shutil
 import subprocess
 from time import sleep, time
+from datetime import datetime
 
 import arm.config.config as cfg
 from arm.models import SystemDrives, Track
 from arm.models.job import JobState
+from arm.models.track import TrackState
 from arm.ripper import utils
 from arm.ripper.utils import notify
 from arm.ui import db
@@ -655,59 +657,37 @@ def makemkv_backup(job, rawpath):
 
 
 def makemkv_mkv(job, rawpath):
-    """
-    Rip Blu-ray without enhanced protection or dvd disc
-
-    Parameters:
-        job: arm.models.job.Job
-        rawpath:
-    """
+    """Rip Blu-ray/DVD titles using MakeMKV."""
     # Get drive mode for the current drive
     mode = utils.get_drive_mode(job.devpath)
     logging.info(f"Job running in {mode} mode")
+    
     # Get track info form mkv rip
     get_track_info(job.drive.mdisc, job)
+    
+    #
+    # dispatch makemkv commands for drive mode
+    #
+    
     # route to ripping functions.
-    if job.config.MAINFEATURE:
-        logging.info("Trying to find mainfeature (sorting by chapters desc, filesize desc, track_number asc)")
-        track = Track.query.filter_by(job_id=job.job_id).order_by(
-            Track.chapters.desc(), Track.filesize.desc(), Track.track_number.asc()).first()
-        rip_mainfeature(job, track, rawpath)
-    elif mode == 'manual':  # Run if mode is manual, user selects tracks
-        # Set job status to waiting
-        job.status = JobState.VIDEO_WAITING.value
-        db.session.commit()
-        # Process Tracks
-        if manual_wait(job):  # Alert user: tracks are ready and wait for 30 minutes
-            # Response from user provided, process requested tracks
-            job.status = JobState.VIDEO_RIPPING.value
-            db.session.commit()
-            process_single_tracks(job, rawpath, mode)
-        else:
-            # Notify User: no action was taken
-            title = "ARM is Sad - Job Abandoned"
-            message = "You left me alone in the cold and dark, I forgot who I was. Your job has been abandoned."
-            notify(job, title, message)
+    if job.config.MAINFEATURE:                 
+        process_main_feature(job, rawpath)
 
-            raise utils.RipperException("Manual mode: Timed out waiting for user input")
+    # Run if mode is manual, user selects tracks
+    elif mode == 'manual':  
+        process_manual_tracks(job, rawpath)
 
     # if no maximum length, process the whole disc in one command
     elif int(job.config.MAXLENGTH) > 99998:
-        cmd = [
-            "mkv",
-        ]
-        cmd += shlex.split(job.config.MKV_ARGS)
-        cmd += [
-            f"--progress={progress_log(job)}",
-            f"dev:{job.devpath}",
-            "all",
-            rawpath,
-            f"--minlength={job.config.MINLENGTH}",
-        ]
-        logging.info("Process all tracks from disc.")
-        collections.deque(run(cmd, OutputType.MSG), maxlen=0)
+        process_all_tracks(job, rawpath)
+
+    # Process tracks one at a time
     else:
         process_single_tracks(job, rawpath, 'auto')
+
+    # confirm processed tracks ripped and saved successfully
+    for track in job.tracks:
+        confirm_track_saved(track, rawpath)
 
 
 def makemkv(job):
@@ -761,100 +741,218 @@ def makemkv(job):
     logging.info(f"Exiting MakeMKV processing with return value of: {rawpath}")
     return rawpath
 
+def confirm_track_saved(track : Track, rawpath) -> bool:
+    """Confirm ripped track by checking the output file."""
+    if not track.process:
+        return False
 
-def rip_mainfeature(job, track, rawpath):
-    """
-    Find and rip only the main feature when using Blu-rays
+    message = ""
+    
+    if not track.filename:
+        track.ripped = False
+        message = f"Track #{track.track_number} has no output filename."
+   
+    else:
+        filepath = os.path.join(rawpath, track.filename)     
+        track.ripped = os.path.isfile(filepath) and os.path.getsize(filepath) > 0
+
+        if not track.ripped:
+            message = f"Track #{track.track_number} output file is missing or empty: {filepath}"
+
+    # track exists on disk
+    if track.ripped:
+        track.status = TrackState.TRACK_RIPPED
+
+    # no track found
+    else:
+        track.status = TrackState.TRACK_FAILURE
+        logging.warning(message)
+
+    track.error = message
+    db.session.commit()
+
+    return track.ripped
+
+_MAKEMKV_TRACK_ADDED = re.compile(r"File (?P<filename>.+\.mkv) was added")
+_MAKEMKV_TRACK_SUFFIX = re.compile(r"_t\d+\.mkv$")
+_MAKEMKV_SAVING_TITLE = re.compile(r'^PRGC:5017,(?P<title_index>\d+),"Saving to MKV file"$')
+_MAKEMKV_TRACK_SKIPPED = re.compile(
+    r"^Title #(?P<track_number>\d+) has length of \d+ seconds "
+    r"which is less than minimum title length of \d+ seconds "
+    r"and was therefore skipped$"
+)
+
+def find_skip_message(message):
+    """Parse a MakeMKV message indicating that a title was skipped."""
+    match = _MAKEMKV_TRACK_SKIPPED.match(message.strip())
+    return int(match.group("track_number")) if match else None
+
+
+def find_saving_message(message):
+    match = _MAKEMKV_SAVING_TITLE.match(message.strip())
+    return int(match.group("title_index")) if match else None
+
+
+def mark_track_skipped(job, rawpath, track_number):
+    """Mark a MakeMKV-skipped track as not processing."""
+    track = next(
+        (track for track in job.tracks if track.track_number == track_number),
+        None,
+    )
+    if not track:
+        return
+
+    message = f"Track #{track_number} did not meet minimum length, skipping."
+
+    track.process   = False
+    track.status    = TrackState.TRACK_SKIPPED
+    track.error     = message
+    
+    logging.info(message)
+    db.session.commit()
+    
+def mark_track_ripped(job, rawpath, message):
+    """Mark a track as ripped based on a MakeMKV FILE_ADDED message."""
+    match = _MAKEMKV_TRACK_ADDED.search(message)
+    if not match:
+        return False
+
+    filename = match.group("filename")
+    prefix = _MAKEMKV_TRACK_SUFFIX.sub("", filename)
+
+    for track in job.tracks:
+        if _MAKEMKV_TRACK_SUFFIX.sub("", track.filename or "") == prefix:
+            return confirm_track_saved( track, rawpath )
+
+    logging.debug("FILE_ADDED for '%s' did not match any track", filename)
+    return False
+
+def process_all_tracks(job, rawpath):
+    # Mark all tracks as processing before MakeMKV runs.
+    for track in job.tracks:
+        track.process = True
+        track.status = TrackState.TRACK_RIPPING
+    db.session.commit()
+
+    logging.info("Process all tracks from disc.")
+    
+    # create rip command
+    cmd = create_makemkv_cmd(job, rawpath)  # all
+
+    # run and process live feed
+    for msg in run(cmd, OutputType.MSG):
+        message = getattr(msg, "message", "")
+        code = getattr(msg, "code", False)
+
+        if code and int(code) == MessageID.FILE_ADDED:
+            mark_track_ripped(job, rawpath, message)
+
+        if skip := find_skip_message(message):
+            mark_track_skipped(job, rawpath, skip)
+ 
+def process_single_track(job, track, rawpath):
+    """Rip a single track using MakeMKV.
 
     Parameters:
         job: arm.models.job.Job
         track: arm.models.track.Track
+        rawpath: Output directory for the ripped track
     """
-    logging.info(f"Processing track#{track.track_number} as mainfeature. Length is {track.length}s")
-    filepathname = os.path.join(rawpath, track.filename)
-    logging.info(f"Ripping track#{track.track_number} to {shlex.quote(filepathname)}")
-    cmd = [
-        "mkv",
-    ]
-    cmd += shlex.split(job.config.MKV_ARGS)
-    cmd += [
-        f"--progress={progress_log(job)}",
-        f"dev:{job.devpath}",
-        track.track_number,
-        rawpath,
-        f"--minlength={job.config.MINLENGTH}",
-    ]
-    logging.info("Ripping main feature")
-    # Possibly update db to say track was ripped
+    track.status = TrackState.TRACK_RIPPING
+    db.session.commit()
+
+    filepath = os.path.join(rawpath, track.filename)
+    logging.info(f"Ripping track #{track.track_number} with lenght of {track.length} seconds to {shlex.quote(filepath)}")
+    
+    # create rip command
+    cmd = create_makemkv_cmd(job, rawpath, track.track_number) # single track
     collections.deque(run(cmd, OutputType.MSG), maxlen=0)
 
+    # post check if file is ripped and saved
+    # checked again for all tracks after all tracks are done in makemkv_mkv()
+    confirm_track_saved( track, rawpath)
 
 def process_single_tracks(job, rawpath, mode: str):
-    """
-    Process single tracks by MakeMKV one at a time
+    """Process single tracks by MakeMKV one at a time."""
 
-    Parameters:
-        job: arm.models.job.Job
-        rawpath:
-        mode: drive mode (auto or manual)
-    """
-    # process one track at a time based on track length
-    if mode == 'auto':
-        # Process single track automatically based on start and finish times
-        for track in job.tracks:
+    for track in job.tracks:
+        message = None
+        
+        # disabled track manually?
+        if track.process is False:
+            track.status    = TrackState.TRACK_SKIPPED
+            message = f"Track #{track.track_number} disabled by user — skipping rip."
+
+        # in auto mode, lets check allowed min and max lenghts
+        elif mode == "auto":
             if track.length < int(job.config.MINLENGTH):
-                # too short
-                logging.info(f"Track #{track.track_number} of {job.no_of_titles}. Length ({track.length}) "
-                             f"is less than minimum length ({job.config.MINLENGTH}).  Skipping")
+                message = f"Track #{track.track_number} of {job.no_of_titles - 1}. Length ({track.length}) is less than minimum length ({job.config.MINLENGTH}). Skipping."
                 track.process = False
 
             elif track.length > int(job.config.MAXLENGTH):
-                # too long
-                logging.info(f"Track #{track.track_number} of {job.no_of_titles}. "
-                             f"Length ({track.length}) is greater than maximum length ({job.config.MAXLENGTH}).  "
-                             "Skipping")
+                message = f"Track #{track.track_number} of {job.no_of_titles - 1}. Length ({track.length}) is greater than maximum length ({job.config.MAXLENGTH}). Skipping."
                 track.process = False
+
             else:
-                # track is just right
                 track.process = True
 
-    # Rip the track if the user has set it to rip, or in auto mode and the time is good
+        if message:
+            track.error = message
+            logging.info(message)
 
-    tracks_to_process = [track for track in job.tracks if track.process]
-    process_index = 1
-    for track in tracks_to_process:
-        logging.info(f"Processing track #{process_index} of {len(tracks_to_process)}. "
-                     f"Length is {track.length} seconds.")
-        filepathname = os.path.join(rawpath, track.filename)
-        logging.info(f"Ripping title {track.track_number} to {shlex.quote(filepathname)}")
-        logfile_base = progress_log(job)
-        cmd = [
-            "mkv",
-        ]
-        cmd += shlex.split(job.config.MKV_ARGS)
-        cmd += [
-            f"--minlength={job.config.MINLENGTH}",
-            f"--progress={logfile_base}",
-            f"dev:{job.devpath}",
-            track.track_number,
-            rawpath,
-        ]
-        # Create a batch info file so the web gui can know when this process started, which track, and how many tracks
-        logging.debug(f"Saving batch position info for job {job.job_id}: "
-                      f"BINF:{int(time())},{process_index},{len(tracks_to_process)},0000"
-                      )
-        batch_info_file = logfile_base+".batchinfo"
-        if not os.path.exists(batch_info_file):
-            with open(batch_info_file, 'w') as f:
-                f.write(f"BINF:{int(time())},{process_index},{len(tracks_to_process)},0000")
-        else:
-            with open(batch_info_file, 'a') as f:
-                f.write(f"\nBINF:{int(time())},{process_index},{len(tracks_to_process)},0000")
+        db.session.commit()
+        
+        if not track.process:
+            continue
 
-        logging.debug("Starting to rip single track.")
-        collections.deque(run(cmd, OutputType.MSG), maxlen=0)
-        process_index += 1
+        process_single_track(job, track, rawpath)
 
+    # redundancy
+    db.session.commit()
+
+def process_manual_tracks(job, rawpath):
+    # Stop/hold job and set status to waiting
+    job.status = JobState.VIDEO_WAITING.value
+    job.stop_time = datetime.now()
+    db.session.commit()
+
+    # Process Tracks
+    # Notify user: tracks are ready and wait for 30 minutes
+    if manual_wait(job): 
+        # Response from user provided, process requested tracks
+        job.status = JobState.VIDEO_RIPPING.value
+        job.stop_time = None
+        db.session.commit()
+        process_single_tracks(job, rawpath, 'manual')
+    else:
+        # Notify user: no action was taken
+        title = "ARM is Sad - Job Abandoned"
+        message = "You left me alone in the cold and dark, I forgot who I was. Your job has been abandoned."
+        notify(job, title, message)
+
+        raise utils.RipperException("Manual mode: Timed out waiting for user input")
+
+def process_main_feature(job, rawpath):
+    logging.info("Trying to find mainfeature (sorting by chapters desc, filesize desc, track_number asc)")
+    track = Track.query.filter_by(job_id=job.job_id).order_by(Track.chapters.desc(), Track.filesize.desc(), Track.track_number.asc()).first()
+
+    if track is None:
+        logging.warning("No tracks found for job #%s; skipping mainfeature rip.", job.job_id,)
+    else:
+        logging.info( f"Processing track #{track.track_number} as mainfeature. "f"Length is {track.length}s")
+        process_single_track(job, track, rawpath)
+
+def create_makemkv_cmd(job, rawpath, track_number=None):
+    cmd = ["mkv"]
+    cmd += shlex.split(job.config.MKV_ARGS)
+    cmd += [f"--progress={progress_log(job)}", f"dev:{job.devpath}"]
+
+    if track_number is None:
+        cmd += ["all", rawpath, f"--minlength={job.config.MINLENGTH}"]
+    else:
+        cmd += [f"--minlength={job.config.MINLENGTH}", track_number, rawpath]
+
+    return cmd
 
 def setup_rawpath(job, raw_path):
     """
@@ -884,7 +982,6 @@ def setup_rawpath(job, raw_path):
             err = f"Couldn't create the base file path: {raw_path}. Probably a permissions error"
             raise OSError(err) from OSError
     return raw_path
-
 
 def prep_mkv():
     """
@@ -1245,26 +1342,32 @@ def run(options, select):
     logging.debug(f"command: '{' '.join(cmd)}'")
     with subprocess.Popen(cmd, stdout=subprocess.PIPE, text=True) as proc:
         logging.debug(f"PID {proc.pid}: command: '{' '.join(cmd)}'")
+
         for line in proc.stdout:
             line = line.rstrip(os.linesep)
-            logging.debug(line)  # Maybe write the raw output to a separate log
-            if proc.returncode:
-                buffer.append(line)
-                continue
+            logging.debug(line)
+
             try:
                 msg_type, data = parse_line(line)
             except MakeMkvParserError as err:
                 logging.warning(err)
                 buffer.append(line)
                 continue
+
             logging.debug(data)
+
             if msg_type in select:
                 yield data
-    if proc.returncode:
-        raise MakeMkvRuntimeError(proc.returncode, cmd, output=os.linesep.join(buffer))
-    if buffer and proc.returncode:
-        logging.warning(f"Cannot parse {len(buffer)} lines: {os.linesep.join(buffer)}")
-        raise MakeMkvRuntimeError(proc.returncode, cmd, output=os.linesep.join(buffer))
+
+        returncode = proc.wait()
+
+    if returncode != 0:
+        raise MakeMkvRuntimeError(
+            returncode,
+            cmd,
+            output=os.linesep.join(buffer),
+        )
+
     logging.info("MakeMKV exits gracefully.")
 
 

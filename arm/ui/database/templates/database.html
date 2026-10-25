@@ -3,7 +3,7 @@
 {% block content %}
 <div>
     {% set header_icon = "fa-solid fa-database" %}
-    {% set header_title = "Job Database" %}
+    {% set header_title = "Job History" %}
     {% set header_description = "Browse and manage your ripping history." %}
     {% set header_actions %}
         <button id="get_all" type="button" class="arm-button arm-button-secondary">
@@ -21,15 +21,18 @@
             <span>Failed jobs</span>
         </button>
 
-        <button
-            type="button"
-            class="arm-button arm-button-primary database-search-button"
-            data-modal="search"
-            aria-label="Search database"
-            title="Search database">
-            <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
-            <span>Search</span>
-        </button>
+        <div id="search_container">
+            <input type="text" id="search_query">
+            <button
+                type="button"
+                class="arm-button arm-button-primary database-search-button"
+                data-modal="search"
+                aria-label="Search database"
+                title="Search database">
+                <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                <span>Search</span>
+            </button>
+        </div>
     {% endset %}
 
     {% include "includes/page_header.html" %}

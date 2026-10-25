@@ -75,7 +75,10 @@ def jobdetail_api():
 	if meta and 'Error' not in meta:
 		plot = meta['Plot'] if 'Plot' in meta else "There was a problem getting the plot"
 		background = meta['background_url'] if 'background_url' in meta else None
-	
+	else:
+		plot = ""
+		background = None
+
 	#plot = " is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since 1966, when designers at Letraset and James Mosley, the librarian at St Bride Printing Library in London, took a 1914 Cicero translation and scrambled it to make dummy text for Letraset's Body Type sheets. It has survived not only many decades, but also the leap into el"
 	#background = ""
 
