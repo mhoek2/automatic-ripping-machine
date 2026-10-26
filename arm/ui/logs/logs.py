@@ -90,16 +90,15 @@ def logreader():
 
     ui_utils.validate_logfile(full_path.name, mode, full_path)
 
-    match mode:
-        case "armcat":
-            content = "".join(ui_utils.generate_arm_cat(full_path))
-        case "tail":
-            with full_path.open(encoding="utf8", errors="ignore") as log_file:
-                content = log_file.read()
-        case "download":
-            return send_file(full_path, as_attachment=True)
-        case _:
-            raise ValidationError
+    if mode == "armcat":
+        content = "".join(ui_utils.generate_arm_cat(full_path))
+    elif mode == "tail":
+        with full_path.open(encoding="utf8", errors="ignore") as log_file:
+            content = log_file.read()
+    elif mode == "download":
+        return send_file(full_path, as_attachment=True)
+    else:
+        raise ValidationError
 
     return jsonify({
         "mode": mode,
