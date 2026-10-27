@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - ui/develop
+      - docker/compose
 
 permissions:
   contents: read
@@ -103,6 +104,6 @@ jobs:
           push: true
           platforms: linux/amd64
           tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest-dev
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest-dev-compose
           cache-from: type=gha,scope=automatic-ripping-machine
           cache-to: type=gha,mode=max,scope=automatic-ripping-machine
