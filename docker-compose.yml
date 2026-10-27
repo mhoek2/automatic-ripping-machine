@@ -1,0 +1,18 @@
+services:
+  arm:
+    #image: arm-local:dev
+    image: ghcr.io/mhoek2/automatic-ripping-machine:latest-dev
+    container_name: arm_local
+    restart: unless-stopped
+    privileged: true
+    ports:
+      - "8080:8080"
+    environment:
+      - TZ=Europe/Amsterdam
+    volumes:
+      - ./config:/etc/arm/config
+      - ./home:/home/arm
+      - ./logs:/home/arm/logs
+      - ./media:/home/arm/media
+      - ./music:/home/arm/Music
+      - /dev:/dev

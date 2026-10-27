@@ -1,84 +1,142 @@
 # Automatic Ripping Machine (ARM)
-[![CI](https://github.com/automatic-ripping-machine/automatic-ripping-machine/actions/workflows/main.yml/badge.svg)](https://github.com/automatic-ripping-machine/automatic-ripping-machine/actions/workflows/main.yml) [![Publish Docker Image](https://github.com/automatic-ripping-machine/automatic-ripping-machine/actions/workflows/publish-image.yml/badge.svg)](https://github.com/automatic-ripping-machine/automatic-ripping-machine/actions/workflows/publish-image.yml)
-[![Docker](https://img.shields.io/docker/pulls/automaticrippingmachine/automatic-ripping-machine.svg)](https://hub.docker.com/r/automaticrippingmachine/automatic-ripping-machine)
-
-[![GitHub forks](https://img.shields.io/github/forks/automatic-ripping-machine/automatic-ripping-machine)](https://github.com/automatic-ripping-machine/automatic-ripping-machine/network)
-[![GitHub stars](https://img.shields.io/github/stars/automatic-ripping-machine/automatic-ripping-machine)](https://github.com/automatic-ripping-machine/automatic-ripping-machine/stargazers)
-[![GitHub issues](https://img.shields.io/github/issues/automatic-ripping-machine/automatic-ripping-machine)](https://github.com/automatic-ripping-machine/automatic-ripping-machine/issues)
-[![GitHub pull requests](https://img.shields.io/github/issues-pr/automatic-ripping-machine/automatic-ripping-machine)](https://github.com/automatic-ripping-machine/automatic-ripping-machine/pulls)
-[![GitHub contributors](https://img.shields.io/github/contributors/automatic-ripping-machine/automatic-ripping-machine)](https://github.com/automatic-ripping-machine/automatic-ripping-machine/graphs/contributors)
-[![GitHub last commit](https://img.shields.io/github/last-commit/automatic-ripping-machine/automatic-ripping-machine?)](https://github.com/automatic-ripping-machine/automatic-ripping-machine/commits/main)
-
-[![GitHub license](https://img.shields.io/github/license/automatic-ripping-machine/automatic-ripping-machine)](https://github.com/automatic-ripping-machine/automatic-ripping-machine/blob/main/LICENSE)
-
-[![GitHub release (latest by date)](https://img.shields.io/github/v/release/automatic-ripping-machine/automatic-ripping-machine?label=Latest%20Stable%20Version)](https://github.com/automatic-ripping-machine/automatic-ripping-machine/releases)
-[![GitHub release Date](https://img.shields.io/github/release-date/automatic-ripping-machine/automatic-ripping-machine?label=Latest%20Stable%20Released)](https://github.com/automatic-ripping-machine/automatic-ripping-machine/releases)
-![Python Versions](https://img.shields.io/badge/Python_Versions-3.9_|_3.10_|_3.11_|_3.12-blue?logo=python)
+A fork of the [Automatic Ripping Machine](https://github.com/automatic-ripping-machine/automatic-ripping-machine) with updates to the UI, keeping true to usage of Flask, which is sufficient for its purpose.
 
 
 
-[![Wiki](https://img.shields.io/badge/Wiki-Get%20Help-brightgreen)](https://github.com/automatic-ripping-machine/automatic-ripping-machine/wiki)
-[![Discord](https://img.shields.io/discord/576479573886107699)](https://discord.gg/FUSrn8jUcR)
+> [!IMPORTANT]
+> **Prerequisites**
+>
+> - A system running Ubuntu Linux.
+> - Docker Engine and the Docker Compose plugin installed.
+> - A user account with `sudo` privileges.
+> - A working internet connection to download the ARM Docker image.
+> - A DVD or Blu-ray drive connected to the system for ripping media.
+>
+> This guide assumes Docker is already installed and configured. If not, follow the [Quick Guide](#install-docker-on-ubuntu) or the official [Docker installation guide](https://docs.docker.com/engine/install/ubuntu/) first.
 
 
+## Install ARM
+> [!NOTE]
+> This guide covers a simple setup of Automatic Ripping Machine (ARM) using Docker Compose.
+<details>
+<summary>View steps</summary>
 
-## Overview
+### 1. Prepare
 
-Insert an optical disc (Blu-ray, DVD, CD) and checks to see if it's audio, video (Movie or TV), or data, then rips it.
+Create a directory for ARM and its configuration files.
 
-See: https://b3n.org/automatic-ripping-machine
+```bash
+sudo mkdir -p /stack/arm
+cd /stack/arm
+sudo nano docker-compose.yml
+```
+
+Paste the following configuration into `docker-compose.yml` and save the file.
+
+```yaml
+services:
+  arm:
+    image: ghcr.io/mhoek2/automatic-ripping-machine:latest-dev
+    container_name: arm_local
+    restart: unless-stopped
+    privileged: true
+    ports:
+      - "8080:8080"
+    environment:
+      - TZ=Europe/Amsterdam
+    volumes:
+      - ./config:/etc/arm/config
+      - ./home:/home/arm
+      - ./logs:/home/arm/logs
+      - ./media:/home/arm/media
+      - ./music:/home/arm/Music
+      - /dev:/dev
+```
+
+The configuration uses the development Compose image. The other image options are included as alternatives.
+
+### 2. Start ARM
+
+From the `/stack/arm` directory, run Docker Compose to pull the image (if needed) and start the container in the background.
+
+```bash
+sudo docker compose up -d
+```
+
+### 3. Verify the Installation
+
+Check whether the container is running.
+
+```bash
+sudo docker compose ps
+```
+
+To view the container logs:
+
+```bash
+sudo docker compose logs -f
+```
+
+### 4. Access the Web Interface
+
+Open the following address in your browser:
+
+http://<server-ip>:8080
+
+Replace `<server-ip>` with the IP address of your Ubuntu server. If you're accessing ARM directly on the same machine, use `http://localhost:8080`.
+
+find ip on ubuntu:
+```bash
+ip a
+```
+</details>
 
 
-## Features
+## Install Docker on Ubuntu
+> [!NOTE]
+> This is a quick guide. More detailed guides are available online or follow the official [Docker installation guide](https://docs.docker.com/engine/install/ubuntu/)!
 
-- Detects insertion of disc using udev
-- Determines disc type...
-  - If video (Blu-ray or DVD)
-    - Retrieve title from disc or [OMDb API](http://www.omdbapi.com/) to name the folder "Movie Title (Year)" so that Plex or Emby can pick it up
-    - Determine if video is Movie or TV using [OMDb API](http://www.omdbapi.com/)
-    - Rip using MakeMKV or HandBrake (can rip all features or main feature)
-    - Eject disc and queue up Handbrake transcoding when done
-    - Transcoding jobs are asynchronously batched from ripping
-    - Send notifications via IFTTT, Pushbullet, Slack, Discord, and many more!
-  - If audio (CD) - rip using abcde (get disc-data and album art from [musicbrainz](https://musicbrainz.org/))
-  - If data (Blu-ray, DVD, DVD-Audio or CD) - make an ISO backup
-- Headless, designed to be run from a server
-- Can rip from multiple-optical drives in parallel
-- Python Flask UI to interact with ripping jobs, view logs, update jobs, etc
+<details>
+<summary>View steps</summary>
+ 
+### 1. Prepare
 
+Install the required packages and add the official Docker repository.
 
+```bash
+sudo apt install -y ca-certificates curl gnupg lsb-release software-properties-common
 
-## Usage
+sudo mkdir -p /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 
-- Insert disc
-- Wait for disc to eject
-- Repeat
+echo \
+    "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+    $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+```
 
+### 2. Install
 
-## Requirements
+### 1. Prepare
+```bash
+sudo apt update
+sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+```
 
-- A system capable of running Docker containers
-- One or more optical drives to rip Blu-rays, DVDs, and CDs
-- Lots of drive space (I suggest using a NAS) to store your movies
+### 3. Enable Docker
 
+```bash
+sudo systemctl enable docker
+sudo systemctl start docker
+sudo systemctl status docker
+```
 
-## Install
+### 4. Verify Installation
 
-[For normal installation please see the wiki](https://github.com/automatic-ripping-machine/automatic-ripping-machine/wiki/).
-
-[For docker installation please see here](https://github.com/automatic-ripping-machine/automatic-ripping-machine/wiki/docker).
-
-[For WSL Integration please see here]()
-
-## Troubleshooting
- [Please see the wiki for troubleshooting](https://github.com/automatic-ripping-machine/automatic-ripping-machine/wiki/).
-
-## Contributing
-
-Pull requests are welcome.  Please see the [Contributing Guide](https://github.com/automatic-ripping-machine/automatic-ripping-machine/wiki/Contributing-Guide)
-
-If you set ARM up in a different environment (hardware/OS/virtual/etc.), please consider [submitting a howto to the wiki](https://github.com/automatic-ripping-machine/automatic-ripping-machine/wiki).
+```bash
+docker version
+docker compose version
+```
+</details>
 
 ## License
-
 [MIT License](LICENSE)

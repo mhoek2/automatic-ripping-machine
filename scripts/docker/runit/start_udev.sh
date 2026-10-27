@@ -1,4 +1,4 @@
-#!/bin/sh -i
+#!/bin/sh
 
 echo "Trying to start udev"
 /etc/init.d/udev start > /dev/null 2>&1
