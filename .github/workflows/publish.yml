@@ -103,6 +103,6 @@ jobs:
           push: true
           platforms: linux/amd64
           tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest-dev-compose
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest-dev
           cache-from: type=gha,scope=automatic-ripping-machine
           cache-to: type=gha,mode=max,scope=automatic-ripping-machine
