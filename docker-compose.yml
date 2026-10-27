@@ -1,7 +1,8 @@
 services:
   arm:
-    image: arm-local:dev
+    #image: arm-local:dev
     #image: ghcr.io/mhoek2/automatic-ripping-machine:latest-dev
+    image: ghcr.io/mhoek2/automatic-ripping-machine:latest-dev-compose
     container_name: arm_local
     restart: unless-stopped
     privileged: true
