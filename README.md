@@ -36,9 +36,7 @@ Paste the following configuration into `docker-compose.yml` and save the file.
 ```yaml
 services:
   arm:
-    # image: arm-local:dev
-    # image: ghcr.io/mhoek2/automatic-ripping-machine:latest-dev
-    image: ghcr.io/mhoek2/automatic-ripping-machine:latest-dev-compose
+    image: ghcr.io/mhoek2/automatic-ripping-machine:latest-dev
     container_name: arm_local
     restart: unless-stopped
     privileged: true
@@ -89,7 +87,7 @@ Replace `<server-ip>` with the IP address of your Ubuntu server. If you're acces
 
 find ip on ubuntu:
 ```bash
-ip -a
+ip a
 ```
 </details>
 

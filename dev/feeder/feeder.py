@@ -232,7 +232,7 @@ class Feeder:
         if self.config.NOTIFY_TRANSCODE:
             self._job_notificaton(self.job, f"{self.job.title} {constants.TRANSCODE_COMPLETE}")
         
-        self.track.status = JobState.IDLE.value # why ??
+        self.job.status = JobState.IDLE.value # why ??
         db.session.commit()
 
         time.sleep(duration)
