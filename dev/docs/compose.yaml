@@ -1,0 +1,12 @@
+services:
+  docs:
+    build:
+      context: ../..
+      dockerfile: dev/docs/Dockerfile
+    working_dir: /workspace
+    volumes:
+      - ../..:/workspace
+      - docs_node_modules:/workspace/node_modules
+
+volumes:
+  docs_node_modules:

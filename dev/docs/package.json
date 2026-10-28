@@ -1,0 +1,37 @@
+{
+    "name": "arm",
+    "version": "1.0.0",
+    "description": "ARM",
+    "main": "index.js",
+    "directories": {
+        "doc": "docs",
+        "test": "tests"
+    },
+    "scripts": {
+        "lint:js": "eslint \"arm/ui/static/js/**/*.js\"",
+        "lint:css": "stylelint \"arm/ui/static/css/**/*.css\"",
+        "lint": "npm run lint:js && npm run lint:css",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/mhoek2/automatic-ripping-machine.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/mhoek2/automatic-ripping-machine/issues"
+    },
+    "homepage": "https://github.com/mhoek2/automatic-ripping-machine",
+    "devDependencies": {
+        "@eslint/js": "^9.23.0",
+        "eslint": "^9.23.0",
+        "eslint-plugin-html": "^8.1.2",
+        "globals": "^16.0.0",
+        "postcss-html": "^1.8.0",
+        "postcss-scss": "^4.0.9",
+        "stylelint": "^16.17.0",
+        "stylelint-config-standard": "^37.0.0"
+    }
+}
