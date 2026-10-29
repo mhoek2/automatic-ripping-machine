@@ -28,13 +28,31 @@
 
                     <div class="ripper-setting">
                         <label class="ripper-setting-label" for="setting_use_icons">use_icons</label>
-                        <input class="ripper-setting-input" type="text" id="setting_use_icons" name="use_icons" value="{{ ui_settings.use_icons }}" aria-label="use_icons">
+                        <label class="arm-checkbox">
+                            <input
+                                type="checkbox"
+                                id="setting_use_icons"
+                                name="use_icons"
+                                value="True"
+                                {% if ui_settings.use_icons | string == "True" %}checked{% endif %}
+                            >
+                            <span></span>
+                        </label>
                         <a class="ripper-setting-info popovers" href="" onClick="return false;" data-content="{{ jsoncomments['use_icons'] | replace('#', '\n') }}" rel="popover" data-placement="top" data-original-title="use_icons" title="More information"><i class="fas fa-circle-info"></i></a>
                     </div>
 
                     <div class="ripper-setting">
                         <label class="ripper-setting-label" for="setting_save_remote_images">save_remote_images</label>
-                        <input class="ripper-setting-input" type="text" id="setting_save_remote_images" name="save_remote_images" value="{{ ui_settings.save_remote_images }}" aria-label="save_remote_images">
+                        <label class="arm-checkbox">
+                            <input
+                                type="checkbox"
+                                id="setting_save_remote_images"
+                                name="save_remote_images"
+                                value="True"
+                                {% if ui_settings.save_remote_images | string == "True" %}checked{% endif %}
+                            >
+                            <span></span>
+                        </label>
                         <a class="ripper-setting-info popovers" href="" onClick="return false;" data-content="{{ jsoncomments['save_remote_images'] | replace('#', '\n') }}" rel="popover" data-placement="top" data-original-title="save_remote_images" title="More information"><i class="fas fa-circle-info"></i></a>
                     </div>
 

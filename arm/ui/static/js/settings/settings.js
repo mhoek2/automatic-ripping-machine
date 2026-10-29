@@ -1,17 +1,21 @@
 $(function () {
     function sendSettings(formToSend, sendTo) {
+        const data = formToSend.serializeArray();
+
+        formToSend.find('input[type="checkbox"]').each(function () {
+            data.push({
+                name: this.name,
+                value: this.checked ? 'True' : 'False'
+            });
+        });
+
         $.ajax({
             type: 'POST',
             url: sendTo,
-            data: formToSend.serialize()
+            data: $.param(data)
         }).done(function (data) {
             if (data.success === true) {
-                console.log(data)
-                //var dt = new Date();
-                //var time = `${dt.getHours()}:${dt.getMinutes()}:${dt.getSeconds()}`;
-                //addNotification("Saved Successfully", `Saved ${data.form} settings at ${time}`, toastCount);
-                //toastCount++;
-                //alert("Setting saved");
+                console.log(data);
             }
         });
     }

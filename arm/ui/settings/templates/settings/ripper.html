@@ -14,8 +14,38 @@
 
                     <div class="ripper-setting">
                         <label class="ripper-setting-label" for="setting_{{ k }}">{{ k }}</label>
-                        <input class="ripper-setting-input" type="text" id="setting_{{ k }}" name="{{ k }}" placeholder="{{ settings[k] }}" value="{{ settings[k] }}" aria-label="{{ k }}" {% if ripper_read_only %}disabled title="arm.yaml is read-only"{% endif %}>
-                        <a class="ripper-setting-info popovers" href="" onClick="return false;" data-content="{{ jsoncomments[k] | replace('#', '\n') }}" rel="popover" data-placement="top" data-original-title="{{ k }}" title="More information"><i class="fas fa-circle-info"></i></a>
+
+                        {% if settings[k] | string in ["True", "False"] %}
+                        <label class="arm-checkbox">
+                            <input
+                                type="checkbox"
+                                id="setting_{{ k }}"
+                                name="{{ k }}"
+                                value="True"
+                                {% if settings[k] | string == "True" %}checked{% endif %}
+                                {% if ripper_read_only %}disabled title="arm.yaml is read-only"{% endif %}
+                            >
+                            <span></span>
+                        </label>
+                        {% else %}
+                        <input
+                            class="ripper-setting-input"
+                            type="text"
+                            id="setting_{{ k }}"
+                            name="{{ k }}"
+                            placeholder="{{ settings[k] }}"
+                            value="{{ settings[k] }}"
+                            aria-label="{{ k }}"
+                            {% if ripper_read_only %}disabled title="arm.yaml is read-only"{% endif %}
+                        >
+                        {% endif %}
+
+                        <a class="ripper-setting-info popovers" href="" onClick="return false;"
+                            data-content="{{ jsoncomments[k] | replace('#', '\n') }}"
+                            rel="popover" data-placement="top"
+                            data-original-title="{{ k }}" title="More information">
+                            <i class="fas fa-circle-info"></i>
+                        </a>
                     </div>
 
                     {% endif %}
