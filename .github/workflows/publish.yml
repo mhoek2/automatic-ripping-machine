@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - ui/develop
-      - docs/rework
 
 permissions:
   contents: read
