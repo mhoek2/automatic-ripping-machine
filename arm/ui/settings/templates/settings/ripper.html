@@ -41,7 +41,7 @@
                         {% endif %}
 
                         <a class="ripper-setting-info popovers" href="" onClick="return false;"
-                            data-content="{{ jsoncomments[k] | replace('#', '\n') }}"
+                            data-content="{{ jsoncomments[k] | replace('#', '\n') | replace('\n\n\n', '\n\n') | replace('\n\n', '\n') | trim }}"
                             rel="popover" data-placement="top"
                             data-original-title="{{ k }}" title="More information">
                             <i class="fas fa-circle-info"></i>

@@ -5,10 +5,10 @@
     cursor: help;
 }
 
-.popovers::after {
+.popovers::before {
     content: attr(data-original-title) "\A" attr(data-content);
     position: absolute;
-    bottom: calc(100% + 0.5rem);
+    bottom: calc(100% + 0.7rem);
     left: 50%;
     z-index: 1000;
     width: max-content;
@@ -16,6 +16,33 @@
     padding: 0.75rem 1rem;
     border: 1px solid var(--color-border);
     border-radius: 0.5rem;
+    background: var(--color-surface);
+    color: var(--color-text);
+    font-size: 0.875rem;
+    font-weight: bold;
+    letter-spacing: -0.5px;
+    line-height: 1.5;
+    text-align: left;
+    white-space: pre-line;
+    overflow-wrap: anywhere;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transform: translate(-50%, 0.25rem);
+    transition: opacity 150ms ease, transform 150ms ease, visibility 150ms;
+}
+
+.popovers::after {
+    content: attr(data-content);
+    position: absolute;
+    bottom: calc(100% - 0.5rem);
+    left: 50%;
+    z-index: 1010;
+    width: max-content;
+    max-width: min(24rem, 80vw);
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0 0 5px 5px;
     background: var(--color-surface);
     color: var(--color-text);
     box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
@@ -32,8 +59,10 @@
     transition: opacity 150ms ease, transform 150ms ease, visibility 150ms;
 }
 
-.popovers:hover::after,
-.popovers:focus-visible::after {
+.popovers:hover::before,
+.popovers:focus-visible::before,
+.popovers:not([data-content=""]):hover::after,
+.popovers:not([data-content=""]):focus-visible::after {
     opacity: 1;
     visibility: visible;
     transform: translate(-50%, 0);

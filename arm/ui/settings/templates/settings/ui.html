@@ -17,13 +17,13 @@
                     <div class="ripper-setting">
                         <label class="ripper-setting-label" for="setting_index_refresh">index_refresh</label>
                         <input class="ripper-setting-input" type="text" id="setting_index_refresh" name="index_refresh" value="{{ ui_settings.index_refresh }}" aria-label="index_refresh">
-                        <a class="ripper-setting-info popovers" href="" onClick="return false;" data-content="{{ jsoncomments['index_refresh'] | replace('#', '\n') }}" rel="popover" data-placement="top" data-original-title="index_refresh" title="More information"><i class="fas fa-circle-info"></i></a>
+                        <a class="ripper-setting-info popovers" href="" onClick="return false;" data-content="{{ jsoncomments['index_refresh'] | replace('#', '\n') | replace('\n\n\n', '\n\n') | replace('\n\n', '\n') | trim }}" rel="popover" data-placement="top" data-original-title="index_refresh" title="More information"><i class="fas fa-circle-info"></i></a>
                     </div>
 
                     <div class="ripper-setting">
                         <label class="ripper-setting-label" for="setting_notify_refresh">Notification Timeout</label>
                         <input class="ripper-setting-input" type="text" id="setting_notify_refresh" name="notify_refresh" value="{{ ui_settings.notify_refresh }}" aria-label="notify_refresh">
-                        <a class="ripper-setting-info popovers" href="" onClick="return false;" data-content="{{ jsoncomments['notify_refresh'] | replace('#', '\n') }}" rel="popover" data-placement="top" data-original-title="notify_refresh" title="More information"><i class="fas fa-circle-info"></i></a>
+                        <a class="ripper-setting-info popovers" href="" onClick="return false;" data-content="{{ jsoncomments['notify_refresh'] | replace('#', '\n')| replace('\n\n\n', '\n\n') | replace('\n\n', '\n') | trim }}" rel="popover" data-placement="top" data-original-title="notify_refresh" title="More information"><i class="fas fa-circle-info"></i></a>
                     </div>
 
                     <div class="ripper-setting">
@@ -38,7 +38,7 @@
                             >
                             <span></span>
                         </label>
-                        <a class="ripper-setting-info popovers" href="" onClick="return false;" data-content="{{ jsoncomments['use_icons'] | replace('#', '\n') }}" rel="popover" data-placement="top" data-original-title="use_icons" title="More information"><i class="fas fa-circle-info"></i></a>
+                        <a class="ripper-setting-info popovers" href="" onClick="return false;" data-content="{{ jsoncomments['use_icons'] | replace('#', '\n') | replace('\n\n\n', '\n\n') | replace('\n\n', '\n') | trim }}" rel="popover" data-placement="top" data-original-title="use_icons" title="More information"><i class="fas fa-circle-info"></i></a>
                     </div>
 
                     <div class="ripper-setting">
@@ -53,25 +53,25 @@
                             >
                             <span></span>
                         </label>
-                        <a class="ripper-setting-info popovers" href="" onClick="return false;" data-content="{{ jsoncomments['save_remote_images'] | replace('#', '\n') }}" rel="popover" data-placement="top" data-original-title="save_remote_images" title="More information"><i class="fas fa-circle-info"></i></a>
+                        <a class="ripper-setting-info popovers" href="" onClick="return false;" data-content="{{ jsoncomments['save_remote_images'] | replace('#', '\n') | replace('\n\n\n', '\n\n') | replace('\n\n', '\n') | trim }}" rel="popover" data-placement="top" data-original-title="save_remote_images" title="More information"><i class="fas fa-circle-info"></i></a>
                     </div>
 
                     <div class="ripper-setting">
                         <label class="ripper-setting-label" for="setting_bootstrap_skin">bootstrap_skin</label>
                         <input class="ripper-setting-input" type="text" id="setting_bootstrap_skin" name="bootstrap_skin" value="{{ ui_settings.bootstrap_skin }}" aria-label="bootstrap_skin">
-                        <a class="ripper-setting-info popovers" href="" onClick="return false;" data-content="{{ jsoncomments['bootstrap_skin'] | replace('#', '\n') }}" rel="popover" data-placement="top" data-original-title="bootstrap_skin" title="More information"><i class="fas fa-circle-info"></i></a>
+                        <a class="ripper-setting-info popovers" href="" onClick="return false;" data-content="{{ jsoncomments['bootstrap_skin'] | replace('#', '\n') | replace('\n\n\n', '\n\n') | replace('\n\n', '\n') | trim }}" rel="popover" data-placement="top" data-original-title="bootstrap_skin" title="More information"><i class="fas fa-circle-info"></i></a>
                     </div>
 
                     <div class="ripper-setting">
                         <label class="ripper-setting-label" for="setting_language">language</label>
                         <input class="ripper-setting-input" type="text" id="setting_language" name="language" value="{{ ui_settings.language }}" aria-label="language">
-                        <a class="ripper-setting-info popovers" href="" onClick="return false;" data-content="{{ jsoncomments['language'] | replace('#', '\n') }}" rel="popover" data-placement="top" data-original-title="language" title="More information"><i class="fas fa-circle-info"></i></a>
+                        <a class="ripper-setting-info popovers" href="" onClick="return false;" data-content="{{ jsoncomments['language'] | replace('#', '\n') | replace('\n\n\n', '\n\n') | replace('\n\n', '\n') | trim }}" rel="popover" data-placement="top" data-original-title="language" title="More information"><i class="fas fa-circle-info"></i></a>
                     </div>
 
                     <div class="ripper-setting">
                         <label class="ripper-setting-label" for="setting_database_limit">database_limit</label>
                         <input class="ripper-setting-input" type="text" id="setting_database_limit" name="database_limit" value="{{ ui_settings.database_limit }}" aria-label="database_limit">
-                        <a class="ripper-setting-info popovers" href="" onClick="return false;" data-content="{{ jsoncomments['database_limit'] | replace('#', '\n') }}" rel="popover" data-placement="top" data-original-title="database_limit" title="More information"><i class="fas fa-circle-info"></i></a>
+                        <a class="ripper-setting-info popovers" href="" onClick="return false;" data-content="{{ jsoncomments['database_limit'] | replace('#', '\n') | replace('\n\n\n', '\n\n') | replace('\n\n', '\n') | trim }}" rel="popover" data-placement="top" data-original-title="database_limit" title="More information"><i class="fas fa-circle-info"></i></a>
                     </div>
 
                 </div>
