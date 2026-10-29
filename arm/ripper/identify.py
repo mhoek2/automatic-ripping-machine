@@ -9,6 +9,7 @@ import datetime
 import unicodedata
 import json
 from ast import literal_eval
+from typing import Optional
 
 import pydvdid
 import xmltodict
