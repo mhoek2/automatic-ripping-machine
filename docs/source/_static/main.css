@@ -9,6 +9,40 @@
     margin: 1.5625em 0 !important;
 }
 
+
+ ol {
+    list-style: none !important;
+    counter-reset: item;
+ }
+    ol li {
+        counter-increment: item;
+        margin-bottom: 5px;
+        position: relative;
+        padding-left: 2em;
+    }
+    ol li:before {
+        content: counter(item);
+        position: absolute;
+        left: 0;
+        top: 0;
+        align-items: center;
+        display: inline-flex;
+        justify-content: center;
+        min-width: 25px;
+        height: 24px;
+        border-radius: 5px;
+        font-size: .875rem;
+        padding: 0 .25rem;
+        letter-spacing: .15px;
+        line-height: 1;
+        text-align: center;
+        color: #f1f1f1;
+        background-color: #38bdf82b;
+    }
+    html[data-theme="light"] ol li:before {
+        color: #2e7695;
+    }
+
 /* Light theme */
 html[data-theme="light"] .landing {
     margin-bottom: 100px;
