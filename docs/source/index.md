@@ -1,6 +1,5 @@
 
-::::::{div} landing-title
-:style: "margin-bottom:100px;padding: 0.1rem 0.5rem 0.6rem 0; background-image: linear-gradient(270deg, #e2b48000 0%, #d1705412 74%); clip-path: polygon(0px 0px, 100% 0%, 100% 100%, 0% calc(100% - 1.5rem)); -webkit-clip-path: polygon(0px 0px, 100% 0%, 100% 100%, 0% calc(100% - 1.5rem));"
+::::::{div} landing
 
 ::::{grid}
 :reverse:
@@ -13,7 +12,9 @@
 :child-align: justify
 :class: sd-text-white sd-fs-3 sd-text-center
 
+:::{div} landing-title
 Automatic Ripping Machine
+:::
 
 ::::{grid}
 :reverse:
@@ -36,7 +37,7 @@ Automatic Ripping Machine
 :ref-type: doc
 :outline:
 :color: white
-:class: sd-px-4 sd-fs-5
+:class: sd-px-4 sd-fs-5 btn-development
 :align: right
 
 Development

@@ -3,6 +3,15 @@ set -uo pipefail
 
 cd "$(dirname "$0")/../.."
 
+# remove on exit
+trap 'rm -f ./eslint.config.mjs ./stylelint.config.js ./pyproject.toml' EXIT
+
+# move to root. 
+# prefer to keep docs build related files concentrated in: dev/docs
+cp dev/docs/eslint.config.mjs ./eslint.config.mjs
+cp dev/docs/stylelint.config.js ./stylelint.config.js
+cp dev/docs/pyproject.toml ./pyproject.toml
+
 REPORT_DIR="docs/source/development/reports"
 mkdir -p "$REPORT_DIR"
 
@@ -28,8 +37,8 @@ if command -v shellcheck >/dev/null 2>&1; then
             -o -type f -name '*.sh' -print0
     )
 
-    if (("\${#SHELL_FILES[@]}" > 0)); then
-        shellcheck --format=json "\${SHELL_FILES[@]}" \
+    if (("${#SHELL_FILES[@]}" > 0)); then
+        shellcheck --format=json "${SHELL_FILES[@]}" \
             > "$REPORT_DIR/shellcheck.json" || true
     else
         printf '[]\n' > "$REPORT_DIR/shellcheck.json"
@@ -47,8 +56,8 @@ if command -v hadolint >/dev/null 2>&1; then
             -o -type f \( -iname Dockerfile -o -iname 'Dockerfile.*' \) -print0
     )
 
-    if (("\${#DOCKER_FILES[@]}" > 0)); then
-        hadolint --format json "\${DOCKER_FILES[@]}" \
+    if (("${#DOCKER_FILES[@]}" > 0)); then
+        hadolint --format json "${DOCKER_FILES[@]}" \
             > "$REPORT_DIR/hadolint.json" || true
     else
         printf '[]\n' > "$REPORT_DIR/hadolint.json"

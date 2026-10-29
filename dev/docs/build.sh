@@ -4,10 +4,6 @@ set -e
 
 cd "$(dirname "$0")/../.."
 
-cp dev/docs/eslint.config.mjs ./eslint.config.mjs
-cp dev/docs/stylelint.config.js ./stylelint.config.js
-cp dev/docs/pyproject.toml ./pyproject.toml
-
 if [[ "${1:-}" != "--skip-lint" ]]; then
     ./dev/docs/lint.sh
 fi
