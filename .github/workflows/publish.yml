@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - ui/develop
+      - docs/rework
 
 permissions:
   contents: read
@@ -102,3 +103,36 @@ jobs:
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest-dev
           cache-from: type=gha,scope=automatic-ripping-machine
           cache-to: type=gha,mode=max,scope=automatic-ripping-machine
+
+  docs:
+    name: Build and Deploy Documentation
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Build the docs
+        run: |
+          docker compose -f dev/docs/compose.yaml run --build --rm docs
+
+      - name: Upload GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: ./docs/build
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
