@@ -5,7 +5,7 @@ set -e
 cd "$(dirname "$0")/../.."
 
 if [[ "${1:-}" != "--skip-lint" ]]; then
-    ./dev/docs/lint.sh
+    bash ./dev/docs/lint.sh
 fi
 
 python -m sphinx -b html docs/source docs/build
