@@ -15,6 +15,7 @@ if find_spec("arm") is None:
 from arm.ripper import utils, makemkv, handbrake, ffmpeg  # noqa E402
 from arm.ui import app, db, constants  # noqa E402
 from arm.models.job import JobState  # noqa E402
+from arm.models.track import TrackState  # noqa E402
 
 
 def _job_update_status(job, status) -> bool:
@@ -93,39 +94,63 @@ def rip_visual_media(have_dupes, job, logfile, protection):
     # If ripped with MakeMKV remove the 'out' folder and set the raw as the output
     logging.debug(f"Transcode status: [{job.config.SKIP_TRANSCODE}] and MakeMKV Status: [{use_make_mkv}]")
     if job.config.SKIP_TRANSCODE and use_make_mkv:
-        utils.delete_raw_files([transcode_out_path])
+        utils.delete_job_files([transcode_out_path])
         transcode_out_path = transcode_in_path
 
     # Update final path if user has set a custom/manual title
     logging.debug(f"Job title status: [{job.title_manual}]")
     if job.title_manual:
         # Remove the old final dir
-        utils.delete_raw_files([final_directory])
+        utils.delete_job_files([final_directory])
         job_title = utils.fix_job_title(job)
         final_directory = os.path.join(job.config.COMPLETED_PATH, type_sub_folder, job_title)
         # Update the job.path with the final directory
         utils.database_updater({'path': final_directory}, job)
 
+    # Validate 'to process' tracks before moving and finishing
+    validate_tracks(job)
+
     # Move to final folder
     _job_update_status(job, JobState.POSTPROCESSING_MOVING.value)
     move_files_post(transcode_out_path, job)
-    
+
     # Movie the movie poster if we have one - no longer needed, now handled by save_movie_poster   
     utils.move_movie_poster(final_directory, transcode_out_path)
-    
+
     # Scan Emby if arm.yaml requires it
     utils.scan_emby()
     
     # Set permissions if arm.yaml requires it
     utils.set_permissions(final_directory)
+
+    # when job finished successfully, and if enabled in arm.yaml, remove the job files. 
+    utils.delete_job_files([transcode_in_path, transcode_out_path, makemkv_out_path])
     
-    # If set in the arm.yaml remove the raw files
-    utils.delete_raw_files([transcode_in_path, transcode_out_path, makemkv_out_path])
-    
-    # finish job, and report errors if any
+    # Check whether processing was successful, raise error when not
     finish_job(job)
+
     logging.info("************* ARM processing complete *************")
 
+def finish_job(job):
+    """Validate tracks and notify when ARM processing is complete."""
+
+    # move to __main__ ?
+    _job_notificaton(job, f"{job.title} {constants.PROCESS_COMPLETE}")
+
+def validate_tracks(job):
+    """Validate that all non-skipped tracks were successfully ripped."""
+
+    tracks = job.tracks.all()
+    failed_tracks = [
+        track for track in tracks
+        if not track.ripped and track.status != TrackState.SKIPPED.value
+    ]
+
+    if failed_tracks:
+        failed_numbers = [track.track_number for track in failed_tracks]
+        message = f"Tracks failed to rip: {', '.join(map(str, failed_numbers))}"
+        logging.error(message)
+        raise utils.RipperException(message)
 
 def start_transcode(job, logfile, raw_in_path, transcode_out_path, protection):
     """
@@ -206,25 +231,6 @@ def start_transcode(job, logfile, raw_in_path, transcode_out_path, protection):
             _job_notificaton(job, f"{job.title} {constants.TRANSCODE_OPTION_FAILED}")
             
         return None
-
-def finish_job(job):
-    """
-    Notify post transcoding - ARM finished\n
-    Includes any errors
-    :param job: current job
-    :return: None
-    """
-    if job.errors:
-        errlist = ', '.join(job.errors)
-        logging.info(f"Job completed with errors.  Title(s) {errlist} failed to complete. ")
-
-        _job_notificaton(job,
-                        f" {job.title} processing completed with errors. "
-                        f"Title(s) {errlist} failed to complete. "
-            )
-        return
-
-    _job_notificaton(job, f"{job.title} {constants.PROCESS_COMPLETE}")
 
 def move_files_post(transcode_out_path, job):
     """

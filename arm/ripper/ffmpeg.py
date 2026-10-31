@@ -256,14 +256,12 @@ def ffmpeg_main_feature(src_path, out_path, job):
         # Update the status of the job as succeeded
         track.status = TrackState.TRACK_SUCCESS
     except subprocess.CalledProcessError as ffmpeg_error:
-        # If it fails mark the job as failed and log it
         err = f"Call to FFMPEG failed with code: {ffmpeg_error.returncode}"
         logging.error(err)
         track.status = TrackState.TRACK_FAILURE
-        track.error = job.errors = err
-        job.status = JobState.FAILURE
+        track.error = err
         db.session.commit()
-        raise
+        raise utils.RipperException(err) from ffmpeg_error
 
     logging.info(PROCESS_COMPLETE)
     logging.debug(f"\n\r{job.pretty_table()}")
@@ -456,16 +454,13 @@ def ffmpeg_mkv(src_path, base_path, job):
             else:
                 logging.debug("No matching DB track found to mark success")
         except subprocess.CalledProcessError as ff_error:
-            # Mark track and job as failed if ffmpeg fails
             err = f"Call to FFmpeg failed with code: {ff_error.returncode}"
             logging.error(err)
             if track is not None:
                 track.status = TrackState.TRACK_FAILURE
                 track.error = err
-            job.errors = err
-            job.status = JobState.FAILURE
-            db.session.commit()
-            raise
+                db.session.commit()
+            raise utils.RipperException(err) from ff_error
 
     logging.info(PROCESS_COMPLETE)
     logging.debug(f"\n\r{job.pretty_table()}")

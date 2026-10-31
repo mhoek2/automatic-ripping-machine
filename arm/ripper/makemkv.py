@@ -753,7 +753,15 @@ def confirm_track_saved(track : Track, rawpath) -> bool:
         message = f"Track #{track.track_number} has no output filename."
    
     else:
-        filepath = os.path.join(rawpath, track.filename)     
+        filepath = os.path.join(rawpath, track.filename)
+        logging.info("Checking MakeMKV output: %s", filepath)
+        logging.info("Raw directory exists: %s", os.path.isdir(rawpath))
+        logging.info("Raw directory contents: %s", os.listdir(rawpath) if os.path.isdir(rawpath) else "MISSING")
+        logging.info("Output file exists: %s", os.path.isfile(filepath))
+
+        if os.path.isfile(filepath):
+            logging.info("Output file size: %s bytes", os.path.getsize(filepath))
+
         track.ripped = os.path.isfile(filepath) and os.path.getsize(filepath) > 0
 
         if not track.ripped:

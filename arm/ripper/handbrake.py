@@ -131,11 +131,8 @@ def handbrake_main_feature(srcpath, basepath, logfile, job):
     try:
         run_handbrake_command(cmd, track)
         logging.info("Handbrake call successful")
-    except subprocess.CalledProcessError:
-        job.errors = track.error
-        job.status = JobState.FAILURE.value
-        db.session.commit()
-        raise
+    except subprocess.CalledProcessError as error:
+        raise utils.RipperException(track.error) from error
 
     logging.info(PROCESS_COMPLETE)
     logging.debug(f"\n\r{job.pretty_table()}")
