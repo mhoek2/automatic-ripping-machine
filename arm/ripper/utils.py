@@ -375,7 +375,7 @@ def scan_emby():
         logging.info("EMBY_REFRESH config parameter is false.  Skipping emby scan.")
 
 
-def delete_raw_files(dir_list):
+def delete_job_files(dir_list):
     """
     Delete the raw folders from arm after job has finished
     :param list dir_list: Python list containing strings of the folders to be deleted
