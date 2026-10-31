@@ -143,7 +143,7 @@ def validate_tracks(job):
     tracks = job.tracks.all()
     failed_tracks = [
         track for track in tracks
-        if not track.ripped and track.status != TrackState.SKIPPED.value
+        if not track.ripped and track.status != TrackState.TRACK_SKIPPED.value
     ]
 
     if failed_tracks:
