@@ -50,7 +50,12 @@
 {% block js %}
     {{ super() }}
 
-    <script type="text/javascript">
+    <script type="module">
+        import { ARM } from './static/js/modal/modal.js';
+        import { activeTab } from './static/js/common.js';
+        import { fetchJobs, fetchAllJobs, checkDatabaseScroll, setDatbaseInfitiniseScrollState } from './static/js/database.js';
+        import { refreshJobs,  } from './static/js/jobs/refresh.js';
+
         $(document).ready(function () {
             activeTab("database");
 
@@ -75,17 +80,17 @@
             $(".base_content").off("scroll.database").on("scroll.database", checkDatabaseScroll);
 
             $("#get_all").on("click", function() {
-                databaseInfiniteScrollEnabled = true;
+                setDatbaseInfitiniseScrollState(true);
                 fetchAllJobs(true);
             });
 
             $("#get_success").on("click", function() {
-                databaseInfiniteScrollEnabled = false;
+                setDatbaseInfitiniseScrollState(false);
                 fetchJobs("/json?mode=getsuccessful");
             });
 
             $("#get_failed").on("click", function() {
-                databaseInfiniteScrollEnabled = false;
+                setDatbaseInfitiniseScrollState(false);
                 fetchJobs("/json?mode=getfailed");
             });
         });

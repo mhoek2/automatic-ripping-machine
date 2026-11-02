@@ -10,7 +10,10 @@
 {% block js %}
     {{ super() }}
 
-    <script type="text/javascript">
+    <script type="module">
+        import { activeTab } from './static/js/common.js';
+        import { refreshJobs } from './static/js/jobs/refresh.js';
+
         $(document).ready(function () {
             activeTab("home");
 

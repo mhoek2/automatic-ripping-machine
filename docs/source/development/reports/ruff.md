@@ -273,34 +273,35 @@
 | 1:1 | EXE002 | The file is executable but no shebang is present |
 | 4:1 | I001 | Import block is un-sorted or un-formatted |
 | 17:38 | RUF100 | Unused blanket `noqa` directive |
-| 61:5 | LOG015 | `info()` call on root logger |
-| 67:5 | LOG015 | `debug()` call on root logger |
-| 69:9 | LOG015 | `info()` call on root logger |
-| 74:41 | RUF100 | Unused `noqa` directive (unused: `E722`) |
-| 81:9 | LOG015 | `info()` call on root logger |
-| 88:9 | LOG015 | `info()` call on root logger |
-| 94:5 | LOG015 | `debug()` call on root logger |
-| 100:5 | LOG015 | `debug()` call on root logger |
-| 127:5 | LOG015 | `info()` call on root logger |
-| 149:9 | LOG015 | `info()` call on root logger |
-| 153:13 | LOG015 | `debug()` call on root logger |
-| 158:13 | LOG015 | `debug()` call on root logger |
-| 164:13 | LOG015 | `debug()` call on root logger |
-| 167:9 | LOG015 | `info()` call on root logger |
-| 172:9 | LOG015 | `info()` call on root logger |
-| 176:13 | LOG015 | `debug()` call on root logger |
-| 181:13 | LOG015 | `debug()` call on root logger |
-| 187:13 | LOG015 | `debug()` call on root logger |
-| 190:9 | LOG015 | `info()` call on root logger |
-| 202:9 | LOG015 | `info()` call on root logger |
-| 208:9 | RET501 | Do not explicitly `return None` in function if it is the only possible return value |
-| 219:9 | LOG015 | `info()` call on root logger |
-| 291:5 | LOG015 | `debug()` call on root logger |
-| 295:5 | LOG015 | `debug()` call on root logger |
-| 298:5 | LOG015 | `debug()` call on root logger |
-| 301:9 | LOG015 | `info()` call on root logger |
-| 311:17 | LOG015 | `info()` call on root logger |
+| 18:42 | RUF100 | Unused blanket `noqa` directive |
+| 62:5 | LOG015 | `info()` call on root logger |
+| 68:5 | LOG015 | `debug()` call on root logger |
+| 70:9 | LOG015 | `info()` call on root logger |
+| 75:41 | RUF100 | Unused `noqa` directive (unused: `E722`) |
+| 82:9 | LOG015 | `info()` call on root logger |
+| 89:9 | LOG015 | `info()` call on root logger |
+| 95:5 | LOG015 | `debug()` call on root logger |
+| 101:5 | LOG015 | `debug()` call on root logger |
+| 132:5 | LOG015 | `info()` call on root logger |
+| 152:9 | LOG015 | `error()` call on root logger |
+| 174:9 | LOG015 | `info()` call on root logger |
+| 178:13 | LOG015 | `debug()` call on root logger |
+| 183:13 | LOG015 | `debug()` call on root logger |
+| 189:13 | LOG015 | `debug()` call on root logger |
+| 192:9 | LOG015 | `info()` call on root logger |
+| 197:9 | LOG015 | `info()` call on root logger |
+| 201:13 | LOG015 | `debug()` call on root logger |
+| 206:13 | LOG015 | `debug()` call on root logger |
+| 212:13 | LOG015 | `debug()` call on root logger |
+| 215:9 | LOG015 | `info()` call on root logger |
+| 227:9 | LOG015 | `info()` call on root logger |
+| 233:9 | RET501 | Do not explicitly `return None` in function if it is the only possible return value |
+| 297:5 | LOG015 | `debug()` call on root logger |
+| 301:5 | LOG015 | `debug()` call on root logger |
+| 304:5 | LOG015 | `debug()` call on root logger |
+| 307:9 | LOG015 | `info()` call on root logger |
 | 317:17 | LOG015 | `info()` call on root logger |
+| 323:17 | LOG015 | `info()` call on root logger |
 
 ````
 :::
@@ -331,44 +332,44 @@
 | 233:5 | LOG015 | `info()` call on root logger |
 | 242:9 | LOG015 | `error()` call on root logger |
 | 255:9 | LOG015 | `info()` call on root logger |
-| 261:9 | LOG015 | `error()` call on root logger |
-| 268:5 | LOG015 | `info()` call on root logger |
-| 269:5 | LOG015 | `debug()` call on root logger |
-| 285:5 | LOG015 | `info()` call on root logger |
-| 289:5 | LOG015 | `debug()` call on root logger |
-| 297:13 | LOG015 | `info()` call on root logger |
-| 302:13 | LOG015 | `info()` call on root logger |
-| 306:13 | LOG015 | `info()` call on root logger |
-| 312:13 | LOG015 | `info()` call on root logger |
-| 323:17 | LOG015 | `error()` call on root logger |
-| 331:5 | LOG015 | `info()` call on root logger |
-| 332:5 | LOG015 | `debug()` call on root logger |
-| 356:9 | LOG015 | `debug()` call on root logger |
-| 362:13 | LOG015 | `debug()` call on root logger |
-| 365:13 | LOG015 | `debug()` call on root logger |
-| 369:9 | LOG015 | `info()` call on root logger |
-| 374:13 | LOG015 | `info()` call on root logger |
-| 376:13 | LOG015 | `error()` call on root logger |
-| 378:5 | LOG015 | `info()` call on root logger |
-| 379:5 | LOG015 | `debug()` call on root logger |
-| 389:5 | LOG015 | `info()` call on root logger |
-| 394:9 | LOG015 | `info()` call on root logger |
-| 400:9 | LOG015 | `info()` call on root logger |
-| 428:9 | LOG015 | `debug()` call on root logger |
-| 433:13 | LOG015 | `debug()` call on root logger |
-| 436:13 | LOG015 | `debug()` call on root logger |
-| 443:9 | LOG015 | `info()` call on root logger |
-| 452:13 | LOG015 | `info()` call on root logger |
-| 457:17 | LOG015 | `debug()` call on root logger |
-| 461:13 | LOG015 | `error()` call on root logger |
-| 470:5 | LOG015 | `info()` call on root logger |
-| 471:5 | LOG015 | `debug()` call on root logger |
-| 490:9 | LOG015 | `error()` call on root logger |
-| 498:5 | LOG015 | `debug()` call on root logger |
-| 506:13 | LOG015 | `debug()` call on root logger |
-| 515:25 | LOG015 | `info()` call on root logger |
-| 529:21 | LOG015 | `info()` call on root logger |
-| 531:17 | LOG015 | `debug()` call on root logger |
+| 260:9 | LOG015 | `error()` call on root logger |
+| 266:5 | LOG015 | `info()` call on root logger |
+| 267:5 | LOG015 | `debug()` call on root logger |
+| 283:5 | LOG015 | `info()` call on root logger |
+| 287:5 | LOG015 | `debug()` call on root logger |
+| 295:13 | LOG015 | `info()` call on root logger |
+| 300:13 | LOG015 | `info()` call on root logger |
+| 304:13 | LOG015 | `info()` call on root logger |
+| 310:13 | LOG015 | `info()` call on root logger |
+| 321:17 | LOG015 | `error()` call on root logger |
+| 329:5 | LOG015 | `info()` call on root logger |
+| 330:5 | LOG015 | `debug()` call on root logger |
+| 354:9 | LOG015 | `debug()` call on root logger |
+| 360:13 | LOG015 | `debug()` call on root logger |
+| 363:13 | LOG015 | `debug()` call on root logger |
+| 367:9 | LOG015 | `info()` call on root logger |
+| 372:13 | LOG015 | `info()` call on root logger |
+| 374:13 | LOG015 | `error()` call on root logger |
+| 376:5 | LOG015 | `info()` call on root logger |
+| 377:5 | LOG015 | `debug()` call on root logger |
+| 387:5 | LOG015 | `info()` call on root logger |
+| 392:9 | LOG015 | `info()` call on root logger |
+| 398:9 | LOG015 | `info()` call on root logger |
+| 426:9 | LOG015 | `debug()` call on root logger |
+| 431:13 | LOG015 | `debug()` call on root logger |
+| 434:13 | LOG015 | `debug()` call on root logger |
+| 441:9 | LOG015 | `info()` call on root logger |
+| 450:13 | LOG015 | `info()` call on root logger |
+| 455:17 | LOG015 | `debug()` call on root logger |
+| 458:13 | LOG015 | `error()` call on root logger |
+| 465:5 | LOG015 | `info()` call on root logger |
+| 466:5 | LOG015 | `debug()` call on root logger |
+| 485:9 | LOG015 | `error()` call on root logger |
+| 493:5 | LOG015 | `debug()` call on root logger |
+| 501:13 | LOG015 | `debug()` call on root logger |
+| 510:25 | LOG015 | `info()` call on root logger |
+| 524:21 | LOG015 | `info()` call on root logger |
+| 526:17 | LOG015 | `debug()` call on root logger |
 
 ````
 :::
@@ -389,32 +390,32 @@
 | 115:5 | LOG015 | `info()` call on root logger |
 | 122:9 | LOG015 | `error()` call on root logger |
 | 133:9 | LOG015 | `info()` call on root logger |
-| 140:5 | LOG015 | `info()` call on root logger |
-| 141:5 | LOG015 | `debug()` call on root logger |
-| 156:5 | LOG015 | `info()` call on root logger |
-| 161:5 | LOG015 | `debug()` call on root logger |
-| 169:13 | LOG015 | `info()` call on root logger |
-| 174:13 | LOG015 | `info()` call on root logger |
-| 179:13 | LOG015 | `info()` call on root logger |
-| 185:13 | LOG015 | `info()` call on root logger |
-| 201:5 | LOG015 | `info()` call on root logger |
-| 202:5 | LOG015 | `debug()` call on root logger |
-| 233:5 | LOG015 | `info()` call on root logger |
-| 241:9 | LOG015 | `debug()` call on root logger |
+| 137:5 | LOG015 | `info()` call on root logger |
+| 138:5 | LOG015 | `debug()` call on root logger |
+| 153:5 | LOG015 | `info()` call on root logger |
+| 158:5 | LOG015 | `debug()` call on root logger |
+| 166:13 | LOG015 | `info()` call on root logger |
+| 171:13 | LOG015 | `info()` call on root logger |
+| 176:13 | LOG015 | `info()` call on root logger |
+| 182:13 | LOG015 | `info()` call on root logger |
+| 198:5 | LOG015 | `info()` call on root logger |
+| 199:5 | LOG015 | `debug()` call on root logger |
+| 230:5 | LOG015 | `info()` call on root logger |
+| 238:9 | LOG015 | `debug()` call on root logger |
+| 241:13 | LOG015 | `debug()` call on root logger |
 | 244:13 | LOG015 | `debug()` call on root logger |
-| 247:13 | LOG015 | `debug()` call on root logger |
-| 252:9 | LOG015 | `info()` call on root logger |
-| 257:5 | LOG015 | `info()` call on root logger |
-| 258:5 | LOG015 | `debug()` call on root logger |
-| 268:5 | LOG015 | `info()` call on root logger |
-| 271:5 | LOG015 | `debug()` call on root logger |
-| 292:21 | LOG015 | `debug()` call on root logger |
-| 293:21 | LOG015 | `info()` call on root logger |
-| 306:9 | LOG015 | `info()` call on root logger |
-| 376:9 | LOG015 | `error()` call on root logger |
-| 377:9 | LOG015 | `error()` call on root logger |
-| 388:13 | LOG015 | `error()` call on root logger |
-| 390:13 | LOG015 | `error()` call on root logger |
+| 249:9 | LOG015 | `info()` call on root logger |
+| 254:5 | LOG015 | `info()` call on root logger |
+| 255:5 | LOG015 | `debug()` call on root logger |
+| 265:5 | LOG015 | `info()` call on root logger |
+| 268:5 | LOG015 | `debug()` call on root logger |
+| 289:21 | LOG015 | `debug()` call on root logger |
+| 290:21 | LOG015 | `info()` call on root logger |
+| 303:9 | LOG015 | `info()` call on root logger |
+| 373:9 | LOG015 | `error()` call on root logger |
+| 374:9 | LOG015 | `error()` call on root logger |
+| 385:13 | LOG015 | `error()` call on root logger |
+| 387:13 | LOG015 | `error()` call on root logger |
 
 ````
 :::
@@ -426,60 +427,61 @@
 | Line | Type | Message |
 |---:|---|---|
 | 4:1 | I001 | Import block is un-sorted or un-formatted |
-| 23:1 | RUF100 | Unused `noqa` directive (unused: `W605`) |
-| 48:9 | LOG015 | `info()` call on root logger |
-| 51:9 | LOG015 | `info()` call on root logger |
-| 54:13 | LOG015 | `info()` call on root logger |
-| 57:13 | LOG015 | `error()` call on root logger |
-| 64:5 | LOG015 | `debug()` call on root logger |
-| 75:9 | LOG015 | `info()` call on root logger |
-| 89:13 | LOG015 | `info()` call on root logger |
-| 92:13 | LOG015 | `debug()` call on root logger |
-| 113:17 | LOG015 | `warning()` call on root logger |
-| 126:21 | LOG015 | `info()` call on root logger |
-| 128:21 | LOG015 | `exception()` call on root logger |
-| 133:25 | TRY401 | Redundant exception object included in `logging.exception` call |
-| 138:9 | LOG015 | `error()` call on root logger |
-| 166:13 | LOG015 | `error()` call on root logger |
-| 196:5 | LOG015 | `debug()` call on root logger |
-| 203:9 | LOG015 | `info()` call on root logger |
-| 206:9 | LOG015 | `debug()` call on root logger |
-| 209:9 | LOG015 | `debug()` call on root logger |
+| 24:1 | RUF100 | Unused `noqa` directive (unused: `W605`) |
+| 28:33 | UP045 | Use `X \| None` for type annotations |
+| 49:9 | LOG015 | `info()` call on root logger |
+| 52:9 | LOG015 | `info()` call on root logger |
+| 55:13 | LOG015 | `info()` call on root logger |
+| 58:13 | LOG015 | `error()` call on root logger |
+| 65:5 | LOG015 | `debug()` call on root logger |
+| 76:9 | LOG015 | `info()` call on root logger |
+| 90:13 | LOG015 | `info()` call on root logger |
+| 93:13 | LOG015 | `debug()` call on root logger |
+| 114:17 | LOG015 | `warning()` call on root logger |
+| 127:21 | LOG015 | `info()` call on root logger |
+| 129:21 | LOG015 | `exception()` call on root logger |
+| 134:25 | TRY401 | Redundant exception object included in `logging.exception` call |
+| 139:9 | LOG015 | `error()` call on root logger |
+| 167:13 | LOG015 | `error()` call on root logger |
+| 197:5 | LOG015 | `debug()` call on root logger |
+| 204:9 | LOG015 | `info()` call on root logger |
+| 207:9 | LOG015 | `debug()` call on root logger |
 | 210:9 | LOG015 | `debug()` call on root logger |
-| 212:13 | LOG015 | `info()` call on root logger |
+| 211:9 | LOG015 | `debug()` call on root logger |
 | 213:13 | LOG015 | `info()` call on root logger |
-| 228:12 | BLE001 | Do not catch blind exception: `Exception` |
-| 229:9 | LOG015 | `error()` call on root logger |
-| 232:5 | LOG015 | `debug()` call on root logger |
-| 238:5 | LOG015 | `debug()` call on root logger |
-| 241:5 | LOG015 | `debug()` call on root logger |
-| 246:9 | LOG015 | `debug()` call on root logger |
-| 248:12 | BLE001 | Do not catch blind exception: `Exception` |
-| 250:9 | LOG015 | `debug()` call on root logger |
-| 263:13 | LOG015 | `debug()` call on root logger |
-| 269:13 | LOG015 | `error()` call on root logger |
-| 284:5 | LOG015 | `debug()` call on root logger |
-| 286:9 | LOG015 | `info()` call on root logger |
-| 296:5 | LOG015 | `debug()` call on root logger |
+| 214:13 | LOG015 | `info()` call on root logger |
+| 229:12 | BLE001 | Do not catch blind exception: `Exception` |
+| 230:9 | LOG015 | `error()` call on root logger |
+| 233:5 | LOG015 | `debug()` call on root logger |
+| 239:5 | LOG015 | `debug()` call on root logger |
+| 242:5 | LOG015 | `debug()` call on root logger |
+| 247:9 | LOG015 | `debug()` call on root logger |
+| 249:12 | BLE001 | Do not catch blind exception: `Exception` |
+| 251:9 | LOG015 | `debug()` call on root logger |
+| 264:13 | LOG015 | `debug()` call on root logger |
+| 270:13 | LOG015 | `error()` call on root logger |
+| 285:5 | LOG015 | `debug()` call on root logger |
+| 287:9 | LOG015 | `info()` call on root logger |
 | 297:5 | LOG015 | `debug()` call on root logger |
-| 301:12 | BLE001 | Do not catch blind exception: `Exception` |
-| 302:9 | LOG015 | `info()` call on root logger |
-| 317:5 | LOG015 | `debug()` call on root logger |
-| 353:9 | LOG015 | `info()` call on root logger |
-| 357:9 | LOG015 | `debug()` call on root logger |
-| 362:9 | LOG015 | `debug()` call on root logger |
-| 367:9 | LOG015 | `debug()` call on root logger |
+| 298:5 | LOG015 | `debug()` call on root logger |
+| 302:12 | BLE001 | Do not catch blind exception: `Exception` |
+| 303:9 | LOG015 | `info()` call on root logger |
+| 318:5 | LOG015 | `debug()` call on root logger |
+| 354:9 | LOG015 | `info()` call on root logger |
+| 358:9 | LOG015 | `debug()` call on root logger |
+| 363:9 | LOG015 | `debug()` call on root logger |
 | 368:9 | LOG015 | `debug()` call on root logger |
-| 382:5 | LOG015 | `debug()` call on root logger |
-| 392:17 | LOG015 | `debug()` call on root logger |
-| 394:17 | LOG015 | `debug()` call on root logger |
-| 399:17 | LOG015 | `debug()` call on root logger |
-| 401:17 | LOG015 | `debug()` call on root logger |
-| 404:21 | LOG015 | `debug()` call on root logger |
-| 417:9 | LOG015 | `debug()` call on root logger |
-| 419:9 | LOG015 | `debug()` call on root logger |
-| 437:9 | LOG015 | `debug()` call on root logger |
-| 442:9 | LOG015 | `debug()` call on root logger |
+| 369:9 | LOG015 | `debug()` call on root logger |
+| 383:5 | LOG015 | `debug()` call on root logger |
+| 393:17 | LOG015 | `debug()` call on root logger |
+| 395:17 | LOG015 | `debug()` call on root logger |
+| 400:17 | LOG015 | `debug()` call on root logger |
+| 402:17 | LOG015 | `debug()` call on root logger |
+| 405:21 | LOG015 | `debug()` call on root logger |
+| 418:9 | LOG015 | `debug()` call on root logger |
+| 420:9 | LOG015 | `debug()` call on root logger |
+| 438:9 | LOG015 | `debug()` call on root logger |
+| 443:9 | LOG015 | `debug()` call on root logger |
 
 ````
 :::
@@ -591,46 +593,51 @@
 | 731:5 | LOG015 | `info()` call on root logger |
 | 739:9 | LOG015 | `info()` call on root logger |
 | 741:5 | LOG015 | `info()` call on root logger |
-| 769:9 | LOG015 | `warning()` call on root logger |
-| 811:5 | LOG015 | `info()` call on root logger |
-| 827:5 | LOG015 | `debug()` call on root logger |
-| 837:5 | LOG015 | `info()` call on root logger |
-| 865:5 | LOG015 | `info()` call on root logger |
-| 889:161 | E501 | Line too long (171 > 160) |
-| 893:161 | E501 | Line too long (174 > 160) |
-| 901:13 | LOG015 | `info()` call on root logger |
-| 936:5 | LOG015 | `info()` call on root logger |
-| 940:9 | LOG015 | `warning()` call on root logger |
-| 942:9 | LOG015 | `info()` call on root logger |
-| 968:5 | LOG015 | `info()` call on root logger |
-| 974:13 | LOG015 | `error()` call on root logger |
-| 976:9 | LOG015 | `info()` call on root logger |
-| 978:9 | LOG015 | `info()` call on root logger |
-| 1000:9 | LOG015 | `debug()` call on root logger |
-| 1004:13 | LOG015 | `info()` call on root logger |
-| 1007:13 | LOG015 | `debug()` call on root logger |
-| 1013:9 | LOG015 | `info()` call on root logger |
-| 1016:9 | LOG015 | `debug()` call on root logger |
-| 1025:13 | LOG015 | `warning()` call on root logger |
-| 1068:5 | LOG015 | `debug()` call on root logger |
-| 1146:9 | LOG015 | `info()` call on root logger |
-| 1211:22 | RUF012 | Mutable default value for class attribute |
-| 1218:22 | RUF012 | Mutable default value for class attribute |
-| 1227:27 | RUF012 | Mutable default value for class attribute |
-| 1269:9 | LOG015 | `debug()` call on root logger |
-| 1271:13 | LOG015 | `critical()` call on root logger |
-| 1279:9 | LOG015 | `critical()` call on root logger |
-| 1288:13 | LOG015 | `debug()` call on root logger |
-| 1299:13 | LOG015 | `critical()` call on root logger |
-| 1301:13 | LOG015 | `warning()` call on root logger |
-| 1307:9 | LOG015 | `critical()` call on root logger |
-| 1342:5 | LOG015 | `debug()` call on root logger |
-| 1344:9 | LOG015 | `debug()` call on root logger |
-| 1348:13 | LOG015 | `debug()` call on root logger |
-| 1353:17 | LOG015 | `warning()` call on root logger |
-| 1357:13 | LOG015 | `debug()` call on root logger |
-| 1371:5 | LOG015 | `info()` call on root logger |
-| 1412:9 | LOG015 | `debug()` call on root logger |
+| 757:9 | LOG015 | `info()` call on root logger |
+| 758:9 | LOG015 | `info()` call on root logger |
+| 759:9 | LOG015 | `info()` call on root logger |
+| 760:9 | LOG015 | `info()` call on root logger |
+| 763:13 | LOG015 | `info()` call on root logger |
+| 777:9 | LOG015 | `warning()` call on root logger |
+| 819:5 | LOG015 | `info()` call on root logger |
+| 835:5 | LOG015 | `debug()` call on root logger |
+| 845:5 | LOG015 | `info()` call on root logger |
+| 873:5 | LOG015 | `info()` call on root logger |
+| 897:161 | E501 | Line too long (171 > 160) |
+| 901:161 | E501 | Line too long (174 > 160) |
+| 909:13 | LOG015 | `info()` call on root logger |
+| 944:5 | LOG015 | `info()` call on root logger |
+| 948:9 | LOG015 | `warning()` call on root logger |
+| 950:9 | LOG015 | `info()` call on root logger |
+| 976:5 | LOG015 | `info()` call on root logger |
+| 982:13 | LOG015 | `error()` call on root logger |
+| 984:9 | LOG015 | `info()` call on root logger |
+| 986:9 | LOG015 | `info()` call on root logger |
+| 1008:9 | LOG015 | `debug()` call on root logger |
+| 1012:13 | LOG015 | `info()` call on root logger |
+| 1015:13 | LOG015 | `debug()` call on root logger |
+| 1021:9 | LOG015 | `info()` call on root logger |
+| 1024:9 | LOG015 | `debug()` call on root logger |
+| 1033:13 | LOG015 | `warning()` call on root logger |
+| 1076:5 | LOG015 | `debug()` call on root logger |
+| 1154:9 | LOG015 | `info()` call on root logger |
+| 1219:22 | RUF012 | Mutable default value for class attribute |
+| 1226:22 | RUF012 | Mutable default value for class attribute |
+| 1235:27 | RUF012 | Mutable default value for class attribute |
+| 1277:9 | LOG015 | `debug()` call on root logger |
+| 1279:13 | LOG015 | `critical()` call on root logger |
+| 1287:9 | LOG015 | `critical()` call on root logger |
+| 1296:13 | LOG015 | `debug()` call on root logger |
+| 1307:13 | LOG015 | `critical()` call on root logger |
+| 1309:13 | LOG015 | `warning()` call on root logger |
+| 1315:9 | LOG015 | `critical()` call on root logger |
+| 1350:5 | LOG015 | `debug()` call on root logger |
+| 1352:9 | LOG015 | `debug()` call on root logger |
+| 1356:13 | LOG015 | `debug()` call on root logger |
+| 1361:17 | LOG015 | `warning()` call on root logger |
+| 1365:13 | LOG015 | `debug()` call on root logger |
+| 1379:5 | LOG015 | `info()` call on root logger |
+| 1420:9 | LOG015 | `debug()` call on root logger |
 
 ````
 :::
@@ -713,65 +720,65 @@
 | 371:13 | LOG015 | `info()` call on root logger |
 | 373:13 | LOG015 | `error()` call on root logger |
 | 375:9 | LOG015 | `info()` call on root logger |
-| 387:17 | LOG015 | `info()` call on root logger |
-| 390:17 | LOG015 | `debug()` call on root logger |
-| 392:17 | LOG015 | `debug()` call on root logger |
-| 394:17 | LOG015 | `debug()` call on root logger |
-| 411:9 | LOG015 | `debug()` call on root logger |
-| 464:9 | LOG015 | `info()` call on root logger |
-| 471:9 | LOG015 | `debug()` call on root logger |
-| 478:13 | LOG015 | `info()` call on root logger |
-| 486:13 | LOG015 | `error()` call on root logger |
-| 513:5 | LOG015 | `info()` call on root logger |
-| 517:5 | LOG015 | `debug()` call on root logger |
-| 520:55 | RUF010 | Use explicit conversion flag |
-| 521:9 | LOG015 | `info()` call on root logger |
-| 523:9 | LOG015 | `info()` call on root logger |
-| 527:9 | LOG015 | `error()` call on root logger |
-| 532:9 | LOG015 | `info()` call on root logger |
-| 535:9 | LOG015 | `error()` call on root logger |
-| 549:9 | LOG015 | `info()` call on root logger |
-| 554:17 | LOG015 | `debug()` call on root logger |
-| 558:17 | LOG015 | `debug()` call on root logger |
-| 561:9 | LOG015 | `info()` call on root logger |
-| 562:12 | BLE001 | Do not catch blind exception: `Exception` |
-| 563:9 | LOG015 | `error()` call on root logger |
-| 578:17 | UP012 | Unnecessary call to `encode` as UTF-8 |
-| 582:33 | SIM115 | Use a context manager for opening files |
-| 585:12 | BLE001 | Do not catch blind exception: `Exception` |
-| 587:9 | LOG015 | `error()` call on root logger |
-| 608:5 | LOG015 | `debug()` call on root logger |
-| 672:9 | LOG015 | `debug()` call on root logger |
-| 677:13 | LOG015 | `debug()` call on root logger |
-| 682:17 | LOG015 | `debug()` call on root logger |
-| 684:17 | LOG015 | `debug()` call on root logger |
-| 686:5 | LOG015 | `error()` call on root logger |
-| 699:13 | LOG015 | `debug()` call on root logger |
-| 702:13 | LOG015 | `debug()` call on root logger |
-| 707:17 | LOG015 | `debug()` call on root logger |
-| 709:17 | LOG015 | `error()` call on root logger |
-| 711:5 | LOG015 | `error()` call on root logger |
-| 726:17 | LOG015 | `info()` call on root logger |
-| 728:13 | LOG015 | `info()` call on root logger |
-| 788:9 | LOG015 | `info()` call on root logger |
-| 794:5 | LOG015 | `critical()` call on root logger |
-| 797:5 | LOG015 | `info()` call on root logger |
-| 799:9 | LOG015 | `info()` call on root logger |
-| 813:13 | LOG015 | `info()` call on root logger |
-| 816:13 | LOG015 | `info()` call on root logger |
-| 831:9 | LOG015 | `info()` call on root logger |
-| 834:9 | LOG015 | `debug()` call on root logger |
+| 388:21 | LOG015 | `info()` call on root logger |
+| 391:17 | LOG015 | `debug()` call on root logger |
+| 393:17 | LOG015 | `debug()` call on root logger |
+| 395:17 | LOG015 | `debug()` call on root logger |
+| 412:9 | LOG015 | `debug()` call on root logger |
+| 465:9 | LOG015 | `info()` call on root logger |
+| 472:9 | LOG015 | `debug()` call on root logger |
+| 479:13 | LOG015 | `info()` call on root logger |
+| 487:13 | LOG015 | `error()` call on root logger |
+| 514:5 | LOG015 | `info()` call on root logger |
+| 518:5 | LOG015 | `debug()` call on root logger |
+| 521:55 | RUF010 | Use explicit conversion flag |
+| 522:9 | LOG015 | `info()` call on root logger |
+| 524:9 | LOG015 | `info()` call on root logger |
+| 528:9 | LOG015 | `error()` call on root logger |
+| 533:9 | LOG015 | `info()` call on root logger |
+| 536:9 | LOG015 | `error()` call on root logger |
+| 550:9 | LOG015 | `info()` call on root logger |
+| 555:17 | LOG015 | `debug()` call on root logger |
+| 559:17 | LOG015 | `debug()` call on root logger |
+| 562:9 | LOG015 | `info()` call on root logger |
+| 563:12 | BLE001 | Do not catch blind exception: `Exception` |
+| 564:9 | LOG015 | `error()` call on root logger |
+| 579:17 | UP012 | Unnecessary call to `encode` as UTF-8 |
+| 583:33 | SIM115 | Use a context manager for opening files |
+| 586:12 | BLE001 | Do not catch blind exception: `Exception` |
+| 588:9 | LOG015 | `error()` call on root logger |
+| 609:5 | LOG015 | `debug()` call on root logger |
+| 673:9 | LOG015 | `debug()` call on root logger |
+| 678:13 | LOG015 | `debug()` call on root logger |
+| 683:17 | LOG015 | `debug()` call on root logger |
+| 685:17 | LOG015 | `debug()` call on root logger |
+| 687:5 | LOG015 | `error()` call on root logger |
+| 700:13 | LOG015 | `debug()` call on root logger |
+| 703:13 | LOG015 | `debug()` call on root logger |
+| 708:17 | LOG015 | `debug()` call on root logger |
+| 710:17 | LOG015 | `error()` call on root logger |
+| 712:5 | LOG015 | `error()` call on root logger |
+| 727:17 | LOG015 | `info()` call on root logger |
+| 729:13 | LOG015 | `info()` call on root logger |
+| 789:9 | LOG015 | `info()` call on root logger |
+| 795:5 | LOG015 | `critical()` call on root logger |
+| 798:5 | LOG015 | `info()` call on root logger |
+| 800:9 | LOG015 | `info()` call on root logger |
+| 814:13 | LOG015 | `info()` call on root logger |
+| 817:13 | LOG015 | `info()` call on root logger |
+| 832:9 | LOG015 | `info()` call on root logger |
 | 835:9 | LOG015 | `debug()` call on root logger |
-| 841:13 | LOG015 | `info()` call on root logger |
-| 846:5 | LOG015 | `info()` call on root logger |
-| 857:5 | LOG015 | `debug()` call on root logger |
-| 859:9 | LOG015 | `info()` call on root logger |
-| 871:13 | SIM113 | Use `enumerate()` for index variable `i` in `for` loop |
-| 875:9 | LOG015 | `debug()` call on root logger |
-| 890:13 | LOG015 | `debug()` call on root logger |
-| 893:9 | LOG015 | `info()` call on root logger |
-| 905:9 | LOG015 | `info()` call on root logger |
-| 913:17 | LOG015 | `info()` call on root logger |
+| 836:9 | LOG015 | `debug()` call on root logger |
+| 842:13 | LOG015 | `info()` call on root logger |
+| 847:5 | LOG015 | `info()` call on root logger |
+| 858:5 | LOG015 | `debug()` call on root logger |
+| 860:9 | LOG015 | `info()` call on root logger |
+| 872:13 | SIM113 | Use `enumerate()` for index variable `i` in `for` loop |
+| 876:9 | LOG015 | `debug()` call on root logger |
+| 891:13 | LOG015 | `debug()` call on root logger |
+| 894:9 | LOG015 | `info()` call on root logger |
+| 906:9 | LOG015 | `info()` call on root logger |
+| 914:17 | LOG015 | `info()` call on root logger |
 
 ````
 :::

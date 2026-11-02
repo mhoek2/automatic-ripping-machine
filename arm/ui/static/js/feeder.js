@@ -1,3 +1,5 @@
+import { JobState } from './common.js';
+
 const FEEDER_GROUPS = {
     ripping: [
         JobState.MANUAL_WAIT_STARTED,
@@ -15,18 +17,17 @@ const FEEDER_GROUPS = {
         JobState.SUCCESS,
         JobState.FAILURE,
         JobState.POSTPROCESSING_MOVING,
-        "clear",
-        
+        'clear',
     ],
     //simulate: [
-    //    "simulate",
+    //    'simulate',
     //]
 };
 
 function renderFeederGroup(group, states) {
     const container = $(`#feeder-${group}`);
 
-    /*if (group === "simulate")
+    /*if (group === 'simulate')
     {
         $.each(job_refresh.activeJobs, function (index, job) {
             if (!job?.active)
@@ -36,11 +37,11 @@ function renderFeederGroup(group, states) {
 
             container.append(
                 $("<button>", {
-                    type: "button",
+                    type: 'button',
                     text: `${job.title} (${job.year})`,
-                    "data-feeder-action": group,
-                    "data-job-id": ids.jobId,
-                    "data-drive": job.devpath,
+                    'data-feeder-action': group,
+                    'data-job-id': ids.jobId,
+                    'data-drive': job.devpath,
                 })
             );
         });
@@ -51,10 +52,10 @@ function renderFeederGroup(group, states) {
     const uniqueStates = [...new Set(states)];
     uniqueStates.forEach(state => {
         container.append(
-            $("<button>", {
-                type: "button",
+            $('<button>', {
+                type: 'button',
                 text: state,
-                "data-feeder-action": state
+                'data-feeder-action': state
             })
         );
     });
@@ -62,44 +63,44 @@ function renderFeederGroup(group, states) {
 
 function getFeederDriveMode()
 {
-    return localStorage.getItem("feeder-drive-mode") || "auto";
+    return localStorage.getItem('feeder-drive-mode') || 'auto';
 }
 
-function setFeederDriveMode( drive_mode )
+function setFeederDriveMode(drive_mode)
 {
-    localStorage.setItem("feeder-drive-mode", drive_mode );
+    localStorage.setItem('feeder-drive-mode', drive_mode);
 }
 
 function setFeederDriveModeCheckbox()
 {
-    const drive_mode = (getFeederDriveMode() === "manual") ? true : false;
-    $("#feeder_drive_mode").prop("checked", drive_mode);
+    const drive_mode = (getFeederDriveMode() === 'manual') ? true : false;
+    $('#feeder_drive_mode').prop('checked', drive_mode);
 }
 
-$(document).on('change', "#feeder_drive_mode", function(){
-    setFeederDriveMode(this.checked ? "manual" : "auto");
+$(document).on('change', '#feeder_drive_mode', function(){
+    setFeederDriveMode(this.checked ? 'manual' : 'auto');
 });
 
-$(document).on("click", "[data-feeder-action]", function() {
+$(document).on('click', '[data-feeder-action]', function() {
 
     const data = {
-        action      : $(this).attr("data-feeder-action"),
-        job_id      : $(this).attr("data-job-id") ?? -1,
-        drive       : $(this).attr("data-drive") ?? -1,
+        action      : $(this).attr('data-feeder-action'),
+        job_id      : $(this).attr('data-job-id') ?? -1,
+        drive       : $(this).attr('data-drive') ?? -1,
         drive_mode  : getFeederDriveMode(),
     };
 
     $.ajax({
-        url			: "/feeder",
-        method		: "GET",
+        url			: '/feeder',
+        method		: 'GET',
         data		: data,
-        dataType	: "json"
+        dataType	: 'json'
     })
     .done(function(result) {
-        console.log("Feeder:", result);
+        console.log('Feeder:', result);
     })
     .fail(function(xhr) {
-        console.error("Feeder failed:", xhr.responseJSON || xhr.statusText);
+        console.error('Feeder failed:', xhr.responseJSON || xhr.statusText);
     });
 });
 

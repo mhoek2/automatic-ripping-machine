@@ -235,8 +235,10 @@
     </div>
 </div>
 
-<script>
-    $(function() {
+<script type="module">
+    import { sysinfo } from './static/js/sysinfo.js';
+
+    $(document).ready(function () {
         sysinfo.start();
     });
 </script>

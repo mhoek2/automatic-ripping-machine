@@ -23,7 +23,7 @@ echo "Running ESLint..."
 echo "Running Stylelint..."
 /opt/docs/node_modules/.bin/stylelint "arm/ui/static/css/**/*.css" \
     --formatter json \
-    --output-file "$REPORT_DIR/stylelint.json" || true
+    --output-file "$REPORT_DIR/stylelint.json" > /dev/null 2>&1 || true
 
 echo "Running Ruff..."
 python -m ruff check arm --output-format json \

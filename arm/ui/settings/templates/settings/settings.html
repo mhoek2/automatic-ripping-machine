@@ -43,8 +43,10 @@
 
 {% block js %}
     {{ super() }}
-    <script type="application/javascript" src="static/js/settings/settings.js"></script>
-    <script type="application/javascript">
+    <script type="module" src="static/js/settings/settings.js"></script>
+    <script type="module">
+        import { activeTab } from './static/js/common.js';
+
         $(function () {
             activeTab("armsettings");
             

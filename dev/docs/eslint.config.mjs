@@ -13,8 +13,14 @@ export default [
         files: ['arm/ui/static/js/**/*.js'],
         languageOptions: {
             ecmaVersion: 'latest',
-            sourceType: 'script',
-            globals: globals.browser,
+            sourceType: 'module',
+            globals: {
+                ...globals.browser,
+                $                           : 'readonly',
+                jQuery                      : 'readonly',
+                authenticated               : 'readonly',
+                __is_authenticated_simple   : 'readonly',
+            },
         },
         rules: {
             ...js.configs.recommended.rules,
@@ -25,7 +31,8 @@ export default [
             'prefer-const': 'error',
             'no-var': 'error',
             'quotes': ['error', 'single'],
-            'no-multi-spaces': ['error', { ignoreEOLComments: true }],
+            /*'no-multi-spaces': ['error', { ignoreEOLComments: true }],*/
+            'no-multi-spaces': 'off',
             'max-len': ['warn', { code: 100 }],
             'object-curly-spacing': ['error', 'always'],
             'space-in-parens': ['error', 'never'],

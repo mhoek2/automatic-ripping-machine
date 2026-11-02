@@ -21,12 +21,14 @@
         </div>
 
         {% block js %}
-        <script type="text/javascript">
+        <script type="module">
+            import { collectChildServers } from './static/js/common.js';
+            import { getNotifications } from './static/js/notification.js';
+
             $(document).ready(function () {
                 collectChildServers();
-
                 getNotifications();
-                window.setInterval(getNotifications, 2000 );
+                window.setInterval(getNotifications, 2000);
             });
         </script>
         {% endblock %}

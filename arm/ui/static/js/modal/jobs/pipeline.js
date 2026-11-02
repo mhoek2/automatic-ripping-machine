@@ -1,9 +1,13 @@
+import { ARM } from '../modal.js';
+import { getActiveJob, renderJobPipeline, renderProgress } from '../../jobs/job.js';
+import { startLogViewer } from '../../logs.js';
+
 ARM.modal.jobs = ARM.modal.jobs || {};
 
 ARM.modal.jobs.pipeline = {
-	modal: "#jobs-pipeline-modal",
-	job_id: null,
-	log_viewer: null,
+	modal		: '#jobs-pipeline-modal',
+	job_id		: null,
+	log_viewer	: null,
 
 	open(options = {}) {
 		const _modal = ARM.modal.jobs.pipeline;
@@ -11,16 +15,16 @@ ARM.modal.jobs.pipeline = {
 
 		if (!job_id)
 			return;
-		
+
 		const job = getActiveJob(job_id);
 
 		if (!job)
 			return;
 
 		_modal.job_id = job_id;
-		_modal.log_viewer = startLogViewer("tail", job.logfile);
+		_modal.log_viewer = startLogViewer('tail', job.logfile);
 
-		$("#job-pipeline-modal-title").text(`
+		$('#job-pipeline-modal-title').text(`
 			${job.title} (${job.year})
 		`);
 
@@ -68,9 +72,9 @@ ARM.modal.jobs.pipeline = {
 $(function() {
 	const _modal = ARM.modal.jobs.pipeline;
 
-	$(document).on("click", "[data-modal='jobs_pipeline']", function () {
+	$(document).on('click', '[data-modal="jobs_pipeline"]', function () {
 		_modal.open({
-			jobId: $(this).attr("data-jobid")
+			jobId: $(this).attr('data-jobid')
 		});
 
 		_modal.update();

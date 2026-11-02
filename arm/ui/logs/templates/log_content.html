@@ -16,7 +16,10 @@
 
 {% block js %}
 {{ super() }}
-    <script type="text/javascript">
+    <script type="module">
+        import { activeTab } from './static/js/common.js';
+        import { startLogViewer } from './static/js/logs.js';
+
         $(document).ready(function () {
             activeTab("viewlogs");
 

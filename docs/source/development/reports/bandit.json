@@ -1,6 +1,6 @@
 {
   "errors": [],
-  "generated_at": "2026-10-29T09:08:23Z",
+  "generated_at": "2026-11-02T13:29:07Z",
   "metrics": {
     "_totals": {
       "CONFIDENCE.HIGH": 57,
@@ -11,7 +11,7 @@
       "SEVERITY.LOW": 35,
       "SEVERITY.MEDIUM": 13,
       "SEVERITY.UNDEFINED": 0,
-      "loc": 9622,
+      "loc": 9625,
       "nosec": 0,
       "skipped_tests": 0
     },
@@ -531,7 +531,7 @@
       "SEVERITY.LOW": 0,
       "SEVERITY.MEDIUM": 0,
       "SEVERITY.UNDEFINED": 0,
-      "loc": 211,
+      "loc": 212,
       "nosec": 0,
       "skipped_tests": 0
     },
@@ -544,7 +544,7 @@
       "SEVERITY.LOW": 2,
       "SEVERITY.MEDIUM": 0,
       "SEVERITY.UNDEFINED": 0,
-      "loc": 403,
+      "loc": 400,
       "nosec": 0,
       "skipped_tests": 0
     },
@@ -557,7 +557,7 @@
       "SEVERITY.LOW": 1,
       "SEVERITY.MEDIUM": 0,
       "SEVERITY.UNDEFINED": 0,
-      "loc": 314,
+      "loc": 311,
       "nosec": 0,
       "skipped_tests": 0
     },
@@ -570,7 +570,7 @@
       "SEVERITY.LOW": 0,
       "SEVERITY.MEDIUM": 1,
       "SEVERITY.UNDEFINED": 0,
-      "loc": 350,
+      "loc": 351,
       "nosec": 0,
       "skipped_tests": 0
     },
@@ -609,7 +609,7 @@
       "SEVERITY.LOW": 6,
       "SEVERITY.MEDIUM": 0,
       "SEVERITY.UNDEFINED": 0,
-      "loc": 1122,
+      "loc": 1128,
       "nosec": 0,
       "skipped_tests": 0
     },
@@ -635,7 +635,7 @@
       "SEVERITY.LOW": 2,
       "SEVERITY.MEDIUM": 1,
       "SEVERITY.UNDEFINED": 0,
-      "loc": 767,
+      "loc": 768,
       "nosec": 0,
       "skipped_tests": 0
     },
@@ -1167,7 +1167,7 @@
       "test_name": "subprocess_popen_with_shell_equals_true"
     },
     {
-      "code": "447             subprocess.check_output((f\"mkdir -p {shlex.quote(base_path)} \"\n448                                      f\"&& chmod -R 777 {shlex.quote(base_path)}\"), shell=True)\n449 \n450             # Actually transcoding the file to the output location & updating the db with the status\n",
+      "code": "445             subprocess.check_output((f\"mkdir -p {shlex.quote(base_path)} \"\n446                                      f\"&& chmod -R 777 {shlex.quote(base_path)}\"), shell=True)\n447 \n448             # Actually transcoding the file to the output location & updating the db with the status\n",
       "col_offset": 12,
       "end_col_offset": 94,
       "filename": "arm/ripper/ffmpeg.py",
@@ -1178,17 +1178,17 @@
       },
       "issue_severity": "HIGH",
       "issue_text": "subprocess call with shell=True identified, security issue.",
-      "line_number": 448,
+      "line_number": 446,
       "line_range": [
-        447,
-        448
+        445,
+        446
       ],
       "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b602_subprocess_popen_with_shell_equals_true.html",
       "test_id": "B602",
       "test_name": "subprocess_popen_with_shell_equals_true"
     },
     {
-      "code": "486             f\"{shlex.quote(src_file)}\",\n487             shell=True, stderr=subprocess.STDOUT).decode('utf-8').strip()\n488         total_duration = int(float(duration_sec_str) * 1_000_000)\n489     except (subprocess.CalledProcessError, ValueError) as e:\n490         logging.error(f\"Could not get duration from ffprobe: {e}\")\n491         # We can continue without progress reporting if this fails\n",
+      "code": "481             f\"{shlex.quote(src_file)}\",\n482             shell=True, stderr=subprocess.STDOUT).decode('utf-8').strip()\n483         total_duration = int(float(duration_sec_str) * 1_000_000)\n484     except (subprocess.CalledProcessError, ValueError) as e:\n485         logging.error(f\"Could not get duration from ffprobe: {e}\")\n486         # We can continue without progress reporting if this fails\n",
       "col_offset": 27,
       "end_col_offset": 49,
       "filename": "arm/ripper/ffmpeg.py",
@@ -1199,19 +1199,19 @@
       },
       "issue_severity": "HIGH",
       "issue_text": "subprocess call with shell=True identified, security issue.",
-      "line_number": 487,
+      "line_number": 482,
       "line_range": [
-        484,
-        485,
-        486,
-        487
+        479,
+        480,
+        481,
+        482
       ],
       "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b602_subprocess_popen_with_shell_equals_true.html",
       "test_id": "B602",
       "test_name": "subprocess_popen_with_shell_equals_true"
     },
     {
-      "code": "500     # Execute the ffmpeg command and capture progress\n501     process = subprocess.Popen(shlex.split(cmd), stdout=subprocess.PIPE, stderr=subprocess.STDOUT,\n502                                universal_newlines=True, bufsize=1)\n503 \n",
+      "code": "495     # Execute the ffmpeg command and capture progress\n496     process = subprocess.Popen(shlex.split(cmd), stdout=subprocess.PIPE, stderr=subprocess.STDOUT,\n497                                universal_newlines=True, bufsize=1)\n498 \n",
       "col_offset": 14,
       "end_col_offset": 66,
       "filename": "arm/ripper/ffmpeg.py",
@@ -1222,10 +1222,10 @@
       },
       "issue_severity": "LOW",
       "issue_text": "subprocess call - check for execution of untrusted input.",
-      "line_number": 501,
+      "line_number": 496,
       "line_range": [
-        501,
-        502
+        496,
+        497
       ],
       "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b603_subprocess_without_shell_equals_true.html",
       "test_id": "B603",
@@ -1275,7 +1275,7 @@
       "test_name": "subprocess_popen_with_shell_equals_true"
     },
     {
-      "code": "372             stderr=subprocess.STDOUT,\n373             shell=True\n374         ).decode('utf-8', 'ignore').splitlines()\n375     except subprocess.CalledProcessError as hb_error:\n376         logging.error(\"Couldn't find a valid track with utf-8 encoding. Trying with cp437\")\n377         logging.error(f\"Specific error is: {hb_error}\")\n378     else:\n",
+      "code": "369             stderr=subprocess.STDOUT,\n370             shell=True\n371         ).decode('utf-8', 'ignore').splitlines()\n372     except subprocess.CalledProcessError as hb_error:\n373         logging.error(\"Couldn't find a valid track with utf-8 encoding. Trying with cp437\")\n374         logging.error(f\"Specific error is: {hb_error}\")\n375     else:\n",
       "col_offset": 28,
       "end_col_offset": 9,
       "filename": "arm/ripper/handbrake.py",
@@ -1286,20 +1286,20 @@
       },
       "issue_severity": "HIGH",
       "issue_text": "subprocess call with shell=True identified, security issue.",
-      "line_number": 373,
+      "line_number": 370,
       "line_range": [
+        367,
+        368,
+        369,
         370,
-        371,
-        372,
-        373,
-        374
+        371
       ],
       "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b602_subprocess_popen_with_shell_equals_true.html",
       "test_id": "B602",
       "test_name": "subprocess_popen_with_shell_equals_true"
     },
     {
-      "code": "384                 stderr=subprocess.STDOUT,\n385                 shell=True\n386             ).decode('cp437').splitlines()\n387         except subprocess.CalledProcessError as hb_error:\n388             logging.error(\"Couldn't find a valid track. \"\n389                           \"Try running the command manually to see more specific errors.\")\n390             logging.error(f\"Specific error is: {hb_error}\")\n",
+      "code": "381                 stderr=subprocess.STDOUT,\n382                 shell=True\n383             ).decode('cp437').splitlines()\n384         except subprocess.CalledProcessError as hb_error:\n385             logging.error(\"Couldn't find a valid track. \"\n386                           \"Try running the command manually to see more specific errors.\")\n387             logging.error(f\"Specific error is: {hb_error}\")\n",
       "col_offset": 32,
       "end_col_offset": 13,
       "filename": "arm/ripper/handbrake.py",
@@ -1310,20 +1310,20 @@
       },
       "issue_severity": "HIGH",
       "issue_text": "subprocess call with shell=True identified, security issue.",
-      "line_number": 385,
+      "line_number": 382,
       "line_range": [
+        379,
+        380,
+        381,
         382,
-        383,
-        384,
-        385,
-        386
+        383
       ],
       "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b602_subprocess_popen_with_shell_equals_true.html",
       "test_id": "B602",
       "test_name": "subprocess_popen_with_shell_equals_true"
     },
     {
-      "code": "206         logging.debug(urlstring)\n207         dvd_info_xml = urllib.request.urlopen(urlstring).read()\n208         arm_api_json = json.loads(dvd_info_xml)\n",
+      "code": "207         logging.debug(urlstring)\n208         dvd_info_xml = urllib.request.urlopen(urlstring).read()\n209         arm_api_json = json.loads(dvd_info_xml)\n",
       "col_offset": 23,
       "end_col_offset": 56,
       "filename": "arm/ripper/identify.py",
@@ -1334,9 +1334,9 @@
       },
       "issue_severity": "MEDIUM",
       "issue_text": "Audit url open for permitted schemes. Allowing use of file:/ or custom schemes is often unexpected.",
-      "line_number": 207,
+      "line_number": 208,
       "line_range": [
-        207
+        208
       ],
       "more_info": "https://bandit.readthedocs.io/en/1.9.4/blacklists/blacklist_calls.html#b310-urllib-urlopen",
       "test_id": "B310",
@@ -1363,7 +1363,7 @@
       "test_name": "blacklist"
     },
     {
-      "code": "1004             logging.info(\"Updating MakeMKV key...\")\n1005             proc = subprocess.run(cmd, capture_output=True, check=True)\n1006             stdout = proc.stdout.decode(\"utf-8\")\n",
+      "code": "1012             logging.info(\"Updating MakeMKV key...\")\n1013             proc = subprocess.run(cmd, capture_output=True, check=True)\n1014             stdout = proc.stdout.decode(\"utf-8\")\n",
       "col_offset": 19,
       "end_col_offset": 71,
       "filename": "arm/ripper/makemkv.py",
@@ -1374,16 +1374,16 @@
       },
       "issue_severity": "LOW",
       "issue_text": "subprocess call - check for execution of untrusted input.",
-      "line_number": 1005,
+      "line_number": 1013,
       "line_range": [
-        1005
+        1013
       ],
       "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b603_subprocess_without_shell_equals_true.html",
       "test_id": "B603",
       "test_name": "subprocess_without_shell_equals_true"
     },
     {
-      "code": "1013         logging.info(\"Updating MakeMKV key...\")\n1014         proc = subprocess.run(cmd, capture_output=True, check=True)\n1015         stdout = proc.stdout.decode(\"utf-8\")\n",
+      "code": "1021         logging.info(\"Updating MakeMKV key...\")\n1022         proc = subprocess.run(cmd, capture_output=True, check=True)\n1023         stdout = proc.stdout.decode(\"utf-8\")\n",
       "col_offset": 15,
       "end_col_offset": 67,
       "filename": "arm/ripper/makemkv.py",
@@ -1394,16 +1394,16 @@
       },
       "issue_severity": "LOW",
       "issue_text": "subprocess call - check for execution of untrusted input.",
-      "line_number": 1014,
+      "line_number": 1022,
       "line_range": [
-        1014
+        1022
       ],
       "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b603_subprocess_without_shell_equals_true.html",
       "test_id": "B603",
       "test_name": "subprocess_without_shell_equals_true"
     },
     {
-      "code": "1118         if isinstance(message, SInfo):\n1119             assert message.tid == self.track_id, message\n1120             self._handle_sinfo(message)\n",
+      "code": "1126         if isinstance(message, SInfo):\n1127             assert message.tid == self.track_id, message\n1128             self._handle_sinfo(message)\n",
       "col_offset": 12,
       "end_col_offset": 56,
       "filename": "arm/ripper/makemkv.py",
@@ -1414,16 +1414,16 @@
       },
       "issue_severity": "LOW",
       "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
-      "line_number": 1119,
+      "line_number": 1127,
       "line_range": [
-        1119
+        1127
       ],
       "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
       "test_id": "B101",
       "test_name": "assert_used"
     },
     {
-      "code": "1121         elif isinstance(message, TInfo):\n1122             assert message.tid == self.track_id, message\n1123             self._handle_tinfo(message)\n",
+      "code": "1129         elif isinstance(message, TInfo):\n1130             assert message.tid == self.track_id, message\n1131             self._handle_tinfo(message)\n",
       "col_offset": 12,
       "end_col_offset": 56,
       "filename": "arm/ripper/makemkv.py",
@@ -1434,16 +1434,16 @@
       },
       "issue_severity": "LOW",
       "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
-      "line_number": 1122,
+      "line_number": 1130,
       "line_range": [
-        1122
+        1130
       ],
       "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b101_assert_used.html",
       "test_id": "B101",
       "test_name": "assert_used"
     },
     {
-      "code": "1342     logging.debug(f\"command: '{' '.join(cmd)}'\")\n1343     with subprocess.Popen(cmd, stdout=subprocess.PIPE, text=True) as proc:\n1344         logging.debug(f\"PID {proc.pid}: command: '{' '.join(cmd)}'\")\n",
+      "code": "1350     logging.debug(f\"command: '{' '.join(cmd)}'\")\n1351     with subprocess.Popen(cmd, stdout=subprocess.PIPE, text=True) as proc:\n1352         logging.debug(f\"PID {proc.pid}: command: '{' '.join(cmd)}'\")\n",
       "col_offset": 9,
       "end_col_offset": 65,
       "filename": "arm/ripper/makemkv.py",
@@ -1454,9 +1454,9 @@
       },
       "issue_severity": "LOW",
       "issue_text": "subprocess call - check for execution of untrusted input.",
-      "line_number": 1343,
+      "line_number": 1351,
       "line_range": [
-        1343
+        1351
       ],
       "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b603_subprocess_without_shell_equals_true.html",
       "test_id": "B603",
@@ -1523,7 +1523,7 @@
       "test_name": "request_without_timeout"
     },
     {
-      "code": "476             # TODO check output and confirm all tracks ripped; find \"Finished\\.$\"\n477             subprocess.check_output(cmd, shell=True).decode(\"utf-8\")\n478             logging.info(\"abcde call successful\")\n",
+      "code": "477             # TODO check output and confirm all tracks ripped; find \"Finished\\.$\"\n478             subprocess.check_output(cmd, shell=True).decode(\"utf-8\")\n479             logging.info(\"abcde call successful\")\n",
       "col_offset": 12,
       "end_col_offset": 52,
       "filename": "arm/ripper/utils.py",
@@ -1534,16 +1534,16 @@
       },
       "issue_severity": "HIGH",
       "issue_text": "subprocess call with shell=True identified, security issue.",
-      "line_number": 477,
+      "line_number": 478,
       "line_range": [
-        477
+        478
       ],
       "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b602_subprocess_popen_with_shell_equals_true.html",
       "test_id": "B602",
       "test_name": "subprocess_popen_with_shell_equals_true"
     },
     {
-      "code": "518     try:\n519         subprocess.check_output(cmd, shell=True).decode(\"utf-8\")\n520         full_final_file = os.path.join(final_path, f\"{str(job.label)}.iso\")\n",
+      "code": "519     try:\n520         subprocess.check_output(cmd, shell=True).decode(\"utf-8\")\n521         full_final_file = os.path.join(final_path, f\"{str(job.label)}.iso\")\n",
       "col_offset": 8,
       "end_col_offset": 48,
       "filename": "arm/ripper/utils.py",
@@ -1554,16 +1554,16 @@
       },
       "issue_severity": "HIGH",
       "issue_text": "subprocess call with shell=True identified, security issue.",
-      "line_number": 519,
+      "line_number": 520,
       "line_range": [
-        519
+        520
       ],
       "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b602_subprocess_popen_with_shell_equals_true.html",
       "test_id": "B602",
       "test_name": "subprocess_popen_with_shell_equals_true"
     },
     {
-      "code": "810     if job.disctype == \"dvd\" and cfg.arm_config[\"RIP_POSTER\"]:\n811         os.system(f\"mount {job.devpath}\")\n812         if os.path.isfile(job.mountpoint + \"/JACKET_P/J00___5L.MP2\"):\n",
+      "code": "811     if job.disctype == \"dvd\" and cfg.arm_config[\"RIP_POSTER\"]:\n812         os.system(f\"mount {job.devpath}\")\n813         if os.path.isfile(job.mountpoint + \"/JACKET_P/J00___5L.MP2\"):\n",
       "col_offset": 8,
       "end_col_offset": 41,
       "filename": "arm/ripper/utils.py",
@@ -1574,16 +1574,16 @@
       },
       "issue_severity": "HIGH",
       "issue_text": "Starting a process with a shell, possible injection detected, security issue.",
-      "line_number": 811,
+      "line_number": 812,
       "line_range": [
-        811
+        812
       ],
       "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b605_start_process_with_a_shell.html",
       "test_id": "B605",
       "test_name": "start_process_with_a_shell"
     },
     {
-      "code": "813             logging.info(\"Converting NTSC Poster Image\")\n814             os.system(f'ffmpeg -i \"{job.mountpoint}/JACKET_P/J00___5L.MP2\" \"{final_directory}/poster.png\"')\n815         elif os.path.isfile(job.mountpoint + \"/JACKET_P/J00___6L.MP2\"):\n",
+      "code": "814             logging.info(\"Converting NTSC Poster Image\")\n815             os.system(f'ffmpeg -i \"{job.mountpoint}/JACKET_P/J00___5L.MP2\" \"{final_directory}/poster.png\"')\n816         elif os.path.isfile(job.mountpoint + \"/JACKET_P/J00___6L.MP2\"):\n",
       "col_offset": 12,
       "end_col_offset": 107,
       "filename": "arm/ripper/utils.py",
@@ -1594,38 +1594,18 @@
       },
       "issue_severity": "HIGH",
       "issue_text": "Starting a process with a shell, possible injection detected, security issue.",
-      "line_number": 814,
+      "line_number": 815,
       "line_range": [
-        814
+        815
       ],
       "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b605_start_process_with_a_shell.html",
       "test_id": "B605",
       "test_name": "start_process_with_a_shell"
     },
     {
-      "code": "816             logging.info(\"Converting PAL Poster Image\")\n817             os.system(f'ffmpeg -i \"{job.mountpoint}/JACKET_P/J00___6L.MP2\" \"{final_directory}/poster.png\"')\n818         os.system(f\"umount {job.devpath}\")\n",
+      "code": "817             logging.info(\"Converting PAL Poster Image\")\n818             os.system(f'ffmpeg -i \"{job.mountpoint}/JACKET_P/J00___6L.MP2\" \"{final_directory}/poster.png\"')\n819         os.system(f\"umount {job.devpath}\")\n",
       "col_offset": 12,
       "end_col_offset": 107,
-      "filename": "arm/ripper/utils.py",
-      "issue_confidence": "HIGH",
-      "issue_cwe": {
-        "id": 78,
-        "link": "https://cwe.mitre.org/data/definitions/78.html"
-      },
-      "issue_severity": "HIGH",
-      "issue_text": "Starting a process with a shell, possible injection detected, security issue.",
-      "line_number": 817,
-      "line_range": [
-        817
-      ],
-      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b605_start_process_with_a_shell.html",
-      "test_id": "B605",
-      "test_name": "start_process_with_a_shell"
-    },
-    {
-      "code": "817             os.system(f'ffmpeg -i \"{job.mountpoint}/JACKET_P/J00___6L.MP2\" \"{final_directory}/poster.png\"')\n818         os.system(f\"umount {job.devpath}\")\n819 \n",
-      "col_offset": 8,
-      "end_col_offset": 42,
       "filename": "arm/ripper/utils.py",
       "issue_confidence": "HIGH",
       "issue_cwe": {
@@ -1637,6 +1617,26 @@
       "line_number": 818,
       "line_range": [
         818
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b605_start_process_with_a_shell.html",
+      "test_id": "B605",
+      "test_name": "start_process_with_a_shell"
+    },
+    {
+      "code": "818             os.system(f'ffmpeg -i \"{job.mountpoint}/JACKET_P/J00___6L.MP2\" \"{final_directory}/poster.png\"')\n819         os.system(f\"umount {job.devpath}\")\n820 \n",
+      "col_offset": 8,
+      "end_col_offset": 42,
+      "filename": "arm/ripper/utils.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 78,
+        "link": "https://cwe.mitre.org/data/definitions/78.html"
+      },
+      "issue_severity": "HIGH",
+      "issue_text": "Starting a process with a shell, possible injection detected, security issue.",
+      "line_number": 819,
+      "line_range": [
+        819
       ],
       "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b605_start_process_with_a_shell.html",
       "test_id": "B605",

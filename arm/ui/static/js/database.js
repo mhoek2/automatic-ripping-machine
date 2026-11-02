@@ -1,21 +1,18 @@
-/*jshint multistr: true */
-/*jshint esversion: 6 */
-/*global $:false, jQuery:false */
-/* jshint node: true */
-/* jshint strict: false */
+import { JOB_LIST_CONTAINER, JobStateGroup } from './common.js';
+import { job_refresh } from './jobs/state.js';
+import { addJobItem } from './jobs/job.js';
 
 let databaseCursor = null;
 let databaseLoading = false;
 let databaseHasMore = true;
+
 let databaseInfiniteScrollEnabled = false;
 
+export function setDatbaseInfitiniseScrollState(state){
+    databaseInfiniteScrollEnabled = state;
+}
 
-
-let activeJob = null;
-let actionType = null;
-let z = "";
-
-function _addJobs( data ){
+function _addJobs(data) {
 	if (!data.results)
 		return;
 
@@ -36,8 +33,8 @@ function _addJobs( data ){
 	});
 }
 
-function switchSearch(data) {
-    $(JOB_LIST_CONTAINER).html("");
+export function switchSearch(data) {
+    $(JOB_LIST_CONTAINER).html('');
 
     _addJobs(data);
 }
@@ -46,17 +43,17 @@ function switchSearch(data) {
  * Function to get jobs (success/fail buttons) from the arm api
  * @param getJobsHREF link to the json api
  */
-function fetchJobs( href ) {
+export function fetchJobs(href) {
     $.get(href, function (data) {
         if (data.success === true) {
-            $(JOB_LIST_CONTAINER).html("");
+            $(JOB_LIST_CONTAINER).html('');
 
             _addJobs(data);
         }
-    }, "json");
+    }, 'json');
 }
 
-async function fetchAllJobs(reset = false) {
+export async function fetchAllJobs(reset = false) {
     if (databaseLoading) return;
 
     if (reset) {
@@ -68,8 +65,8 @@ async function fetchAllJobs(reset = false) {
     if (!databaseHasMore) return;
 
     databaseLoading = true;
-    databaseInfiniteScrollEnabled = true;
-    $("#database-load-status").text("Loading jobs...");
+    setDatbaseInfitiniseScrollState(true);
+    $('#database-load-status').text('Loading jobs...');
 
     const params = {};
 
@@ -78,11 +75,11 @@ async function fetchAllJobs(reset = false) {
     }
 
     try {
-        const data = await $.getJSON("/database/jobs", params);
+        const data = await $.getJSON('/database/jobs', params);
 
         if (!data.success) {
             databaseHasMore = false;
-            $("#database-load-status").text(data.error || "Failed to load jobs.");
+            $('#database-load-status').text(data.error || 'Failed to load jobs.');
             return;
         }
 
@@ -92,15 +89,16 @@ async function fetchAllJobs(reset = false) {
         databaseHasMore = data.has_more;
 
         if (!Object.keys(data.results ?? {}).length) {
-            $("#database-load-status").text("No jobs found.");
+            $('#database-load-status').text('No jobs found.');
         } else if (!databaseHasMore) {
-            $("#database-load-status").text("All jobs loaded.");
+            $('#database-load-status').text('All jobs loaded.');
         } else {
-            $("#database-load-status").text("");
+            $('#database-load-status').text('');
         }
     } catch (error) {
         databaseHasMore = false;
-        $("#database-load-status").text("Failed to load jobs.");
+        $('#database-load-status').text('Failed to load jobs.');
+        console.error(error);
     } finally {
         databaseLoading = false;
 
@@ -110,21 +108,17 @@ async function fetchAllJobs(reset = false) {
     }
 }
 
-function checkDatabaseScroll() {
-	const container = $(".base_content")[0];
+export function checkDatabaseScroll() {
+	const container = $('.base_content')[0];
 
-	if (!container || !databaseInfiniteScrollEnabled || databaseLoading || !databaseHasMore )
+	if (!container || !databaseInfiniteScrollEnabled || databaseLoading || !databaseHasMore)
 		return;
 
+    const maxDistanceFromBottom = 400;
 	const distanceFromBottom =
-		container.scrollHeight - container.scrollTop - container.clientHeight;
+        container.scrollHeight - container.scrollTop - container.clientHeight;
 
-	if (distanceFromBottom <= 400) {
+	if (distanceFromBottom <= maxDistanceFromBottom) {
 		fetchAllJobs();
 	}
 }
-
-
-$(document).ready(function () {
-
-});

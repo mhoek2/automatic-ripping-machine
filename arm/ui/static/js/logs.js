@@ -1,4 +1,4 @@
-function startLogViewer(mode, logfile, interval = 3000, element_id = "#log_file_content") {
+export function startLogViewer(mode, logfile, interval = 3000, element_id = '#log_file_content') {
     const log_element = $(element_id);
 
     if (!__is_authenticated_simple()) {
@@ -12,24 +12,24 @@ function startLogViewer(mode, logfile, interval = 3000, element_id = "#log_file_
     }
 
     if (!log_element.length){
-        console.error(`Invalid log dom element`);
+        console.error('Invalid log dom element');
         return;
     }
 
     const element = log_element[0];
     const threshold = 5;
 
-    let lastText = "";
-    let initialized = false;
-    let loading = false;
-    let followBottom = true;
+    let lastText        = '';
+    let initialized     = false;
+    let loading         = false;
+    let followBottom    = true;
 
     function updateFollowBottom() {
         followBottom =
             element.scrollHeight - element.scrollTop - element.clientHeight <= threshold;
     }
 
-    element.addEventListener("scroll", updateFollowBottom);
+    element.addEventListener('scroll', updateFollowBottom);
 
     function scrollToBottom() {
         if (followBottom)
@@ -42,9 +42,9 @@ function startLogViewer(mode, logfile, interval = 3000, element_id = "#log_file_
 
         loading = true;
 
-        $.get("/logreader", {
-            logfile: logfile,
-            mode: mode
+        $.get('/logreader', {
+            logfile : logfile,
+            mode    : mode
         })
         .done(function (data) {
             const text = data.content;
@@ -52,26 +52,28 @@ function startLogViewer(mode, logfile, interval = 3000, element_id = "#log_file_
 
             if (!initialized) {
                 log_element.text(text);
-                lastText = text;
+                lastText    = text;
                 initialized = true;
-                update = text.length > 0;
-            } else if (text.startsWith(lastText) && text.length > lastText.length) {
+                update      = text.length > 0;
+            }
+            else if (text.startsWith(lastText) && text.length > lastText.length) {
                 log_element.append(document.createTextNode(
                     text.substring(lastText.length)
                 ));
-                lastText = text;
-                update = true;
-            } else if (text !== lastText) {
+                lastText    = text;
+                update      = true;
+            }
+            else if (text !== lastText) {
                 log_element.text(text);
-                lastText = text;
-                update = true;
+                lastText    = text;
+                update      = true;
             }
 
             if (update)
                 scrollToBottom();
         })
         .fail(function (xhr, status, error) {
-            console.error("Failed to refresh logfile:", status, error);
+            console.error('Failed to refresh logfile:', status, error);
         })
         .always(function () {
             loading = false;
@@ -84,8 +86,8 @@ function startLogViewer(mode, logfile, interval = 3000, element_id = "#log_file_
 
     // Return a cleanup function to stop polling and remove the listener.
     return function cleanup() {
-        log_element.text("");
+        log_element.text('');
         window.clearInterval(timer);
-        element.removeEventListener("scroll", updateFollowBottom);
+        element.removeEventListener('scroll', updateFollowBottom);
     };
 }

@@ -1,4 +1,4 @@
-const sysinfo = {
+export const sysinfo = {
     refreshInterval: 5000,
     timer: null,
 
@@ -39,23 +39,23 @@ const sysinfo = {
                 this.updateServerVersion(data);
             })
             .fail((xhr, status, error) => {
-                console.error("Failed to load server stats:", status, error);
+                console.error('Failed to load server stats:', status, error);
             });
     },
 
     updateServerInfo(server)
     {
-        if (!server || typeof server !== "object")
+        if (!server || typeof server !== 'object')
             return;
 
-        $('[data-server="name"]').text(server.name ?? "");
-        $('[data-server="description"]').text(server.description ?? "");
-        $('[data-server="cpu"]').text(server.cpu ?? "");
+        $('[data-server="name"]').text(server.name ?? '');
+        $('[data-server="description"]').text(server.description ?? '');
+        $('[data-server="cpu"]').text(server.cpu ?? '');
     },
 
     updateServerUtil(server)
     {
-        if (!server || typeof server !== "object")
+        if (!server || typeof server !== 'object')
             return;
 
         // CPU temperature
@@ -68,23 +68,23 @@ const sysinfo = {
 
             $cpuTempProgress
                 .show()
-                .css("width", this.clamp(server.cpu_temp) + "%")
-                .removeClass("warning danger");
+                .css('width', this.clamp(server.cpu_temp) + '%')
+                .removeClass('warning danger');
 
             if (server.cpu_temp > 70)
-                $cpuTempProgress.addClass("danger");
+                $cpuTempProgress.addClass('danger');
             else if (server.cpu_temp > 55)
-                $cpuTempProgress.addClass("warning");
+                $cpuTempProgress.addClass('warning');
         }
         else
         {
-            $cpuTemp.text("Not reported");
+            $cpuTemp.text('Not reported');
             $cpuTempProgress.hide();
         }
 
         // CPU usage
         this.updateProgress(
-            "cpu_util",
+            'cpu_util',
             server.cpu_util,
             { warning: 70, danger: 80 }
         );
@@ -106,13 +106,13 @@ const sysinfo = {
         const $progress = $(`[data-progress="${key}"]`);
 
         $progress
-            .css("width", this.clamp(percentage) + "%")
-            .removeClass("warning danger");
+            .css('width', this.clamp(percentage) + '%')
+            .removeClass('warning danger');
 
         if (thresholds.danger !== undefined && percentage > thresholds.danger)
-            $progress.addClass("danger");
+            $progress.addClass('danger');
         else if (thresholds.warning !== undefined && percentage > thresholds.warning)
-            $progress.addClass("warning");
+            $progress.addClass('warning');
 
         $(`[data-serverutil="${key}"]`).text(`${percentage}%`);
     },
@@ -122,51 +122,51 @@ const sysinfo = {
     },
 
     renderStorageDirectories(directories) {
-        const $container = $("[data-health-directories]").empty();
+        const $container = $('[data-health-directories]').empty();
 
-        if (!directories || typeof directories !== "object" ||
+        if (!directories || typeof directories !== 'object' ||
             Object.keys(directories).length === 0) {
             $container.append(
-                $("<div>")
-                    .addClass("sysinfo-empty-state")
-                    .text("No directories available")
+                $('<div>')
+                    .addClass('sysinfo-empty-state')
+                    .text('No directories available')
             );
             return;
         }
 
         const labels = {
-            raw: "Raw",
-            transcode: "Transcode",
-            completed: "Completed",
-            logs: "Logs"
+            raw         : 'Raw',
+            transcode   : 'Transcode',
+            completed   : 'Completed',
+            logs        : 'Logs'
         };
 
         Object.entries(directories).forEach(([name, directory]) => {
-            const $row = $("<div>").addClass("sysinfo-storage-row");
-            const $header = $("<div>").addClass("sysinfo-storage-header");
-            const $info = $("<div>").addClass("sysinfo-storage-info");
+            const $row = $('<div>').addClass('sysinfo-storage-row');
+            const $header = $('<div>').addClass('sysinfo-storage-header');
+            const $info = $('<div>').addClass('sysinfo-storage-info');
 
-            $("<div>")
-                .addClass("sysinfo-storage-name")
+            $('<div>')
+                .addClass('sysinfo-storage-name')
                 .text(labels[name] || name)
                 .appendTo($info);
 
-            const $checks = $("<div>").addClass("sysinfo-storage-checks");
+            const $checks = $('<div>').addClass('sysinfo-storage-checks');
 
             [
-                ["exists", "Exists"],
-                ["readable", "Read"],
-                ["writable", "Write"]
+                ['exists',      'Exists'],
+                ['readable',    'Read'],
+                ['writable',    'Write']
             ].forEach(([key, label]) => {
                 const ok = directory[key] === true;
 
-                const $badge = $("<span>")
-                    .addClass("server-check-status")
-                    .addClass(ok ? "ok" : "fail")
+                const $badge = $('<span>')
+                    .addClass('server-check-status')
+                    .addClass(ok ? 'ok' : 'fail')
                     .append(this.icon(
-                        ok ? "fa-circle-check" : "fa-circle-xmark"
+                        ok ? 'fa-circle-check' : 'fa-circle-xmark'
                     ))
-                    .append($("<span>").text(label));
+                    .append($('<span>').text(label));
 
                 $checks.append($badge);
             });
@@ -185,49 +185,49 @@ const sysinfo = {
                 total !== null &&
                 percentage !== null
             ) {
-                const $label = $("<div>").addClass("sysinfo-label");
+                const $label = $('<div>').addClass('sysinfo-label');
 
-                $("<span>")
-                    .text(directory.path || "")
+                $('<span>')
+                    .text(directory.path || '')
                     .appendTo($label);
 
-                $("<span>")
+                $('<span>')
                     .text(`${percentage}%`)
                     .appendTo($label);
 
-                const $progress = $("<div>").addClass("sysinfo-progress");
-                const $bar = $("<div>")
-                    .addClass("sysinfo-progress-bar")
-                    .css("width", this.clamp(percentage) + "%");
+                const $progress = $('<div>').addClass('sysinfo-progress');
+                const $bar = $('<div>')
+                    .addClass('sysinfo-progress-bar')
+                    .css('width', this.clamp(percentage) + '%');
 
                 if (percentage > 80)
-                    $bar.addClass("danger");
+                    $bar.addClass('danger');
                 else if (percentage > 70)
-                    $bar.addClass("warning");
+                    $bar.addClass('warning');
 
                 $progress.append($bar);
 
-                const $legend = $("<div>").addClass("sysinfo-memory-legend");
+                const $legend = $('<div>').addClass('sysinfo-memory-legend');
 
                 [
-                    ["Total", total],
-                    ["Used", used],
-                    ["Free", free]
+                    ['Total',   total],
+                    ['Used',    used],
+                    ['Free',    free]
                 ].forEach(([label, value]) => {
-                    const $item = $("<div>")
-                        .addClass("sysinfo-memory-legend-item");
+                    const $item = $('<div>')
+                        .addClass('sysinfo-memory-legend-item');
 
-                    $("<span>")
-                        .addClass("sysinfo-memory-dot")
+                    $('<span>')
+                        .addClass('sysinfo-memory-dot')
                         .addClass(label.toLowerCase())
                         .appendTo($item);
 
-                    $("<span>")
-                        .addClass("sysinfo-memory-legend-label")
+                    $('<span>')
+                        .addClass('sysinfo-memory-legend-label')
                         .text(label)
                         .appendTo($item);
 
-                    $("<strong>")
+                    $('<strong>')
                         .text(this.formatGb(value))
                         .appendTo($item);
 
@@ -244,7 +244,7 @@ const sysinfo = {
 
     updateMemory(server)
     {
-        if (!server || typeof server !== "object")
+        if (!server || typeof server !== 'object')
             return;
 
         const used = this.toNumber(server.memory_used);
@@ -276,20 +276,20 @@ const sysinfo = {
         usedPercent = this.clamp(usedPercent);
 
         $('[data-memory-segment="used"]')
-            .css("width", usedPercent + "%");
+            .css('width', usedPercent + '%');
 
         $('[data-memory-segment="free"]')
-            .css("width", (100 - usedPercent) + "%");
+            .css('width', (100 - usedPercent) + '%');
     },
 
     updateServerStats(data)
     {
-        if (!data || typeof data !== "object")
+        if (!data || typeof data !== 'object')
             return;
 
-        $("[data-serverstat]").each((_, element) => {
+        $('[data-serverstat]').each((_, element) => {
             const $element = $(element);
-            const key = $element.data("serverstat");
+            const key = $element.data('serverstat');
             const value = data[key];
 
             // -1 indicates that this value has not been refreshed.
@@ -303,11 +303,11 @@ const sysinfo = {
     updateServerHealth(health)
     {
         // Preserve the existing UI while initialization is in progress.
-        if ( !health || typeof health !== "object")
+        if (!health || typeof health !== 'object')
             return;
 
         const checks = [];
-        const validTools = (health.tools !== -1 && health.tools && typeof health.tools === "object");
+        const validTools = (health.tools !== -1 && health.tools && typeof health.tools === 'object');
 
         $.each(health.directories || {}, (_, item) => {
             checks.push(
@@ -322,37 +322,37 @@ const sysinfo = {
         }
 
         const failed = checks.filter(ok => !ok).length;
-        const $summary = $("[data-health-summary]");
+        const $summary = $('[data-health-summary]');
 
-        $summary.removeClass("ok fail warning").empty();
+        $summary.removeClass('ok fail warning').empty();
 
         if (checks.length === 0)
         {
             $summary
-                .addClass("warning")
-                .append(this.icon("fa-triangle-exclamation"))
-                .append(" No checks");
+                .addClass('warning')
+                .append(this.icon('fa-triangle-exclamation'))
+                .append(' No checks');
         }
         else if (failed > 0)
         {
             $summary
-                .addClass("fail")
-                .append(this.icon("fa-circle-xmark"))
-                .append(` ${failed} check${failed === 1 ? "" : "s"} failed`);
+                .addClass('fail')
+                .append(this.icon('fa-circle-xmark'))
+                .append(` ${failed} check${failed === 1 ? '' : 's'} failed`);
         }
         else
         {
             $summary
-                .addClass("ok")
-                .append(this.icon("fa-circle-check"))
-                .append(" All checks passed");
+                .addClass('ok')
+                .append(this.icon('fa-circle-check'))
+                .append(' All checks passed');
         }
 
         if (validTools) {
             this.renderHealthRows(
-                "[data-health-tools]",
+                '[data-health-tools]',
                 health.tools,
-                "tool"
+                'tool'
             );
         }
     },
@@ -361,23 +361,23 @@ const sysinfo = {
     {
         const $container = $(selector).empty();
 
-        if (!items || typeof items !== "object" || Object.keys(items).length === 0)
+        if (!items || typeof items !== 'object' || Object.keys(items).length === 0)
         {
             $container.append(
-                $("<div>")
-                    .addClass("sysinfo-empty-state")
-                    .text("No checks available")
+                $('<div>')
+                    .addClass('sysinfo-empty-state')
+                    .text('No checks available')
             );
             return;
         }
 
         $.each(items, (name, item) => {
-            const $row = $("<div>").addClass("server-check-row");
-            const $info = $("<div>").addClass("server-check-info");
+            const $row = $('<div>').addClass('server-check-row');
+            const $info = $('<div>').addClass('server-check-info');
 
             const labels = {
-                handbrake: "HandBrake",
-                makemkv: "MakeMKV"
+                handbrake   : 'HandBrake',
+                makemkv     : 'MakeMKV'
             };
 
             // Transcoding hardware support, currently has its own section
@@ -386,36 +386,36 @@ const sysinfo = {
                 return 1;
 
             const label = labels[name] ||
-                name.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+                name.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
 
-            $("<div>")
-                .addClass("server-check-name")
+            $('<div>')
+                .addClass('server-check-name')
                 .text(label)
                 .appendTo($info);
 
             if (item.path)
             {
-                $("<div>")
-                    .addClass("server-check-detail")
+                $('<div>')
+                    .addClass('server-check-detail')
                     .text(item.path)
                     .appendTo($info);
             }
 
-            const $status = $("<div>").addClass("server-check-meta");
+            const $status = $('<div>').addClass('server-check-meta');
 
-            if (type === "tool")
+            if (type === 'tool')
             {
                 const ok = Boolean(item.available);
                 const statusText = ok
-                    ? (item.version ? `v${item.version}` : "Available")
-                    : (item.error || "Unavailable");
+                    ? (item.version ? `v${item.version}` : 'Available')
+                    : (item.error || 'Unavailable');
 
                 $status.append(this.healthStatus(ok, statusText));
 
                 if (item.command)
                 {
-                    $("<div>")
-                        .addClass("server-check-detail")
+                    $('<div>')
+                        .addClass('server-check-detail')
                         .text(item.command)
                         .appendTo($info);
                 }
@@ -428,13 +428,13 @@ const sysinfo = {
 
     updateHardwareSupport(tools)
     {
-        if (tools === -1 || !tools || typeof tools !== "object")
+        if (tools === -1 || !tools || typeof tools !== 'object')
             return;
 
         const hardware = {
-            intel   : "Intel Quick Sync",
-            nvidia  : "NVIDIA NVENC",
-            amd     : "AMD VCN"
+            intel   : 'Intel Quick Sync',
+            nvidia  : 'NVIDIA NVENC',
+            amd     : 'AMD VCN'
         };
 
         Object.keys(hardware).forEach(type => {
@@ -444,9 +444,9 @@ const sysinfo = {
                 return;
 
             const supported = Boolean(tools.transcode[type]);
-            const label = supported ? "Supported" : "Unavailable";
+            const label = supported ? 'Supported' : 'Unavailable';
 
-            $row.find(".server-check-status").remove();
+            $row.find('.server-check-status').remove();
 
             $row.append(
                 this.healthStatus(supported, label)
@@ -456,7 +456,7 @@ const sysinfo = {
 
     updateServerVersion(data)
     {
-        const $update = $("[data-serverstat-update]");
+        const $update = $('[data-serverstat-update]');
 
         if (!$update.length || !data)
             return;
@@ -485,26 +485,26 @@ const sysinfo = {
 
     healthStatus(ok, label)
     {
-        const $status = $("<span>")
-            .addClass("server-check-status")
-            .addClass(ok ? "ok" : "fail");
+        const $status = $('<span>')
+            .addClass('server-check-status')
+            .addClass(ok ? 'ok' : 'fail');
 
         $status
-            .append(this.icon(ok ? "fa-circle-check" : "fa-circle-xmark"))
-            .append($("<span>").text(label));
+            .append(this.icon(ok ? 'fa-circle-check' : 'fa-circle-xmark'))
+            .append($('<span>').text(label));
 
         return $status;
     },
 
     icon(name)
     {
-        return $("<i>").addClass("fa-solid").addClass(name);
+        return $('<i>').addClass('fa-solid').addClass(name);
     },
 
 
     toNumber(value)
     {
-        if (value === null || value === undefined || value === "")
+        if (value === null || value === undefined || value === '')
             return null;
 
         const number = Number(value);

@@ -1,6 +1,10 @@
-function addNotification(title, body, notificationId, timestamp = null) {
+import { activeServers } from './common.js';
+import { formatTimestamp } from './time.js';
+
+export function addNotification(title, body, notificationId, timestamp = null) {
 	const timeout = Number.parseInt(getNotifyTimeout(), 10);
-	const delay = Number.isFinite(timeout) ? Math.max(0, timeout) : 15000;
+    const fallback_delay = 15000;
+	const delay = Number.isFinite(timeout) ? Math.max(0, timeout) : fallback_delay;
 
     const notification = $(`
         <div class="notification" role="status">
@@ -17,21 +21,21 @@ function addNotification(title, body, notificationId, timestamp = null) {
         </div>
     `);
 
-    notification.attr("id", `notification${notificationId}`);
-    notification.find(".notification-title").text(title);
-    notification.find(".notification-body").text(body);
+    notification.attr('id', `notification${notificationId}`);
+    notification.find('.notification-title').text(title);
+    notification.find('.notification-body').text(body);
 
     if (!timestamp) {
-        notification.find(".notification-time").text(
-            "just now"
+        notification.find('.notification-time').text(
+            'just now'
         );
     }
     else{
         const dateInfo = formatTimestamp(timestamp);
-        notification.find(".notification-time").text(dateInfo.relative);
+        notification.find('.notification-time').text(dateInfo.relative);
     }
 
-    $("#notification_container").append(notification);
+    $('#notification_container').append(notification);
 
 	let dismissed = false;
 	let timer;
@@ -41,8 +45,8 @@ function addNotification(title, body, notificationId, timestamp = null) {
 		dismissed = true;
 		clearTimeout(timer);
 
-		notification.addClass("notification-hiding");
-		notification.one("transitionend", function() {
+		notification.addClass('notification-hiding');
+		notification.one('transitionend', function() {
 			notification.remove();
 		});
 
@@ -52,18 +56,18 @@ function addNotification(title, body, notificationId, timestamp = null) {
 		pingReadNotify(notificationId);
 	}
 
-	notification.find(".notification-close").on("click", dismiss);
+	notification.find('.notification-close').on('click', dismiss);
 
 	if (delay > 0) {
 		timer = setTimeout(dismiss, delay);
 	}
 }
 
-function pingReadNotify(notificationId) {
+export function pingReadNotify(id) {
     // this does not check child server ..
     $.ajax({
-        url: "/json?mode=read_notification&notify_id=" + notificationId,
-        type: "get",
+        url: `/json?mode=read_notification&notify_id=${id}`,
+        type: 'get',
         timeout: 2000,
         success: function (data) {
             console.log(data)
@@ -72,16 +76,15 @@ function pingReadNotify(notificationId) {
 }
 
 // Get the notifaction timeout settings from UI Settings via JSON
-function getNotifyTimeout() {
+export function getNotifyTimeout() {
     // this does not check child server ..
     let notify = 6500;
 
     $.ajax({
-        url: "/json?mode=notify_timeout",
-        type: "get",
+        url: '/json?mode=notify_timeout',
+        type: 'get',
         timeout: 2000,
         success: function (data) {
-            console.log("UI timeout: " + data.notify_timeout);
             notify = data.notify_timeout;
         }
     });
@@ -89,7 +92,7 @@ function getNotifyTimeout() {
     return notify;
 }
 
-function parseNotifications(data) {
+export function parseNotifications(data) {
     $.each(data.notes, function (notifyIndex, note) {
         if ($(`#notification${note.id}`).length)    // exists
             return null
@@ -98,9 +101,9 @@ function parseNotifications(data) {
     });
 }
 
-function getNotifications() {
+export function getNotifications() {
     $.each(activeServers, function (serverIndex, serverUrl) {
-        $.getJSON(serverUrl + "/get_notications")
+        $.getJSON(`${serverUrl}/get_notications`)
             .done(function (data) {
                 parseNotifications(data);
             });

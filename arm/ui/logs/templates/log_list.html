@@ -119,7 +119,9 @@
 
 {% block js %}
 {{ super() }}
-    <script type="text/javascript">
+    <script type="module">
+        import { activeTab } from './static/js/common.js';
+
         $(document).ready(function () {
             activeTab("viewlogs");
         });

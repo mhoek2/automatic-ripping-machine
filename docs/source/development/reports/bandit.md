@@ -61,9 +61,9 @@
 | 6 | B404 (severity=LOW, confidence=HIGH) | Consider possible security implications associated with the subprocess module. |
 | 71 | B602 (severity=HIGH, confidence=HIGH) | subprocess call with shell=True identified, security issue. |
 | 252 | B602 (severity=HIGH, confidence=HIGH) | subprocess call with shell=True identified, security issue. |
-| 448 | B602 (severity=HIGH, confidence=HIGH) | subprocess call with shell=True identified, security issue. |
-| 487 | B602 (severity=HIGH, confidence=HIGH) | subprocess call with shell=True identified, security issue. |
-| 501 | B603 (severity=LOW, confidence=HIGH) | subprocess call - check for execution of untrusted input. |
+| 446 | B602 (severity=HIGH, confidence=HIGH) | subprocess call with shell=True identified, security issue. |
+| 482 | B602 (severity=HIGH, confidence=HIGH) | subprocess call with shell=True identified, security issue. |
+| 496 | B603 (severity=LOW, confidence=HIGH) | subprocess call - check for execution of untrusted input. |
 
 ````
 :::
@@ -76,8 +76,8 @@
 |---:|---|---|
 | 6 | B404 (severity=LOW, confidence=HIGH) | Consider possible security implications associated with the subprocess module. |
 | 34 | B602 (severity=HIGH, confidence=HIGH) | subprocess call with shell=True identified, security issue. |
-| 373 | B602 (severity=HIGH, confidence=HIGH) | subprocess call with shell=True identified, security issue. |
-| 385 | B602 (severity=HIGH, confidence=HIGH) | subprocess call with shell=True identified, security issue. |
+| 370 | B602 (severity=HIGH, confidence=HIGH) | subprocess call with shell=True identified, security issue. |
+| 382 | B602 (severity=HIGH, confidence=HIGH) | subprocess call with shell=True identified, security issue. |
 
 ````
 :::
@@ -88,7 +88,7 @@
 
 | Line | Type | Message |
 |---:|---|---|
-| 207 | B310 (severity=MEDIUM, confidence=HIGH) | Audit url open for permitted schemes. Allowing use of file:/ or custom schemes is often unexpected. |
+| 208 | B310 (severity=MEDIUM, confidence=HIGH) | Audit url open for permitted schemes. Allowing use of file:/ or custom schemes is often unexpected. |
 
 ````
 :::
@@ -100,11 +100,11 @@
 | Line | Type | Message |
 |---:|---|---|
 | 19 | B404 (severity=LOW, confidence=HIGH) | Consider possible security implications associated with the subprocess module. |
-| 1005 | B603 (severity=LOW, confidence=HIGH) | subprocess call - check for execution of untrusted input. |
-| 1014 | B603 (severity=LOW, confidence=HIGH) | subprocess call - check for execution of untrusted input. |
-| 1119 | B101 (severity=LOW, confidence=HIGH) | Use of assert detected. The enclosed code will be removed when compiling to optimised byte code. |
-| 1122 | B101 (severity=LOW, confidence=HIGH) | Use of assert detected. The enclosed code will be removed when compiling to optimised byte code. |
-| 1343 | B603 (severity=LOW, confidence=HIGH) | subprocess call - check for execution of untrusted input. |
+| 1013 | B603 (severity=LOW, confidence=HIGH) | subprocess call - check for execution of untrusted input. |
+| 1022 | B603 (severity=LOW, confidence=HIGH) | subprocess call - check for execution of untrusted input. |
+| 1127 | B101 (severity=LOW, confidence=HIGH) | Use of assert detected. The enclosed code will be removed when compiling to optimised byte code. |
+| 1130 | B101 (severity=LOW, confidence=HIGH) | Use of assert detected. The enclosed code will be removed when compiling to optimised byte code. |
+| 1351 | B603 (severity=LOW, confidence=HIGH) | subprocess call - check for execution of untrusted input. |
 
 ````
 :::
@@ -118,12 +118,12 @@
 | 6 | B404 (severity=LOW, confidence=HIGH) | Consider possible security implications associated with the subprocess module. |
 | 158 | B311 (severity=LOW, confidence=HIGH) | Standard pseudo-random generators are not suitable for security/cryptographic purposes. |
 | 368 | B113 (severity=MEDIUM, confidence=LOW) | Call to requests without timeout |
-| 477 | B602 (severity=HIGH, confidence=HIGH) | subprocess call with shell=True identified, security issue. |
-| 519 | B602 (severity=HIGH, confidence=HIGH) | subprocess call with shell=True identified, security issue. |
-| 811 | B605 (severity=HIGH, confidence=HIGH) | Starting a process with a shell, possible injection detected, security issue. |
-| 814 | B605 (severity=HIGH, confidence=HIGH) | Starting a process with a shell, possible injection detected, security issue. |
-| 817 | B605 (severity=HIGH, confidence=HIGH) | Starting a process with a shell, possible injection detected, security issue. |
+| 478 | B602 (severity=HIGH, confidence=HIGH) | subprocess call with shell=True identified, security issue. |
+| 520 | B602 (severity=HIGH, confidence=HIGH) | subprocess call with shell=True identified, security issue. |
+| 812 | B605 (severity=HIGH, confidence=HIGH) | Starting a process with a shell, possible injection detected, security issue. |
+| 815 | B605 (severity=HIGH, confidence=HIGH) | Starting a process with a shell, possible injection detected, security issue. |
 | 818 | B605 (severity=HIGH, confidence=HIGH) | Starting a process with a shell, possible injection detected, security issue. |
+| 819 | B605 (severity=HIGH, confidence=HIGH) | Starting a process with a shell, possible injection detected, security issue. |
 
 ````
 :::

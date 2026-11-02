@@ -1,21 +1,24 @@
+import { ARM } from '../modal.js';
+import { safe_bool } from '../../common.js';
+import { getActiveJob, renderTracks, renderJobStatusBadge, renderJobPipeline, renderProgress } from '../../jobs/job.js';
+import { formatTimestamp } from '../../time.js';
+
 ARM.modal.jobs = ARM.modal.jobs || {};
 
 ARM.modal.jobs.details = {
-	modal: "#jobs-details-modal",
-	inited: null,
-	job_id: null,
-	log_viewer: null,
-	request: null,
-	data: null,
+	modal		: '#jobs-details-modal',
+	inited		: null,
+	job_id		: null,
+	log_viewer	: null,
+	request		: null,
+	data		: null,
 
 	open(options = {}) {
 		const _modal = ARM.modal.jobs.details;
 		const job_id = options.jobId;
 
-		if (job_id == null)
+		if (job_id === null)
 			return;
-
-		const job = getActiveJob(job_id);
 
 		_modal.job_id = job_id;
 		_modal.data = null;
@@ -35,7 +38,7 @@ ARM.modal.jobs.details = {
 		_modal.job_id = null;
 		_modal.data = null;
 
-		if (typeof _modal.log_viewer === "function")
+		if (typeof _modal.log_viewer === 'function')
 			_modal.log_viewer();
 
 		_modal.log_viewer = null;
@@ -44,7 +47,7 @@ ARM.modal.jobs.details = {
 	load() {
 		const _modal = ARM.modal.jobs.details;
 
-		if (_modal.job_id == null)
+		if (_modal.job_id === null)
 			return;
 
 		if (_modal.request)
@@ -52,17 +55,17 @@ ARM.modal.jobs.details = {
 
 		const content = $(`${_modal.modal} .arm-modal-body`);
 
-		content.addClass("is-loading");
+		content.addClass('is-loading');
 
-		_modal.request = $.getJSON("/jobdetail_api", {
+		_modal.request = $.getJSON('/jobdetail_api', {
 			job_id: _modal.job_id
 		})
 			.done(function (data) {
-				if (_modal.job_id == null)
+				if (_modal.job_id === null)
 					return;
 
 				if (!data.success) {
-					content.text(data.error || "Failed to load job details");
+					content.text(data.error || 'Failed to load job details');
 					return;
 				}
 
@@ -70,15 +73,15 @@ ARM.modal.jobs.details = {
 				_modal.render(data);
 			})
 			.fail(function (xhr, status) {
-				if (status === "abort")
+				if (status === 'abort')
 					return;
 
-				content.removeClass("is-loading");
-				console.error("Failed to load job details", xhr);
+				content.removeClass('is-loading');
+				console.error('Failed to load job details', xhr);
 				//_modal.close();
 			})
 			.always(function () {
-				content.removeClass("is-loading");
+				content.removeClass('is-loading');
 				_modal.request = null;
 			});
 	},
@@ -90,18 +93,18 @@ ARM.modal.jobs.details = {
 
 		console.log(job);
 
-		modal.find("#job-details-title").text(
-			`${job.title || "Unknown title"}${job.year ? ` (${job.year})` : ""}`
+		modal.find('#job-details-title').text(
+			`${job.title || 'Unknown title'}${job.year ? ` (${job.year})` : ''}`
 		);
 
-		modal.find("#job-details-poster")
-			.attr("src", job.poster_url || "")
-			.attr("alt", job.title || "Movie poster");
+		modal.find('#job-details-poster')
+			.attr('src', job.poster_url || '')
+			.attr('alt', job.title || 'Movie poster');
 
-		modal.find("#job-details-plot").text(job.plot || "");
+		modal.find('#job-details-plot').text(job.plot || '');
 
-		modal.find("#job-details-log")
-			.attr("href", job.logfile ? `/logs?logfile=${encodeURIComponent(job.logfile)}&mode=tail` : "#")
+		modal.find('#job-details-log')
+			.attr('href', job.logfile ? `/logs?logfile=${encodeURIComponent(job.logfile)}&mode=tail` : '#')
 			.toggle(!!job.logfile);
 
 
@@ -114,23 +117,23 @@ ARM.modal.jobs.details = {
 
 		if (!__is_authenticated_simple())
 			return;
-	
-		_modal.renderTable("#job-details-technical", data.technical?.job || {});
-		_modal.renderTable("#job-details-config", job.config || {});
+
+		_modal.renderTable('#job-details-technical', data.technical?.job || {});
+		_modal.renderTable('#job-details-config', job.config || {});
 	},
 
 	renderStatusBadge(job) {
 		const _modal = $(ARM.modal.jobs.details.modal);
         if (!_modal.length) return;
 
-        const status = _modal.find("#job_status_badge_wrapper");
+        const status = _modal.find('#job_status_badge_wrapper');
         if (status.length)
             status.html(renderJobStatusBadge(job));
     },
 
 	renderExternalMeta(job){
 		const _modal = ARM.modal.jobs.details;
-		$(`${_modal.modal} #job-external-meta`).html("");
+		$(`${_modal.modal} #job-external-meta`).html('');
 
 		if (job.imdb_id && job.imdb_id !== 'None') {
 			const imdbLink = $('<a>')
@@ -146,34 +149,34 @@ ARM.modal.jobs.details = {
 	},
 
 	renderMeta(job) {
-		const meta = $("#job-details-meta").empty();
+		const meta = $('#job-details-meta').empty();
 
 		const dateInfo = formatTimestamp(job.start_time);
 
 		const fields = [
-			["Ripping mode",	safe_bool(job.manual_mode) ? "Manual" : "Auto"],
-			["Disc type", 		job.disctype],
-			["Video type", 		job.video_type],
-			["Disc label", 		job.label],
-			["Duration", 		job.job_length],
-			["Started", 		dateInfo.relative]
+			['Ripping mode',	safe_bool(job.manual_mode) ? 'Manual' : 'Auto'],
+			['Disc type', 		job.disctype],
+			['Video type', 		job.video_type],
+			['Disc label', 		job.label],
+			['Duration', 		job.job_length],
+			['Started', 		dateInfo.relative]
 		];
 
 		fields.forEach(([label, value]) => {
-			if (value == null || value === "" || value === "None")
+			if (value === null || value === '' || value === 'None')
 				return;
 
-			const item = $("<div>", {
-				class: "job-details-meta-item"
+			const item = $('<div>', {
+				class: 'job-details-meta-item'
 			});
 
-			$("<span>", {
-				class: "job-details-meta-label",
+			$('<span>', {
+				class: 'job-details-meta-label',
 				text: label
 			}).appendTo(item);
 
-			$("<span>", {
-				class: "job-details-meta-value",
+			$('<span>', {
+				class: 'job-details-meta-value',
 				text: value
 			}).appendTo(item);
 
@@ -192,7 +195,7 @@ ARM.modal.jobs.details = {
 		const table = $('<table>').addClass('job-details-table');
 
 		$.each(values, function (key, value) {
-			if (value == null || value === '')
+			if (value === null || value === '')
 				return;
 
 			table.append(
@@ -231,7 +234,7 @@ $(function () {
 	const _modal = ARM.modal.jobs.details;
 
 	function __openJobDetails(job_id) {
-		if (!job_id) 
+		if (!job_id)
 			return;
 
 		_modal.open({
@@ -243,7 +246,7 @@ $(function () {
 	// open job details from the URL hash
 	function __autoOpenJobDetails(){
 		const params = new URLSearchParams(window.location.hash.slice(1));
-		const param_job_id = params.get("detail_job_id");
+		const param_job_id = params.get('detail_job_id');
 
 		if (!param_job_id)
 			return;
@@ -251,8 +254,8 @@ $(function () {
 		__openJobDetails(String(param_job_id));
 	}
 
-	$(document).on("click", "[data-modal='jobs_details']", function () {
-		__openJobDetails($(this).attr("data-jobid"));
+	$(document).on('click', '[data-modal="jobs_details"]', function () {
+		__openJobDetails($(this).attr('data-jobid'));
 	});
 
 	$(document).on(`arm:modal-close_${_modal.modal}`, function () {

@@ -2152,67 +2152,10 @@
   },
   {
     "cell": null,
-    "code": "LOG015",
-    "end_location": {
-      "column": 63,
-      "row": 61
-    },
-    "filename": "/workspace/arm/ripper/arm_ripper.py",
-    "fix": null,
-    "location": {
-      "column": 5,
-      "row": 61
-    },
-    "message": "`info()` call on root logger",
-    "name": "root-logger-call",
-    "noqa_row": 61,
-    "severity": "error",
-    "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
-  },
-  {
-    "cell": null,
-    "code": "LOG015",
-    "end_location": {
-      "column": 54,
-      "row": 67
-    },
-    "filename": "/workspace/arm/ripper/arm_ripper.py",
-    "fix": null,
-    "location": {
-      "column": 5,
-      "row": 67
-    },
-    "message": "`debug()` call on root logger",
-    "name": "root-logger-call",
-    "noqa_row": 67,
-    "severity": "error",
-    "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
-  },
-  {
-    "cell": null,
-    "code": "LOG015",
-    "end_location": {
-      "column": 78,
-      "row": 69
-    },
-    "filename": "/workspace/arm/ripper/arm_ripper.py",
-    "fix": null,
-    "location": {
-      "column": 9,
-      "row": 69
-    },
-    "message": "`info()` call on root logger",
-    "name": "root-logger-call",
-    "noqa_row": 69,
-    "severity": "error",
-    "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
-  },
-  {
-    "cell": null,
     "code": "RUF100",
     "end_location": {
-      "column": 53,
-      "row": 74
+      "column": 48,
+      "row": 18
     },
     "filename": "/workspace/arm/ripper/arm_ripper.py",
     "fix": {
@@ -2222,11 +2165,103 @@
           "content": "",
           "end_location": {
             "column": 53,
-            "row": 74
+            "row": 18
+          },
+          "location": {
+            "column": 40,
+            "row": 18
+          }
+        }
+      ],
+      "message": "Remove unused `noqa` directive"
+    },
+    "location": {
+      "column": 42,
+      "row": 18
+    },
+    "message": "Unused blanket `noqa` directive",
+    "name": "unused-noqa",
+    "noqa_row": 18,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unused-noqa"
+  },
+  {
+    "cell": null,
+    "code": "LOG015",
+    "end_location": {
+      "column": 63,
+      "row": 62
+    },
+    "filename": "/workspace/arm/ripper/arm_ripper.py",
+    "fix": null,
+    "location": {
+      "column": 5,
+      "row": 62
+    },
+    "message": "`info()` call on root logger",
+    "name": "root-logger-call",
+    "noqa_row": 62,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
+  },
+  {
+    "cell": null,
+    "code": "LOG015",
+    "end_location": {
+      "column": 54,
+      "row": 68
+    },
+    "filename": "/workspace/arm/ripper/arm_ripper.py",
+    "fix": null,
+    "location": {
+      "column": 5,
+      "row": 68
+    },
+    "message": "`debug()` call on root logger",
+    "name": "root-logger-call",
+    "noqa_row": 68,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
+  },
+  {
+    "cell": null,
+    "code": "LOG015",
+    "end_location": {
+      "column": 78,
+      "row": 70
+    },
+    "filename": "/workspace/arm/ripper/arm_ripper.py",
+    "fix": null,
+    "location": {
+      "column": 9,
+      "row": 70
+    },
+    "message": "`info()` call on root logger",
+    "name": "root-logger-call",
+    "noqa_row": 70,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
+  },
+  {
+    "cell": null,
+    "code": "RUF100",
+    "end_location": {
+      "column": 53,
+      "row": 75
+    },
+    "filename": "/workspace/arm/ripper/arm_ripper.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 53,
+            "row": 75
           },
           "location": {
             "column": 39,
-            "row": 74
+            "row": 75
           }
         }
       ],
@@ -2234,11 +2269,11 @@
     },
     "location": {
       "column": 41,
-      "row": 74
+      "row": 75
     },
     "message": "Unused `noqa` directive (unused: `E722`)",
     "name": "unused-noqa",
-    "noqa_row": 74,
+    "noqa_row": 75,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/unused-noqa"
   },
@@ -2247,17 +2282,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 83,
-      "row": 81
+      "row": 82
     },
     "filename": "/workspace/arm/ripper/arm_ripper.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 81
+      "row": 82
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 81,
+    "noqa_row": 82,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -2266,17 +2301,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 68,
-      "row": 88
+      "row": 89
     },
     "filename": "/workspace/arm/ripper/arm_ripper.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 88
+      "row": 89
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 88,
+    "noqa_row": 89,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -2285,17 +2320,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 107,
-      "row": 94
+      "row": 95
     },
     "filename": "/workspace/arm/ripper/arm_ripper.py",
     "fix": null,
     "location": {
       "column": 5,
-      "row": 94
+      "row": 95
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 94,
+    "noqa_row": 95,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -2304,17 +2339,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 61,
-      "row": 100
+      "row": 101
     },
     "filename": "/workspace/arm/ripper/arm_ripper.py",
     "fix": null,
     "location": {
       "column": 5,
-      "row": 100
+      "row": 101
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 100,
+    "noqa_row": 101,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -2323,17 +2358,36 @@
     "code": "LOG015",
     "end_location": {
       "column": 72,
-      "row": 127
+      "row": 132
     },
     "filename": "/workspace/arm/ripper/arm_ripper.py",
     "fix": null,
     "location": {
       "column": 5,
-      "row": 127
+      "row": 132
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 127,
+    "noqa_row": 132,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
+  },
+  {
+    "cell": null,
+    "code": "LOG015",
+    "end_location": {
+      "column": 31,
+      "row": 152
+    },
+    "filename": "/workspace/arm/ripper/arm_ripper.py",
+    "fix": null,
+    "location": {
+      "column": 9,
+      "row": 152
+    },
+    "message": "`error()` call on root logger",
+    "name": "root-logger-call",
+    "noqa_row": 152,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -2342,17 +2396,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 83,
-      "row": 149
+      "row": 174
     },
     "filename": "/workspace/arm/ripper/arm_ripper.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 149
+      "row": 174
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 149,
+    "noqa_row": 174,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -2361,17 +2415,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 78,
-      "row": 153
+      "row": 178
     },
     "filename": "/workspace/arm/ripper/arm_ripper.py",
     "fix": null,
     "location": {
       "column": 13,
-      "row": 153
+      "row": 178
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 153,
+    "noqa_row": 178,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -2380,17 +2434,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 87,
-      "row": 158
+      "row": 183
     },
     "filename": "/workspace/arm/ripper/arm_ripper.py",
     "fix": null,
     "location": {
       "column": 13,
-      "row": 158
+      "row": 183
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 158,
+    "noqa_row": 183,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -2399,17 +2453,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 78,
-      "row": 164
+      "row": 189
     },
     "filename": "/workspace/arm/ripper/arm_ripper.py",
     "fix": null,
     "location": {
       "column": 13,
-      "row": 164
+      "row": 189
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 164,
+    "noqa_row": 189,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -2418,17 +2472,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 83,
-      "row": 167
+      "row": 192
     },
     "filename": "/workspace/arm/ripper/arm_ripper.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 167
+      "row": 192
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 167,
+    "noqa_row": 192,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -2437,17 +2491,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 86,
-      "row": 172
+      "row": 197
     },
     "filename": "/workspace/arm/ripper/arm_ripper.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 172
+      "row": 197
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 172,
+    "noqa_row": 197,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -2456,17 +2510,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 92,
-      "row": 176
+      "row": 201
     },
     "filename": "/workspace/arm/ripper/arm_ripper.py",
     "fix": null,
     "location": {
       "column": 13,
-      "row": 176
+      "row": 201
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 176,
+    "noqa_row": 201,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -2475,17 +2529,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 101,
-      "row": 181
+      "row": 206
     },
     "filename": "/workspace/arm/ripper/arm_ripper.py",
     "fix": null,
     "location": {
       "column": 13,
-      "row": 181
+      "row": 206
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 181,
+    "noqa_row": 206,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -2494,17 +2548,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 92,
-      "row": 187
+      "row": 212
     },
     "filename": "/workspace/arm/ripper/arm_ripper.py",
     "fix": null,
     "location": {
       "column": 13,
-      "row": 187
+      "row": 212
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 187,
+    "noqa_row": 212,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -2513,17 +2567,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 86,
-      "row": 190
+      "row": 215
     },
     "filename": "/workspace/arm/ripper/arm_ripper.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 190
+      "row": 215
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 190,
+    "noqa_row": 215,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -2532,17 +2586,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 74,
-      "row": 203
+      "row": 228
     },
     "filename": "/workspace/arm/ripper/arm_ripper.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 202
+      "row": 227
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 202,
+    "noqa_row": 227,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -2551,7 +2605,7 @@
     "code": "RET501",
     "end_location": {
       "column": 20,
-      "row": 208
+      "row": 233
     },
     "filename": "/workspace/arm/ripper/arm_ripper.py",
     "fix": {
@@ -2561,11 +2615,11 @@
           "content": "return",
           "end_location": {
             "column": 20,
-            "row": 208
+            "row": 233
           },
           "location": {
             "column": 9,
-            "row": 208
+            "row": 233
           }
         }
       ],
@@ -2573,11 +2627,11 @@
     },
     "location": {
       "column": 9,
-      "row": 208
+      "row": 233
     },
     "message": "Do not explicitly `return None` in function if it is the only possible return value",
     "name": "unnecessary-return-none",
-    "noqa_row": 208,
+    "noqa_row": 233,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/unnecessary-return-none"
   },
@@ -2585,37 +2639,18 @@
     "cell": null,
     "code": "LOG015",
     "end_location": {
-      "column": 93,
-      "row": 219
-    },
-    "filename": "/workspace/arm/ripper/arm_ripper.py",
-    "fix": null,
-    "location": {
-      "column": 9,
-      "row": 219
-    },
-    "message": "`info()` call on root logger",
-    "name": "root-logger-call",
-    "noqa_row": 219,
-    "severity": "error",
-    "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
-  },
-  {
-    "cell": null,
-    "code": "LOG015",
-    "end_location": {
       "column": 50,
-      "row": 291
+      "row": 297
     },
     "filename": "/workspace/arm/ripper/arm_ripper.py",
     "fix": null,
     "location": {
       "column": 5,
-      "row": 291
+      "row": 297
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 291,
+    "noqa_row": 297,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -2624,53 +2659,15 @@
     "code": "LOG015",
     "end_location": {
       "column": 42,
-      "row": 295
-    },
-    "filename": "/workspace/arm/ripper/arm_ripper.py",
-    "fix": null,
-    "location": {
-      "column": 5,
-      "row": 295
-    },
-    "message": "`debug()` call on root logger",
-    "name": "root-logger-call",
-    "noqa_row": 295,
-    "severity": "error",
-    "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
-  },
-  {
-    "cell": null,
-    "code": "LOG015",
-    "end_location": {
-      "column": 59,
-      "row": 298
-    },
-    "filename": "/workspace/arm/ripper/arm_ripper.py",
-    "fix": null,
-    "location": {
-      "column": 5,
-      "row": 298
-    },
-    "message": "`debug()` call on root logger",
-    "name": "root-logger-call",
-    "noqa_row": 298,
-    "severity": "error",
-    "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
-  },
-  {
-    "cell": null,
-    "code": "LOG015",
-    "end_location": {
-      "column": 109,
       "row": 301
     },
     "filename": "/workspace/arm/ripper/arm_ripper.py",
     "fix": null,
     "location": {
-      "column": 9,
+      "column": 5,
       "row": 301
     },
-    "message": "`info()` call on root logger",
+    "message": "`debug()` call on root logger",
     "name": "root-logger-call",
     "noqa_row": 301,
     "severity": "error",
@@ -2680,18 +2677,18 @@
     "cell": null,
     "code": "LOG015",
     "end_location": {
-      "column": 99,
-      "row": 311
+      "column": 59,
+      "row": 304
     },
     "filename": "/workspace/arm/ripper/arm_ripper.py",
     "fix": null,
     "location": {
-      "column": 17,
-      "row": 311
+      "column": 5,
+      "row": 304
     },
-    "message": "`info()` call on root logger",
+    "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 311,
+    "noqa_row": 304,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -2699,7 +2696,26 @@
     "cell": null,
     "code": "LOG015",
     "end_location": {
-      "column": 107,
+      "column": 109,
+      "row": 307
+    },
+    "filename": "/workspace/arm/ripper/arm_ripper.py",
+    "fix": null,
+    "location": {
+      "column": 9,
+      "row": 307
+    },
+    "message": "`info()` call on root logger",
+    "name": "root-logger-call",
+    "noqa_row": 307,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
+  },
+  {
+    "cell": null,
+    "code": "LOG015",
+    "end_location": {
+      "column": 99,
       "row": 317
     },
     "filename": "/workspace/arm/ripper/arm_ripper.py",
@@ -2711,6 +2727,25 @@
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
     "noqa_row": 317,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
+  },
+  {
+    "cell": null,
+    "code": "LOG015",
+    "end_location": {
+      "column": 107,
+      "row": 323
+    },
+    "filename": "/workspace/arm/ripper/arm_ripper.py",
+    "fix": null,
+    "location": {
+      "column": 17,
+      "row": 323
+    },
+    "message": "`info()` call on root logger",
+    "name": "root-logger-call",
+    "noqa_row": 323,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -3115,17 +3150,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 27,
-      "row": 261
+      "row": 260
     },
     "filename": "/workspace/arm/ripper/ffmpeg.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 261
+      "row": 260
     },
     "message": "`error()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 261,
+    "noqa_row": 260,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -3134,17 +3169,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 35,
-      "row": 268
+      "row": 266
     },
     "filename": "/workspace/arm/ripper/ffmpeg.py",
     "fix": null,
     "location": {
       "column": 5,
-      "row": 268
+      "row": 266
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 268,
+    "noqa_row": 266,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -3153,17 +3188,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 47,
-      "row": 269
+      "row": 267
     },
     "filename": "/workspace/arm/ripper/ffmpeg.py",
     "fix": null,
     "location": {
       "column": 5,
-      "row": 269
+      "row": 267
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 269,
+    "noqa_row": 267,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -3172,17 +3207,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 65,
-      "row": 285
+      "row": 283
     },
     "filename": "/workspace/arm/ripper/ffmpeg.py",
     "fix": null,
     "location": {
       "column": 5,
-      "row": 285
+      "row": 283
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 285,
+    "noqa_row": 283,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -3191,17 +3226,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 67,
-      "row": 289
+      "row": 287
     },
     "filename": "/workspace/arm/ripper/ffmpeg.py",
     "fix": null,
     "location": {
       "column": 5,
-      "row": 289
+      "row": 287
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 289,
+    "noqa_row": 287,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -3210,17 +3245,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 41,
-      "row": 299
-    },
-    "filename": "/workspace/arm/ripper/ffmpeg.py",
-    "fix": null,
-    "location": {
-      "column": 13,
       "row": 297
     },
+    "filename": "/workspace/arm/ripper/ffmpeg.py",
+    "fix": null,
+    "location": {
+      "column": 13,
+      "row": 295
+    },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 297,
+    "noqa_row": 295,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -3229,17 +3264,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 41,
-      "row": 304
+      "row": 302
     },
     "filename": "/workspace/arm/ripper/ffmpeg.py",
     "fix": null,
     "location": {
       "column": 13,
-      "row": 302
+      "row": 300
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 302,
+    "noqa_row": 300,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -3248,17 +3283,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 63,
-      "row": 307
+      "row": 305
     },
     "filename": "/workspace/arm/ripper/ffmpeg.py",
     "fix": null,
     "location": {
       "column": 13,
-      "row": 306
+      "row": 304
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 306,
+    "noqa_row": 304,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -3267,17 +3302,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 100,
-      "row": 312
+      "row": 310
     },
     "filename": "/workspace/arm/ripper/ffmpeg.py",
     "fix": null,
     "location": {
       "column": 13,
-      "row": 312
+      "row": 310
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 312,
+    "noqa_row": 310,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -3286,17 +3321,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 35,
-      "row": 323
+      "row": 321
     },
     "filename": "/workspace/arm/ripper/ffmpeg.py",
     "fix": null,
     "location": {
       "column": 17,
-      "row": 323
+      "row": 321
     },
     "message": "`error()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 323,
+    "noqa_row": 321,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -3305,17 +3340,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 35,
-      "row": 331
+      "row": 329
     },
     "filename": "/workspace/arm/ripper/ffmpeg.py",
     "fix": null,
     "location": {
       "column": 5,
-      "row": 331
+      "row": 329
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 331,
+    "noqa_row": 329,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -3324,17 +3359,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 47,
-      "row": 332
+      "row": 330
     },
     "filename": "/workspace/arm/ripper/ffmpeg.py",
     "fix": null,
     "location": {
       "column": 5,
-      "row": 332
+      "row": 330
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 332,
+    "noqa_row": 330,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -3343,17 +3378,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 42,
-      "row": 356
+      "row": 354
     },
     "filename": "/workspace/arm/ripper/ffmpeg.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 356
+      "row": 354
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 356,
+    "noqa_row": 354,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -3362,17 +3397,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 57,
-      "row": 362
+      "row": 360
     },
     "filename": "/workspace/arm/ripper/ffmpeg.py",
     "fix": null,
     "location": {
       "column": 13,
-      "row": 362
+      "row": 360
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 362,
+    "noqa_row": 360,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -3381,17 +3416,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 65,
-      "row": 365
+      "row": 363
     },
     "filename": "/workspace/arm/ripper/ffmpeg.py",
     "fix": null,
     "location": {
       "column": 13,
-      "row": 365
+      "row": 363
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 365,
+    "noqa_row": 363,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -3400,17 +3435,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 94,
-      "row": 369
+      "row": 367
     },
     "filename": "/workspace/arm/ripper/ffmpeg.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 369
+      "row": 367
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 369,
+    "noqa_row": 367,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -3419,6 +3454,25 @@
     "code": "LOG015",
     "end_location": {
       "column": 48,
+      "row": 372
+    },
+    "filename": "/workspace/arm/ripper/ffmpeg.py",
+    "fix": null,
+    "location": {
+      "column": 13,
+      "row": 372
+    },
+    "message": "`info()` call on root logger",
+    "name": "root-logger-call",
+    "noqa_row": 372,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
+  },
+  {
+    "cell": null,
+    "code": "LOG015",
+    "end_location": {
+      "column": 52,
       "row": 374
     },
     "filename": "/workspace/arm/ripper/ffmpeg.py",
@@ -3427,7 +3481,7 @@
       "column": 13,
       "row": 374
     },
-    "message": "`info()` call on root logger",
+    "message": "`error()` call on root logger",
     "name": "root-logger-call",
     "noqa_row": 374,
     "severity": "error",
@@ -3437,16 +3491,16 @@
     "cell": null,
     "code": "LOG015",
     "end_location": {
-      "column": 52,
+      "column": 35,
       "row": 376
     },
     "filename": "/workspace/arm/ripper/ffmpeg.py",
     "fix": null,
     "location": {
-      "column": 13,
+      "column": 5,
       "row": 376
     },
-    "message": "`error()` call on root logger",
+    "message": "`info()` call on root logger",
     "name": "root-logger-call",
     "noqa_row": 376,
     "severity": "error",
@@ -3456,37 +3510,18 @@
     "cell": null,
     "code": "LOG015",
     "end_location": {
-      "column": 35,
-      "row": 378
-    },
-    "filename": "/workspace/arm/ripper/ffmpeg.py",
-    "fix": null,
-    "location": {
-      "column": 5,
-      "row": 378
-    },
-    "message": "`info()` call on root logger",
-    "name": "root-logger-call",
-    "noqa_row": 378,
-    "severity": "error",
-    "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
-  },
-  {
-    "cell": null,
-    "code": "LOG015",
-    "end_location": {
       "column": 47,
-      "row": 379
+      "row": 377
     },
     "filename": "/workspace/arm/ripper/ffmpeg.py",
     "fix": null,
     "location": {
       "column": 5,
-      "row": 379
+      "row": 377
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 379,
+    "noqa_row": 377,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -3495,17 +3530,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 96,
-      "row": 389
+      "row": 387
     },
     "filename": "/workspace/arm/ripper/ffmpeg.py",
     "fix": null,
     "location": {
       "column": 5,
-      "row": 389
+      "row": 387
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 389,
+    "noqa_row": 387,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -3514,17 +3549,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 77,
-      "row": 394
+      "row": 392
     },
     "filename": "/workspace/arm/ripper/ffmpeg.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 394
+      "row": 392
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 394,
+    "noqa_row": 392,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -3533,17 +3568,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 82,
-      "row": 400
+      "row": 398
     },
     "filename": "/workspace/arm/ripper/ffmpeg.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 400
+      "row": 398
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 400,
+    "noqa_row": 398,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -3552,17 +3587,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 42,
-      "row": 428
+      "row": 426
     },
     "filename": "/workspace/arm/ripper/ffmpeg.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 428
+      "row": 426
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 428,
+    "noqa_row": 426,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -3571,17 +3606,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 57,
-      "row": 433
+      "row": 431
     },
     "filename": "/workspace/arm/ripper/ffmpeg.py",
     "fix": null,
     "location": {
       "column": 13,
-      "row": 433
+      "row": 431
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 433,
+    "noqa_row": 431,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -3590,17 +3625,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 65,
-      "row": 436
+      "row": 434
     },
     "filename": "/workspace/arm/ripper/ffmpeg.py",
     "fix": null,
     "location": {
       "column": 13,
-      "row": 436
+      "row": 434
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 436,
+    "noqa_row": 434,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -3609,17 +3644,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 96,
-      "row": 443
+      "row": 441
     },
     "filename": "/workspace/arm/ripper/ffmpeg.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 443
+      "row": 441
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 443,
+    "noqa_row": 441,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -3628,17 +3663,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 51,
-      "row": 452
+      "row": 450
     },
     "filename": "/workspace/arm/ripper/ffmpeg.py",
     "fix": null,
     "location": {
       "column": 13,
-      "row": 452
+      "row": 450
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 452,
+    "noqa_row": 450,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -3647,17 +3682,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 76,
-      "row": 457
+      "row": 455
     },
     "filename": "/workspace/arm/ripper/ffmpeg.py",
     "fix": null,
     "location": {
       "column": 17,
-      "row": 457
+      "row": 455
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 457,
+    "noqa_row": 455,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -3666,17 +3701,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 31,
-      "row": 461
+      "row": 458
     },
     "filename": "/workspace/arm/ripper/ffmpeg.py",
     "fix": null,
     "location": {
       "column": 13,
-      "row": 461
+      "row": 458
     },
     "message": "`error()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 461,
+    "noqa_row": 458,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -3685,17 +3720,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 35,
-      "row": 470
+      "row": 465
     },
     "filename": "/workspace/arm/ripper/ffmpeg.py",
     "fix": null,
     "location": {
       "column": 5,
-      "row": 470
+      "row": 465
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 470,
+    "noqa_row": 465,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -3704,17 +3739,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 47,
-      "row": 471
+      "row": 466
     },
     "filename": "/workspace/arm/ripper/ffmpeg.py",
     "fix": null,
     "location": {
       "column": 5,
-      "row": 471
+      "row": 466
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 471,
+    "noqa_row": 466,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -3723,17 +3758,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 67,
-      "row": 490
+      "row": 485
     },
     "filename": "/workspace/arm/ripper/ffmpeg.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 490
+      "row": 485
     },
     "message": "`error()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 490,
+    "noqa_row": 485,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -3742,17 +3777,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 44,
-      "row": 498
+      "row": 493
     },
     "filename": "/workspace/arm/ripper/ffmpeg.py",
     "fix": null,
     "location": {
       "column": 5,
-      "row": 498
+      "row": 493
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 498,
+    "noqa_row": 493,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -3761,17 +3796,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 40,
-      "row": 506
+      "row": 501
     },
     "filename": "/workspace/arm/ripper/ffmpeg.py",
     "fix": null,
     "location": {
       "column": 13,
-      "row": 506
+      "row": 501
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 506,
+    "noqa_row": 501,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -3780,17 +3815,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 86,
-      "row": 515
+      "row": 510
     },
     "filename": "/workspace/arm/ripper/ffmpeg.py",
     "fix": null,
     "location": {
       "column": 25,
-      "row": 515
+      "row": 510
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 515,
+    "noqa_row": 510,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -3799,17 +3834,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 77,
-      "row": 529
+      "row": 524
     },
     "filename": "/workspace/arm/ripper/ffmpeg.py",
     "fix": null,
     "location": {
       "column": 21,
-      "row": 529
+      "row": 524
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 529,
+    "noqa_row": 524,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -3818,17 +3853,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 44,
-      "row": 531
+      "row": 526
     },
     "filename": "/workspace/arm/ripper/ffmpeg.py",
     "fix": null,
     "location": {
       "column": 17,
-      "row": 531
+      "row": 526
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 531,
+    "noqa_row": 526,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -4043,17 +4078,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 35,
-      "row": 140
+      "row": 137
     },
     "filename": "/workspace/arm/ripper/handbrake.py",
     "fix": null,
     "location": {
       "column": 5,
-      "row": 140
+      "row": 137
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 140,
+    "noqa_row": 137,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -4062,17 +4097,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 47,
-      "row": 141
+      "row": 138
     },
     "filename": "/workspace/arm/ripper/handbrake.py",
     "fix": null,
     "location": {
       "column": 5,
-      "row": 141
+      "row": 138
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 141,
+    "noqa_row": 138,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -4081,17 +4116,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 65,
-      "row": 156
+      "row": 153
     },
     "filename": "/workspace/arm/ripper/handbrake.py",
     "fix": null,
     "location": {
       "column": 5,
-      "row": 156
+      "row": 153
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 156,
+    "noqa_row": 153,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -4100,17 +4135,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 67,
-      "row": 161
+      "row": 158
     },
     "filename": "/workspace/arm/ripper/handbrake.py",
     "fix": null,
     "location": {
       "column": 5,
-      "row": 161
+      "row": 158
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 161,
+    "noqa_row": 158,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -4119,36 +4154,36 @@
     "code": "LOG015",
     "end_location": {
       "column": 41,
+      "row": 168
+    },
+    "filename": "/workspace/arm/ripper/handbrake.py",
+    "fix": null,
+    "location": {
+      "column": 13,
+      "row": 166
+    },
+    "message": "`info()` call on root logger",
+    "name": "root-logger-call",
+    "noqa_row": 166,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
+  },
+  {
+    "cell": null,
+    "code": "LOG015",
+    "end_location": {
+      "column": 41,
+      "row": 173
+    },
+    "filename": "/workspace/arm/ripper/handbrake.py",
+    "fix": null,
+    "location": {
+      "column": 13,
       "row": 171
     },
-    "filename": "/workspace/arm/ripper/handbrake.py",
-    "fix": null,
-    "location": {
-      "column": 13,
-      "row": 169
-    },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 169,
-    "severity": "error",
-    "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
-  },
-  {
-    "cell": null,
-    "code": "LOG015",
-    "end_location": {
-      "column": 41,
-      "row": 176
-    },
-    "filename": "/workspace/arm/ripper/handbrake.py",
-    "fix": null,
-    "location": {
-      "column": 13,
-      "row": 174
-    },
-    "message": "`info()` call on root logger",
-    "name": "root-logger-call",
-    "noqa_row": 174,
+    "noqa_row": 171,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -4157,17 +4192,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 63,
-      "row": 180
+      "row": 177
     },
     "filename": "/workspace/arm/ripper/handbrake.py",
     "fix": null,
     "location": {
       "column": 13,
-      "row": 179
+      "row": 176
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 179,
+    "noqa_row": 176,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -4176,17 +4211,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 99,
-      "row": 185
+      "row": 182
     },
     "filename": "/workspace/arm/ripper/handbrake.py",
     "fix": null,
     "location": {
       "column": 13,
-      "row": 185
+      "row": 182
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 185,
+    "noqa_row": 182,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -4195,17 +4230,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 35,
-      "row": 201
+      "row": 198
     },
     "filename": "/workspace/arm/ripper/handbrake.py",
     "fix": null,
     "location": {
       "column": 5,
-      "row": 201
+      "row": 198
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 201,
+    "noqa_row": 198,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -4214,17 +4249,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 47,
-      "row": 202
+      "row": 199
     },
     "filename": "/workspace/arm/ripper/handbrake.py",
     "fix": null,
     "location": {
       "column": 5,
-      "row": 202
+      "row": 199
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 202,
+    "noqa_row": 199,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -4233,17 +4268,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 54,
-      "row": 233
+      "row": 230
     },
     "filename": "/workspace/arm/ripper/handbrake.py",
     "fix": null,
     "location": {
       "column": 5,
-      "row": 233
+      "row": 230
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 233,
+    "noqa_row": 230,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -4252,12 +4287,31 @@
     "code": "LOG015",
     "end_location": {
       "column": 41,
-      "row": 241
+      "row": 238
     },
     "filename": "/workspace/arm/ripper/handbrake.py",
     "fix": null,
     "location": {
       "column": 9,
+      "row": 238
+    },
+    "message": "`debug()` call on root logger",
+    "name": "root-logger-call",
+    "noqa_row": 238,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
+  },
+  {
+    "cell": null,
+    "code": "LOG015",
+    "end_location": {
+      "column": 57,
+      "row": 241
+    },
+    "filename": "/workspace/arm/ripper/handbrake.py",
+    "fix": null,
+    "location": {
+      "column": 13,
       "row": 241
     },
     "message": "`debug()` call on root logger",
@@ -4270,7 +4324,7 @@
     "cell": null,
     "code": "LOG015",
     "end_location": {
-      "column": 57,
+      "column": 65,
       "row": 244
     },
     "filename": "/workspace/arm/ripper/handbrake.py",
@@ -4289,37 +4343,18 @@
     "cell": null,
     "code": "LOG015",
     "end_location": {
-      "column": 65,
-      "row": 247
-    },
-    "filename": "/workspace/arm/ripper/handbrake.py",
-    "fix": null,
-    "location": {
-      "column": 13,
-      "row": 247
-    },
-    "message": "`debug()` call on root logger",
-    "name": "root-logger-call",
-    "noqa_row": 247,
-    "severity": "error",
-    "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
-  },
-  {
-    "cell": null,
-    "code": "LOG015",
-    "end_location": {
       "column": 94,
-      "row": 252
+      "row": 249
     },
     "filename": "/workspace/arm/ripper/handbrake.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 252
+      "row": 249
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 252,
+    "noqa_row": 249,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -4328,17 +4363,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 35,
-      "row": 257
+      "row": 254
     },
     "filename": "/workspace/arm/ripper/handbrake.py",
     "fix": null,
     "location": {
       "column": 5,
-      "row": 257
+      "row": 254
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 257,
+    "noqa_row": 254,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -4347,17 +4382,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 47,
-      "row": 258
+      "row": 255
     },
     "filename": "/workspace/arm/ripper/handbrake.py",
     "fix": null,
     "location": {
       "column": 5,
-      "row": 258
+      "row": 255
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 258,
+    "noqa_row": 255,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -4366,6 +4401,25 @@
     "code": "LOG015",
     "end_location": {
       "column": 119,
+      "row": 265
+    },
+    "filename": "/workspace/arm/ripper/handbrake.py",
+    "fix": null,
+    "location": {
+      "column": 5,
+      "row": 265
+    },
+    "message": "`info()` call on root logger",
+    "name": "root-logger-call",
+    "noqa_row": 265,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
+  },
+  {
+    "cell": null,
+    "code": "LOG015",
+    "end_location": {
+      "column": 45,
       "row": 268
     },
     "filename": "/workspace/arm/ripper/handbrake.py",
@@ -4374,7 +4428,7 @@
       "column": 5,
       "row": 268
     },
-    "message": "`info()` call on root logger",
+    "message": "`debug()` call on root logger",
     "name": "root-logger-call",
     "noqa_row": 268,
     "severity": "error",
@@ -4384,37 +4438,18 @@
     "cell": null,
     "code": "LOG015",
     "end_location": {
-      "column": 45,
-      "row": 271
-    },
-    "filename": "/workspace/arm/ripper/handbrake.py",
-    "fix": null,
-    "location": {
-      "column": 5,
-      "row": 271
-    },
-    "message": "`debug()` call on root logger",
-    "name": "root-logger-call",
-    "noqa_row": 271,
-    "severity": "error",
-    "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
-  },
-  {
-    "cell": null,
-    "code": "LOG015",
-    "end_location": {
       "column": 60,
-      "row": 292
+      "row": 289
     },
     "filename": "/workspace/arm/ripper/handbrake.py",
     "fix": null,
     "location": {
       "column": 21,
-      "row": 292
+      "row": 289
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 292,
+    "noqa_row": 289,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -4423,17 +4458,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 59,
-      "row": 293
+      "row": 290
     },
     "filename": "/workspace/arm/ripper/handbrake.py",
     "fix": null,
     "location": {
       "column": 21,
-      "row": 293
+      "row": 290
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 293,
+    "noqa_row": 290,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -4442,17 +4477,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 66,
-      "row": 306
+      "row": 303
     },
     "filename": "/workspace/arm/ripper/handbrake.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 306
+      "row": 303
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 306,
+    "noqa_row": 303,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -4461,17 +4496,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 92,
-      "row": 376
+      "row": 373
     },
     "filename": "/workspace/arm/ripper/handbrake.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 376
+      "row": 373
     },
     "message": "`error()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 376,
+    "noqa_row": 373,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -4480,17 +4515,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 56,
-      "row": 377
+      "row": 374
     },
     "filename": "/workspace/arm/ripper/handbrake.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 377
+      "row": 374
     },
     "message": "`error()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 377,
+    "noqa_row": 374,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -4499,17 +4534,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 91,
-      "row": 389
+      "row": 386
     },
     "filename": "/workspace/arm/ripper/handbrake.py",
     "fix": null,
     "location": {
       "column": 13,
-      "row": 388
+      "row": 385
     },
     "message": "`error()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 388,
+    "noqa_row": 385,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -4518,17 +4553,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 60,
-      "row": 390
+      "row": 387
     },
     "filename": "/workspace/arm/ripper/handbrake.py",
     "fix": null,
     "location": {
       "column": 13,
-      "row": 390
+      "row": 387
     },
     "message": "`error()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 390,
+    "noqa_row": 387,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -4537,17 +4572,17 @@
     "code": "I001",
     "end_location": {
       "column": 37,
-      "row": 24
+      "row": 25
     },
     "filename": "/workspace/arm/ripper/identify.py",
     "fix": {
       "applicability": "safe",
       "edits": [
         {
-          "content": "import datetime\r\nimport json\r\nimport logging\r\nimport os\r\nimport re\r\nimport unicodedata\r\nimport urllib\r\nimport xml.parsers.expat\r\nfrom ast import literal_eval\r\n\r\nimport pydvdid\r\nimport xmltodict\r\n\r\nimport arm.config.config as cfg\r\nfrom arm.models import Job\r\nfrom arm.ripper import utils\r\nfrom arm.ripper.ProcessHandler import arm_subprocess\r\nfrom arm.ui import db\r\n\r\n# flake8: noqa: W605\r\nfrom arm.ui import utils as ui_utils\r\n\r\n\r\n",
+          "content": "import datetime\r\nimport json\r\nimport logging\r\nimport os\r\nimport re\r\nimport unicodedata\r\nimport urllib\r\nimport xml.parsers.expat\r\nfrom ast import literal_eval\r\nfrom typing import Optional\r\n\r\nimport pydvdid\r\nimport xmltodict\r\n\r\nimport arm.config.config as cfg\r\nfrom arm.models import Job\r\nfrom arm.ripper import utils\r\nfrom arm.ripper.ProcessHandler import arm_subprocess\r\nfrom arm.ui import db\r\n\r\n# flake8: noqa: W605\r\nfrom arm.ui import utils as ui_utils\r\n\r\n\r\n",
           "end_location": {
             "column": 1,
-            "row": 27
+            "row": 28
           },
           "location": {
             "column": 1,
@@ -4572,7 +4607,7 @@
     "code": "RUF100",
     "end_location": {
       "column": 21,
-      "row": 23
+      "row": 24
     },
     "filename": "/workspace/arm/ripper/identify.py",
     "fix": {
@@ -4582,11 +4617,11 @@
           "content": "",
           "end_location": {
             "column": 1,
-            "row": 24
+            "row": 25
           },
           "location": {
             "column": 1,
-            "row": 23
+            "row": 24
           }
         }
       ],
@@ -4594,30 +4629,65 @@
     },
     "location": {
       "column": 1,
-      "row": 23
+      "row": 24
     },
     "message": "Unused `noqa` directive (unused: `W605`)",
     "name": "unused-noqa",
-    "noqa_row": 23,
+    "noqa_row": 24,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/unused-noqa"
+  },
+  {
+    "cell": null,
+    "code": "UP045",
+    "end_location": {
+      "column": 46,
+      "row": 28
+    },
+    "filename": "/workspace/arm/ripper/identify.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "str | None",
+          "end_location": {
+            "column": 46,
+            "row": 28
+          },
+          "location": {
+            "column": 33,
+            "row": 28
+          }
+        }
+      ],
+      "message": "Convert to `X | None`"
+    },
+    "location": {
+      "column": 33,
+      "row": 28
+    },
+    "message": "Use `X | None` for type annotations",
+    "name": "non-pep604-annotation-optional",
+    "noqa_row": 28,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/non-pep604-annotation-optional"
   },
   {
     "cell": null,
     "code": "LOG015",
     "end_location": {
       "column": 74,
-      "row": 48
+      "row": 49
     },
     "filename": "/workspace/arm/ripper/identify.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 48
+      "row": 49
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 48,
+    "noqa_row": 49,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -4626,17 +4696,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 66,
-      "row": 51
+      "row": 52
     },
     "filename": "/workspace/arm/ripper/identify.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 51
+      "row": 52
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 51,
+    "noqa_row": 52,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -4645,17 +4715,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 71,
-      "row": 54
+      "row": 55
     },
     "filename": "/workspace/arm/ripper/identify.py",
     "fix": null,
     "location": {
       "column": 13,
-      "row": 54
+      "row": 55
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 54,
+    "noqa_row": 55,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -4664,17 +4734,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 84,
-      "row": 57
+      "row": 58
     },
     "filename": "/workspace/arm/ripper/identify.py",
     "fix": null,
     "location": {
       "column": 13,
-      "row": 57
+      "row": 58
     },
     "message": "`error()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 57,
+    "noqa_row": 58,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -4683,17 +4753,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 55,
-      "row": 64
+      "row": 65
     },
     "filename": "/workspace/arm/ripper/identify.py",
     "fix": null,
     "location": {
       "column": 5,
-      "row": 64
+      "row": 65
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 64,
+    "noqa_row": 65,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -4702,17 +4772,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 49,
-      "row": 75
+      "row": 76
     },
     "filename": "/workspace/arm/ripper/identify.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 75
+      "row": 76
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 75,
+    "noqa_row": 76,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -4721,17 +4791,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 54,
-      "row": 91
+      "row": 92
     },
     "filename": "/workspace/arm/ripper/identify.py",
     "fix": null,
     "location": {
       "column": 13,
-      "row": 89
+      "row": 90
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 89,
+    "noqa_row": 90,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -4740,17 +4810,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 77,
-      "row": 92
+      "row": 93
     },
     "filename": "/workspace/arm/ripper/identify.py",
     "fix": null,
     "location": {
       "column": 13,
-      "row": 92
+      "row": 93
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 92,
+    "noqa_row": 93,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -4759,17 +4829,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 18,
-      "row": 121
+      "row": 122
     },
     "filename": "/workspace/arm/ripper/identify.py",
     "fix": null,
     "location": {
       "column": 17,
-      "row": 113
+      "row": 114
     },
     "message": "`warning()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 113,
+    "noqa_row": 114,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -4778,17 +4848,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 90,
-      "row": 126
+      "row": 127
     },
     "filename": "/workspace/arm/ripper/identify.py",
     "fix": null,
     "location": {
       "column": 21,
-      "row": 126
+      "row": 127
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 126,
+    "noqa_row": 127,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -4797,17 +4867,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 22,
-      "row": 135
+      "row": 136
     },
     "filename": "/workspace/arm/ripper/identify.py",
     "fix": null,
     "location": {
       "column": 21,
-      "row": 128
+      "row": 129
     },
     "message": "`exception()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 128,
+    "noqa_row": 129,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -4816,17 +4886,17 @@
     "code": "TRY401",
     "end_location": {
       "column": 30,
-      "row": 133
+      "row": 134
     },
     "filename": "/workspace/arm/ripper/identify.py",
     "fix": null,
     "location": {
       "column": 25,
-      "row": 133
+      "row": 134
     },
     "message": "Redundant exception object included in `logging.exception` call",
     "name": "verbose-log-message",
-    "noqa_row": 133,
+    "noqa_row": 134,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/verbose-log-message"
   },
@@ -4835,17 +4905,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 51,
-      "row": 140
+      "row": 141
     },
     "filename": "/workspace/arm/ripper/identify.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 138
+      "row": 139
     },
     "message": "`error()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 138,
+    "noqa_row": 139,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -4854,17 +4924,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 14,
-      "row": 170
+      "row": 171
     },
     "filename": "/workspace/arm/ripper/identify.py",
     "fix": null,
     "location": {
       "column": 13,
-      "row": 166
+      "row": 167
     },
     "message": "`error()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 166,
+    "noqa_row": 167,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -4873,17 +4943,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 47,
-      "row": 196
+      "row": 197
     },
     "filename": "/workspace/arm/ripper/identify.py",
     "fix": null,
     "location": {
       "column": 5,
-      "row": 196
+      "row": 197
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 196,
+    "noqa_row": 197,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -4892,17 +4962,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 52,
-      "row": 203
+      "row": 204
     },
     "filename": "/workspace/arm/ripper/identify.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 203
+      "row": 204
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 203,
+    "noqa_row": 204,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -4911,17 +4981,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 33,
-      "row": 206
+      "row": 207
     },
     "filename": "/workspace/arm/ripper/identify.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 206
+      "row": 207
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 206,
+    "noqa_row": 207,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -4930,25 +5000,6 @@
     "code": "LOG015",
     "end_location": {
       "column": 51,
-      "row": 209
-    },
-    "filename": "/workspace/arm/ripper/identify.py",
-    "fix": null,
-    "location": {
-      "column": 9,
-      "row": 209
-    },
-    "message": "`debug()` call on root logger",
-    "name": "root-logger-call",
-    "noqa_row": 209,
-    "severity": "error",
-    "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
-  },
-  {
-    "cell": null,
-    "code": "LOG015",
-    "end_location": {
-      "column": 62,
       "row": 210
     },
     "filename": "/workspace/arm/ripper/identify.py",
@@ -4967,18 +5018,18 @@
     "cell": null,
     "code": "LOG015",
     "end_location": {
-      "column": 59,
-      "row": 212
+      "column": 62,
+      "row": 211
     },
     "filename": "/workspace/arm/ripper/identify.py",
     "fix": null,
     "location": {
-      "column": 13,
-      "row": 212
+      "column": 9,
+      "row": 211
     },
-    "message": "`info()` call on root logger",
+    "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 212,
+    "noqa_row": 211,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -4986,7 +5037,7 @@
     "cell": null,
     "code": "LOG015",
     "end_location": {
-      "column": 78,
+      "column": 59,
       "row": 213
     },
     "filename": "/workspace/arm/ripper/identify.py",
@@ -5003,20 +5054,39 @@
   },
   {
     "cell": null,
+    "code": "LOG015",
+    "end_location": {
+      "column": 78,
+      "row": 214
+    },
+    "filename": "/workspace/arm/ripper/identify.py",
+    "fix": null,
+    "location": {
+      "column": 13,
+      "row": 214
+    },
+    "message": "`info()` call on root logger",
+    "name": "root-logger-call",
+    "noqa_row": 214,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
+  },
+  {
+    "cell": null,
     "code": "BLE001",
     "end_location": {
       "column": 21,
-      "row": 228
+      "row": 229
     },
     "filename": "/workspace/arm/ripper/identify.py",
     "fix": null,
     "location": {
       "column": 12,
-      "row": 228
+      "row": 229
     },
     "message": "Do not catch blind exception: `Exception`",
     "name": "blind-except",
-    "noqa_row": 228,
+    "noqa_row": 229,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/blind-except"
   },
@@ -5025,17 +5095,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 65,
-      "row": 229
+      "row": 230
     },
     "filename": "/workspace/arm/ripper/identify.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 229
+      "row": 230
     },
     "message": "`error()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 229,
+    "noqa_row": 230,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -5044,17 +5114,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 51,
-      "row": 232
+      "row": 233
     },
     "filename": "/workspace/arm/ripper/identify.py",
     "fix": null,
     "location": {
       "column": 5,
-      "row": 232
+      "row": 233
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 232,
+    "noqa_row": 233,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -5063,17 +5133,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 53,
-      "row": 238
+      "row": 239
     },
     "filename": "/workspace/arm/ripper/identify.py",
     "fix": null,
     "location": {
       "column": 5,
-      "row": 238
+      "row": 239
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 238,
+    "noqa_row": 239,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -5082,17 +5152,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 50,
-      "row": 241
+      "row": 242
     },
     "filename": "/workspace/arm/ripper/identify.py",
     "fix": null,
     "location": {
       "column": 5,
-      "row": 241
+      "row": 242
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 241,
+    "noqa_row": 242,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -5101,17 +5171,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 55,
-      "row": 246
+      "row": 247
     },
     "filename": "/workspace/arm/ripper/identify.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 246
+      "row": 247
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 246,
+    "noqa_row": 247,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -5120,17 +5190,17 @@
     "code": "BLE001",
     "end_location": {
       "column": 21,
-      "row": 248
+      "row": 249
     },
     "filename": "/workspace/arm/ripper/identify.py",
     "fix": null,
     "location": {
       "column": 12,
-      "row": 248
+      "row": 249
     },
     "message": "Do not catch blind exception: `Exception`",
     "name": "blind-except",
-    "noqa_row": 248,
+    "noqa_row": 249,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/blind-except"
   },
@@ -5139,17 +5209,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 57,
-      "row": 250
+      "row": 251
     },
     "filename": "/workspace/arm/ripper/identify.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 250
+      "row": 251
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 250,
+    "noqa_row": 251,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -5158,17 +5228,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 60,
-      "row": 263
+      "row": 264
     },
     "filename": "/workspace/arm/ripper/identify.py",
     "fix": null,
     "location": {
       "column": 13,
-      "row": 263
+      "row": 264
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 263,
+    "noqa_row": 264,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -5177,17 +5247,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 70,
-      "row": 269
+      "row": 270
     },
     "filename": "/workspace/arm/ripper/identify.py",
     "fix": null,
     "location": {
       "column": 13,
-      "row": 269
+      "row": 270
     },
     "message": "`error()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 269,
+    "noqa_row": 270,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -5196,17 +5266,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 38,
-      "row": 284
+      "row": 285
     },
     "filename": "/workspace/arm/ripper/identify.py",
     "fix": null,
     "location": {
       "column": 5,
-      "row": 284
+      "row": 285
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 284,
+    "noqa_row": 285,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -5215,17 +5285,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 52,
-      "row": 286
+      "row": 287
     },
     "filename": "/workspace/arm/ripper/identify.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 286
+      "row": 287
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 286,
+    "noqa_row": 287,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -5234,25 +5304,6 @@
     "code": "LOG015",
     "end_location": {
       "column": 52,
-      "row": 296
-    },
-    "filename": "/workspace/arm/ripper/identify.py",
-    "fix": null,
-    "location": {
-      "column": 5,
-      "row": 296
-    },
-    "message": "`debug()` call on root logger",
-    "name": "root-logger-call",
-    "noqa_row": 296,
-    "severity": "error",
-    "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
-  },
-  {
-    "cell": null,
-    "code": "LOG015",
-    "end_location": {
-      "column": 78,
       "row": 297
     },
     "filename": "/workspace/arm/ripper/identify.py",
@@ -5269,20 +5320,39 @@
   },
   {
     "cell": null,
+    "code": "LOG015",
+    "end_location": {
+      "column": 78,
+      "row": 298
+    },
+    "filename": "/workspace/arm/ripper/identify.py",
+    "fix": null,
+    "location": {
+      "column": 5,
+      "row": 298
+    },
+    "message": "`debug()` call on root logger",
+    "name": "root-logger-call",
+    "noqa_row": 298,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
+  },
+  {
+    "cell": null,
     "code": "BLE001",
     "end_location": {
       "column": 21,
-      "row": 301
+      "row": 302
     },
     "filename": "/workspace/arm/ripper/identify.py",
     "fix": null,
     "location": {
       "column": 12,
-      "row": 301
+      "row": 302
     },
     "message": "Do not catch blind exception: `Exception`",
     "name": "blind-except",
-    "noqa_row": 301,
+    "noqa_row": 302,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/blind-except"
   },
@@ -5291,17 +5361,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 86,
-      "row": 302
+      "row": 303
     },
     "filename": "/workspace/arm/ripper/identify.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 302
+      "row": 303
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 302,
+    "noqa_row": 303,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -5310,17 +5380,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 93,
-      "row": 317
+      "row": 318
     },
     "filename": "/workspace/arm/ripper/identify.py",
     "fix": null,
     "location": {
       "column": 5,
-      "row": 317
+      "row": 318
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 317,
+    "noqa_row": 318,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -5329,17 +5399,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 72,
-      "row": 353
+      "row": 354
     },
     "filename": "/workspace/arm/ripper/identify.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 353
+      "row": 354
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 353,
+    "noqa_row": 354,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -5348,17 +5418,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 39,
-      "row": 357
+      "row": 358
     },
     "filename": "/workspace/arm/ripper/identify.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 357
+      "row": 358
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 357,
+    "noqa_row": 358,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -5367,17 +5437,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 39,
-      "row": 362
+      "row": 363
     },
     "filename": "/workspace/arm/ripper/identify.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 362
+      "row": 363
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 362,
+    "noqa_row": 363,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -5386,25 +5456,6 @@
     "code": "LOG015",
     "end_location": {
       "column": 59,
-      "row": 367
-    },
-    "filename": "/workspace/arm/ripper/identify.py",
-    "fix": null,
-    "location": {
-      "column": 9,
-      "row": 367
-    },
-    "message": "`debug()` call on root logger",
-    "name": "root-logger-call",
-    "noqa_row": 367,
-    "severity": "error",
-    "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
-  },
-  {
-    "cell": null,
-    "code": "LOG015",
-    "end_location": {
-      "column": 90,
       "row": 368
     },
     "filename": "/workspace/arm/ripper/identify.py",
@@ -5423,18 +5474,37 @@
     "cell": null,
     "code": "LOG015",
     "end_location": {
+      "column": 90,
+      "row": 369
+    },
+    "filename": "/workspace/arm/ripper/identify.py",
+    "fix": null,
+    "location": {
+      "column": 9,
+      "row": 369
+    },
+    "message": "`debug()` call on root logger",
+    "name": "root-logger-call",
+    "noqa_row": 369,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
+  },
+  {
+    "cell": null,
+    "code": "LOG015",
+    "end_location": {
       "column": 44,
-      "row": 382
+      "row": 383
     },
     "filename": "/workspace/arm/ripper/identify.py",
     "fix": null,
     "location": {
       "column": 5,
-      "row": 382
+      "row": 383
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 382,
+    "noqa_row": 383,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -5443,17 +5513,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 56,
-      "row": 392
+      "row": 393
     },
     "filename": "/workspace/arm/ripper/identify.py",
     "fix": null,
     "location": {
       "column": 17,
-      "row": 392
+      "row": 393
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 392,
+    "noqa_row": 393,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -5462,17 +5532,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 55,
-      "row": 394
+      "row": 395
     },
     "filename": "/workspace/arm/ripper/identify.py",
     "fix": null,
     "location": {
       "column": 17,
-      "row": 394
+      "row": 395
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 394,
+    "noqa_row": 395,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -5481,17 +5551,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 56,
-      "row": 399
+      "row": 400
     },
     "filename": "/workspace/arm/ripper/identify.py",
     "fix": null,
     "location": {
       "column": 17,
-      "row": 399
+      "row": 400
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 399,
+    "noqa_row": 400,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -5500,17 +5570,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 55,
-      "row": 401
+      "row": 402
     },
     "filename": "/workspace/arm/ripper/identify.py",
     "fix": null,
     "location": {
       "column": 17,
-      "row": 401
+      "row": 402
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 401,
+    "noqa_row": 402,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -5519,17 +5589,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 54,
-      "row": 404
+      "row": 405
     },
     "filename": "/workspace/arm/ripper/identify.py",
     "fix": null,
     "location": {
       "column": 21,
-      "row": 404
+      "row": 405
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 404,
+    "noqa_row": 405,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -5538,17 +5608,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 42,
-      "row": 417
+      "row": 418
     },
     "filename": "/workspace/arm/ripper/identify.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 417
+      "row": 418
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 417,
+    "noqa_row": 418,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -5557,17 +5627,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 47,
-      "row": 419
+      "row": 420
     },
     "filename": "/workspace/arm/ripper/identify.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 419
+      "row": 420
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 419,
+    "noqa_row": 420,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -5576,17 +5646,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 47,
-      "row": 437
+      "row": 438
     },
     "filename": "/workspace/arm/ripper/identify.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 437
+      "row": 438
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 437,
+    "noqa_row": 438,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -5595,17 +5665,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 47,
-      "row": 442
+      "row": 443
     },
     "filename": "/workspace/arm/ripper/identify.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 442
+      "row": 443
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 442,
+    "noqa_row": 443,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -7639,18 +7709,113 @@
     "cell": null,
     "code": "LOG015",
     "end_location": {
-      "column": 33,
-      "row": 769
+      "column": 62,
+      "row": 757
     },
     "filename": "/workspace/arm/ripper/makemkv.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 769
+      "row": 757
+    },
+    "message": "`info()` call on root logger",
+    "name": "root-logger-call",
+    "noqa_row": 757,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
+  },
+  {
+    "cell": null,
+    "code": "LOG015",
+    "end_location": {
+      "column": 73,
+      "row": 758
+    },
+    "filename": "/workspace/arm/ripper/makemkv.py",
+    "fix": null,
+    "location": {
+      "column": 9,
+      "row": 758
+    },
+    "message": "`info()` call on root logger",
+    "name": "root-logger-call",
+    "noqa_row": 758,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
+  },
+  {
+    "cell": null,
+    "code": "LOG015",
+    "end_location": {
+      "column": 113,
+      "row": 759
+    },
+    "filename": "/workspace/arm/ripper/makemkv.py",
+    "fix": null,
+    "location": {
+      "column": 9,
+      "row": 759
+    },
+    "message": "`info()` call on root logger",
+    "name": "root-logger-call",
+    "noqa_row": 759,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
+  },
+  {
+    "cell": null,
+    "code": "LOG015",
+    "end_location": {
+      "column": 73,
+      "row": 760
+    },
+    "filename": "/workspace/arm/ripper/makemkv.py",
+    "fix": null,
+    "location": {
+      "column": 9,
+      "row": 760
+    },
+    "message": "`info()` call on root logger",
+    "name": "root-logger-call",
+    "noqa_row": 760,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
+  },
+  {
+    "cell": null,
+    "code": "LOG015",
+    "end_location": {
+      "column": 82,
+      "row": 763
+    },
+    "filename": "/workspace/arm/ripper/makemkv.py",
+    "fix": null,
+    "location": {
+      "column": 13,
+      "row": 763
+    },
+    "message": "`info()` call on root logger",
+    "name": "root-logger-call",
+    "noqa_row": 763,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
+  },
+  {
+    "cell": null,
+    "code": "LOG015",
+    "end_location": {
+      "column": 33,
+      "row": 777
+    },
+    "filename": "/workspace/arm/ripper/makemkv.py",
+    "fix": null,
+    "location": {
+      "column": 9,
+      "row": 777
     },
     "message": "`warning()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 769,
+    "noqa_row": 777,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -7659,17 +7824,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 26,
-      "row": 811
+      "row": 819
     },
     "filename": "/workspace/arm/ripper/makemkv.py",
     "fix": null,
     "location": {
       "column": 5,
-      "row": 811
+      "row": 819
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 811,
+    "noqa_row": 819,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -7678,17 +7843,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 75,
-      "row": 827
+      "row": 835
     },
     "filename": "/workspace/arm/ripper/makemkv.py",
     "fix": null,
     "location": {
       "column": 5,
-      "row": 827
+      "row": 835
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 827,
+    "noqa_row": 835,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -7697,17 +7862,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 50,
-      "row": 837
+      "row": 845
     },
     "filename": "/workspace/arm/ripper/makemkv.py",
     "fix": null,
     "location": {
       "column": 5,
-      "row": 837
+      "row": 845
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 837,
+    "noqa_row": 845,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -7716,17 +7881,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 122,
-      "row": 865
+      "row": 873
     },
     "filename": "/workspace/arm/ripper/makemkv.py",
     "fix": null,
     "location": {
       "column": 5,
-      "row": 865
+      "row": 873
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 865,
+    "noqa_row": 873,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -7735,17 +7900,17 @@
     "code": "E501",
     "end_location": {
       "column": 172,
-      "row": 889
+      "row": 897
     },
     "filename": "/workspace/arm/ripper/makemkv.py",
     "fix": null,
     "location": {
       "column": 161,
-      "row": 889
+      "row": 897
     },
     "message": "Line too long (171 > 160)",
     "name": "line-too-long",
-    "noqa_row": 889,
+    "noqa_row": 897,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/line-too-long"
   },
@@ -7754,17 +7919,17 @@
     "code": "E501",
     "end_location": {
       "column": 175,
-      "row": 893
+      "row": 901
     },
     "filename": "/workspace/arm/ripper/makemkv.py",
     "fix": null,
     "location": {
       "column": 161,
-      "row": 893
+      "row": 901
     },
     "message": "Line too long (174 > 160)",
     "name": "line-too-long",
-    "noqa_row": 893,
+    "noqa_row": 901,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/line-too-long"
   },
@@ -7773,17 +7938,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 34,
-      "row": 901
+      "row": 909
     },
     "filename": "/workspace/arm/ripper/makemkv.py",
     "fix": null,
     "location": {
       "column": 13,
-      "row": 901
+      "row": 909
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 901,
+    "noqa_row": 909,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -7792,17 +7957,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 107,
-      "row": 936
+      "row": 944
     },
     "filename": "/workspace/arm/ripper/makemkv.py",
     "fix": null,
     "location": {
       "column": 5,
-      "row": 936
+      "row": 944
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 936,
+    "noqa_row": 944,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -7811,17 +7976,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 95,
-      "row": 940
+      "row": 948
     },
     "filename": "/workspace/arm/ripper/makemkv.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 940
+      "row": 948
     },
     "message": "`warning()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 940,
+    "noqa_row": 948,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -7830,17 +7995,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 110,
-      "row": 942
+      "row": 950
     },
     "filename": "/workspace/arm/ripper/makemkv.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 942
+      "row": 950
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 942,
+    "noqa_row": 950,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -7849,50 +8014,12 @@
     "code": "LOG015",
     "end_location": {
       "column": 47,
-      "row": 968
-    },
-    "filename": "/workspace/arm/ripper/makemkv.py",
-    "fix": null,
-    "location": {
-      "column": 5,
-      "row": 968
-    },
-    "message": "`info()` call on root logger",
-    "name": "root-logger-call",
-    "noqa_row": 968,
-    "severity": "error",
-    "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
-  },
-  {
-    "cell": null,
-    "code": "LOG015",
-    "end_location": {
-      "column": 31,
-      "row": 974
-    },
-    "filename": "/workspace/arm/ripper/makemkv.py",
-    "fix": null,
-    "location": {
-      "column": 13,
-      "row": 974
-    },
-    "message": "`error()` call on root logger",
-    "name": "root-logger-call",
-    "noqa_row": 974,
-    "severity": "error",
-    "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
-  },
-  {
-    "cell": null,
-    "code": "LOG015",
-    "end_location": {
-      "column": 63,
       "row": 976
     },
     "filename": "/workspace/arm/ripper/makemkv.py",
     "fix": null,
     "location": {
-      "column": 9,
+      "column": 5,
       "row": 976
     },
     "message": "`info()` call on root logger",
@@ -7905,18 +8032,56 @@
     "cell": null,
     "code": "LOG015",
     "end_location": {
-      "column": 48,
-      "row": 978
+      "column": 31,
+      "row": 982
+    },
+    "filename": "/workspace/arm/ripper/makemkv.py",
+    "fix": null,
+    "location": {
+      "column": 13,
+      "row": 982
+    },
+    "message": "`error()` call on root logger",
+    "name": "root-logger-call",
+    "noqa_row": 982,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
+  },
+  {
+    "cell": null,
+    "code": "LOG015",
+    "end_location": {
+      "column": 63,
+      "row": 984
     },
     "filename": "/workspace/arm/ripper/makemkv.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 978
+      "row": 984
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 978,
+    "noqa_row": 984,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
+  },
+  {
+    "cell": null,
+    "code": "LOG015",
+    "end_location": {
+      "column": 48,
+      "row": 986
+    },
+    "filename": "/workspace/arm/ripper/makemkv.py",
+    "fix": null,
+    "location": {
+      "column": 9,
+      "row": 986
+    },
+    "message": "`info()` call on root logger",
+    "name": "root-logger-call",
+    "noqa_row": 986,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -7925,17 +8090,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 68,
-      "row": 1000
+      "row": 1008
     },
     "filename": "/workspace/arm/ripper/makemkv.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 1000
+      "row": 1008
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 1000,
+    "noqa_row": 1008,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -7944,17 +8109,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 52,
-      "row": 1004
+      "row": 1012
     },
     "filename": "/workspace/arm/ripper/makemkv.py",
     "fix": null,
     "location": {
       "column": 13,
-      "row": 1004
+      "row": 1012
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 1004,
+    "noqa_row": 1012,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -7963,17 +8128,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 86,
-      "row": 1007
+      "row": 1015
     },
     "filename": "/workspace/arm/ripper/makemkv.py",
     "fix": null,
     "location": {
       "column": 13,
-      "row": 1007
+      "row": 1015
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 1007,
+    "noqa_row": 1015,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -7982,17 +8147,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 48,
-      "row": 1013
+      "row": 1021
     },
     "filename": "/workspace/arm/ripper/makemkv.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 1013
+      "row": 1021
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 1013,
+    "noqa_row": 1021,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -8001,17 +8166,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 82,
-      "row": 1016
+      "row": 1024
     },
     "filename": "/workspace/arm/ripper/makemkv.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 1016
+      "row": 1024
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 1016,
+    "noqa_row": 1024,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -8020,17 +8185,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 14,
-      "row": 1029
+      "row": 1037
     },
     "filename": "/workspace/arm/ripper/makemkv.py",
     "fix": null,
     "location": {
       "column": 13,
-      "row": 1025
+      "row": 1033
     },
     "message": "`warning()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 1025,
+    "noqa_row": 1033,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -8039,17 +8204,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 54,
-      "row": 1068
+      "row": 1076
     },
     "filename": "/workspace/arm/ripper/makemkv.py",
     "fix": null,
     "location": {
       "column": 5,
-      "row": 1068
+      "row": 1076
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 1068,
+    "noqa_row": 1076,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -8058,17 +8223,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 56,
-      "row": 1146
+      "row": 1154
     },
     "filename": "/workspace/arm/ripper/makemkv.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 1146
+      "row": 1154
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 1146,
+    "noqa_row": 1154,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -8077,17 +8242,17 @@
     "code": "RUF012",
     "end_location": {
       "column": 6,
-      "row": 1216
+      "row": 1224
     },
     "filename": "/workspace/arm/ripper/makemkv.py",
     "fix": null,
     "location": {
       "column": 22,
-      "row": 1211
+      "row": 1219
     },
     "message": "Mutable default value for class attribute",
     "name": "mutable-class-default",
-    "noqa_row": 1211,
+    "noqa_row": 1219,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/mutable-class-default"
   },
@@ -8096,17 +8261,17 @@
     "code": "RUF012",
     "end_location": {
       "column": 6,
-      "row": 1225
+      "row": 1233
     },
     "filename": "/workspace/arm/ripper/makemkv.py",
     "fix": null,
     "location": {
       "column": 22,
-      "row": 1218
+      "row": 1226
     },
     "message": "Mutable default value for class attribute",
     "name": "mutable-class-default",
-    "noqa_row": 1218,
+    "noqa_row": 1226,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/mutable-class-default"
   },
@@ -8115,17 +8280,17 @@
     "code": "RUF012",
     "end_location": {
       "column": 6,
-      "row": 1231
+      "row": 1239
     },
     "filename": "/workspace/arm/ripper/makemkv.py",
     "fix": null,
     "location": {
       "column": 27,
-      "row": 1227
+      "row": 1235
     },
     "message": "Mutable default value for class attribute",
     "name": "mutable-class-default",
-    "noqa_row": 1227,
+    "noqa_row": 1235,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/mutable-class-default"
   },
@@ -8134,17 +8299,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 33,
-      "row": 1269
+      "row": 1277
     },
     "filename": "/workspace/arm/ripper/makemkv.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 1269
+      "row": 1277
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 1269,
+    "noqa_row": 1277,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -8153,31 +8318,12 @@
     "code": "LOG015",
     "end_location": {
       "column": 48,
-      "row": 1271
-    },
-    "filename": "/workspace/arm/ripper/makemkv.py",
-    "fix": null,
-    "location": {
-      "column": 13,
-      "row": 1271
-    },
-    "message": "`critical()` call on root logger",
-    "name": "root-logger-call",
-    "noqa_row": 1271,
-    "severity": "error",
-    "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
-  },
-  {
-    "cell": null,
-    "code": "LOG015",
-    "end_location": {
-      "column": 44,
       "row": 1279
     },
     "filename": "/workspace/arm/ripper/makemkv.py",
     "fix": null,
     "location": {
-      "column": 9,
+      "column": 13,
       "row": 1279
     },
     "message": "`critical()` call on root logger",
@@ -8190,18 +8336,37 @@
     "cell": null,
     "code": "LOG015",
     "end_location": {
+      "column": 44,
+      "row": 1287
+    },
+    "filename": "/workspace/arm/ripper/makemkv.py",
+    "fix": null,
+    "location": {
+      "column": 9,
+      "row": 1287
+    },
+    "message": "`critical()` call on root logger",
+    "name": "root-logger-call",
+    "noqa_row": 1287,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
+  },
+  {
+    "cell": null,
+    "code": "LOG015",
+    "end_location": {
       "column": 37,
-      "row": 1288
+      "row": 1296
     },
     "filename": "/workspace/arm/ripper/makemkv.py",
     "fix": null,
     "location": {
       "column": 13,
-      "row": 1288
+      "row": 1296
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 1288,
+    "noqa_row": 1296,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -8210,50 +8375,12 @@
     "code": "LOG015",
     "end_location": {
       "column": 48,
-      "row": 1299
-    },
-    "filename": "/workspace/arm/ripper/makemkv.py",
-    "fix": null,
-    "location": {
-      "column": 13,
-      "row": 1299
-    },
-    "message": "`critical()` call on root logger",
-    "name": "root-logger-call",
-    "noqa_row": 1299,
-    "severity": "error",
-    "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
-  },
-  {
-    "cell": null,
-    "code": "LOG015",
-    "end_location": {
-      "column": 39,
-      "row": 1301
-    },
-    "filename": "/workspace/arm/ripper/makemkv.py",
-    "fix": null,
-    "location": {
-      "column": 13,
-      "row": 1301
-    },
-    "message": "`warning()` call on root logger",
-    "name": "root-logger-call",
-    "noqa_row": 1301,
-    "severity": "error",
-    "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
-  },
-  {
-    "cell": null,
-    "code": "LOG015",
-    "end_location": {
-      "column": 44,
       "row": 1307
     },
     "filename": "/workspace/arm/ripper/makemkv.py",
     "fix": null,
     "location": {
-      "column": 9,
+      "column": 13,
       "row": 1307
     },
     "message": "`critical()` call on root logger",
@@ -8266,18 +8393,56 @@
     "cell": null,
     "code": "LOG015",
     "end_location": {
+      "column": 39,
+      "row": 1309
+    },
+    "filename": "/workspace/arm/ripper/makemkv.py",
+    "fix": null,
+    "location": {
+      "column": 13,
+      "row": 1309
+    },
+    "message": "`warning()` call on root logger",
+    "name": "root-logger-call",
+    "noqa_row": 1309,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
+  },
+  {
+    "cell": null,
+    "code": "LOG015",
+    "end_location": {
+      "column": 44,
+      "row": 1315
+    },
+    "filename": "/workspace/arm/ripper/makemkv.py",
+    "fix": null,
+    "location": {
+      "column": 9,
+      "row": 1315
+    },
+    "message": "`critical()` call on root logger",
+    "name": "root-logger-call",
+    "noqa_row": 1315,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
+  },
+  {
+    "cell": null,
+    "code": "LOG015",
+    "end_location": {
       "column": 49,
-      "row": 1342
+      "row": 1350
     },
     "filename": "/workspace/arm/ripper/makemkv.py",
     "fix": null,
     "location": {
       "column": 5,
-      "row": 1342
+      "row": 1350
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 1342,
+    "noqa_row": 1350,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -8286,17 +8451,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 69,
-      "row": 1344
+      "row": 1352
     },
     "filename": "/workspace/arm/ripper/makemkv.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 1344
+      "row": 1352
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 1344,
+    "noqa_row": 1352,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -8305,17 +8470,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 32,
-      "row": 1348
+      "row": 1356
     },
     "filename": "/workspace/arm/ripper/makemkv.py",
     "fix": null,
     "location": {
       "column": 13,
-      "row": 1348
+      "row": 1356
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 1348,
+    "noqa_row": 1356,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -8324,17 +8489,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 37,
-      "row": 1353
+      "row": 1361
     },
     "filename": "/workspace/arm/ripper/makemkv.py",
     "fix": null,
     "location": {
       "column": 17,
-      "row": 1353
+      "row": 1361
     },
     "message": "`warning()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 1353,
+    "noqa_row": 1361,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -8343,17 +8508,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 32,
-      "row": 1357
+      "row": 1365
     },
     "filename": "/workspace/arm/ripper/makemkv.py",
     "fix": null,
     "location": {
       "column": 13,
-      "row": 1357
+      "row": 1365
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 1357,
+    "noqa_row": 1365,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -8362,17 +8527,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 46,
-      "row": 1371
+      "row": 1379
     },
     "filename": "/workspace/arm/ripper/makemkv.py",
     "fix": null,
     "location": {
       "column": 5,
-      "row": 1371
+      "row": 1379
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 1371,
+    "noqa_row": 1379,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -8381,17 +8546,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 86,
-      "row": 1412
+      "row": 1420
     },
     "filename": "/workspace/arm/ripper/makemkv.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 1412
+      "row": 1420
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 1412,
+    "noqa_row": 1420,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -9657,18 +9822,18 @@
     "cell": null,
     "code": "LOG015",
     "end_location": {
-      "column": 66,
-      "row": 387
+      "column": 70,
+      "row": 388
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": null,
     "location": {
-      "column": 17,
-      "row": 387
+      "column": 21,
+      "row": 388
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 387,
+    "noqa_row": 388,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -9677,17 +9842,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 88,
-      "row": 390
+      "row": 391
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": null,
     "location": {
       "column": 17,
-      "row": 390
+      "row": 391
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 390,
+    "noqa_row": 391,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -9696,17 +9861,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 89,
-      "row": 392
+      "row": 393
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": null,
     "location": {
       "column": 17,
-      "row": 392
+      "row": 393
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 392,
+    "noqa_row": 393,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -9715,17 +9880,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 89,
-      "row": 394
+      "row": 395
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": null,
     "location": {
       "column": 17,
-      "row": 394
+      "row": 395
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 394,
+    "noqa_row": 395,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -9734,17 +9899,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 52,
-      "row": 411
+      "row": 412
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 411
+      "row": 412
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 411,
+    "noqa_row": 412,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -9753,17 +9918,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 49,
-      "row": 464
+      "row": 465
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 464
+      "row": 465
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 464,
+    "noqa_row": 465,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -9772,17 +9937,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 49,
-      "row": 471
+      "row": 472
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 471
+      "row": 472
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 471,
+    "noqa_row": 472,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -9791,17 +9956,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 50,
-      "row": 478
+      "row": 479
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": null,
     "location": {
       "column": 13,
-      "row": 478
+      "row": 479
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 478,
+    "noqa_row": 479,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -9810,17 +9975,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 31,
-      "row": 486
+      "row": 487
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": null,
     "location": {
       "column": 13,
-      "row": 486
+      "row": 487
     },
     "message": "`error()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 486,
+    "noqa_row": 487,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -9829,17 +9994,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 65,
-      "row": 513
+      "row": 514
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": null,
     "location": {
       "column": 5,
-      "row": 513
+      "row": 514
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 513,
+    "noqa_row": 514,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -9848,17 +10013,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 45,
-      "row": 517
+      "row": 518
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": null,
     "location": {
       "column": 5,
-      "row": 517
+      "row": 518
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 517,
+    "noqa_row": 518,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -9867,7 +10032,7 @@
     "code": "RUF010",
     "end_location": {
       "column": 69,
-      "row": 520
+      "row": 521
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": {
@@ -9877,11 +10042,11 @@
           "content": "f\"{job.label!s}.iso\"",
           "end_location": {
             "column": 75,
-            "row": 520
+            "row": 521
           },
           "location": {
             "column": 52,
-            "row": 520
+            "row": 521
           }
         }
       ],
@@ -9889,11 +10054,11 @@
     },
     "location": {
       "column": 55,
-      "row": 520
+      "row": 521
     },
     "message": "Use explicit conversion flag",
     "name": "explicit-f-string-type-conversion",
-    "noqa_row": 520,
+    "noqa_row": 521,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/explicit-f-string-type-conversion"
   },
@@ -9902,17 +10067,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 94,
-      "row": 521
+      "row": 522
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 521
+      "row": 522
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 521,
+    "noqa_row": 522,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -9921,17 +10086,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 49,
-      "row": 523
+      "row": 524
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 523
+      "row": 524
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 523,
+    "noqa_row": 524,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -9940,17 +10105,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 27,
-      "row": 527
+      "row": 528
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 527
+      "row": 528
     },
     "message": "`error()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 527,
+    "noqa_row": 528,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -9959,17 +10124,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 65,
-      "row": 532
+      "row": 533
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 532
+      "row": 533
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 532,
+    "noqa_row": 533,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -9978,17 +10143,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 70,
-      "row": 535
+      "row": 536
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 535
+      "row": 536
     },
     "message": "`error()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 535,
+    "noqa_row": 536,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -9997,17 +10162,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 109,
-      "row": 549
+      "row": 550
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 549
+      "row": 550
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 549,
+    "noqa_row": 550,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -10016,17 +10181,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 112,
-      "row": 554
+      "row": 555
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": null,
     "location": {
       "column": 17,
-      "row": 554
+      "row": 555
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 554,
+    "noqa_row": 555,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -10035,17 +10200,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 113,
-      "row": 558
+      "row": 559
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": null,
     "location": {
       "column": 17,
-      "row": 558
+      "row": 559
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 558,
+    "noqa_row": 559,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -10054,17 +10219,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 59,
-      "row": 561
+      "row": 562
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 561
+      "row": 562
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 561,
+    "noqa_row": 562,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -10073,17 +10238,17 @@
     "code": "BLE001",
     "end_location": {
       "column": 21,
-      "row": 562
+      "row": 563
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": null,
     "location": {
       "column": 12,
-      "row": 562
+      "row": 563
     },
     "message": "Do not catch blind exception: `Exception`",
     "name": "blind-except",
-    "noqa_row": 562,
+    "noqa_row": 563,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/blind-except"
   },
@@ -10092,17 +10257,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 65,
-      "row": 563
+      "row": 564
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 563
+      "row": 564
     },
     "message": "`error()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 563,
+    "noqa_row": 564,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -10111,7 +10276,7 @@
     "code": "UP012",
     "end_location": {
       "column": 43,
-      "row": 578
+      "row": 579
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": {
@@ -10121,11 +10286,11 @@
           "content": "b\"password\"",
           "end_location": {
             "column": 43,
-            "row": 578
+            "row": 579
           },
           "location": {
             "column": 17,
-            "row": 578
+            "row": 579
           }
         }
       ],
@@ -10133,11 +10298,11 @@
     },
     "location": {
       "column": 17,
-      "row": 578
+      "row": 579
     },
     "message": "Unnecessary call to `encode` as UTF-8",
     "name": "unnecessary-encode-utf8",
-    "noqa_row": 578,
+    "noqa_row": 579,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/unnecessary-encode-utf8"
   },
@@ -10146,17 +10311,17 @@
     "code": "SIM115",
     "end_location": {
       "column": 37,
-      "row": 582
+      "row": 583
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": null,
     "location": {
       "column": 33,
-      "row": 582
+      "row": 583
     },
     "message": "Use a context manager for opening files",
     "name": "open-file-with-context-handler",
-    "noqa_row": 582,
+    "noqa_row": 583,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/open-file-with-context-handler"
   },
@@ -10165,17 +10330,17 @@
     "code": "BLE001",
     "end_location": {
       "column": 21,
-      "row": 585
+      "row": 586
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": null,
     "location": {
       "column": 12,
-      "row": 585
+      "row": 586
     },
     "message": "Do not catch blind exception: `Exception`",
     "name": "blind-except",
-    "noqa_row": 585,
+    "noqa_row": 586,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/blind-except"
   },
@@ -10184,17 +10349,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 29,
-      "row": 587
+      "row": 588
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 587
+      "row": 588
     },
     "message": "`error()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 587,
+    "noqa_row": 588,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -10203,17 +10368,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 54,
-      "row": 611
+      "row": 612
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": null,
     "location": {
       "column": 5,
-      "row": 608
+      "row": 609
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 608,
+    "noqa_row": 609,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -10222,17 +10387,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 70,
-      "row": 672
+      "row": 673
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 672
+      "row": 673
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 672,
+    "noqa_row": 673,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -10241,17 +10406,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 66,
-      "row": 677
+      "row": 678
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": null,
     "location": {
       "column": 13,
-      "row": 677
+      "row": 678
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 677,
+    "noqa_row": 678,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -10260,17 +10425,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 75,
-      "row": 682
+      "row": 683
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": null,
     "location": {
       "column": 17,
-      "row": 682
+      "row": 683
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 682,
+    "noqa_row": 683,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -10279,17 +10444,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 49,
-      "row": 684
+      "row": 685
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": null,
     "location": {
       "column": 17,
-      "row": 684
+      "row": 685
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 684,
+    "noqa_row": 685,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -10298,17 +10463,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 86,
-      "row": 686
+      "row": 687
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": null,
     "location": {
       "column": 5,
-      "row": 686
+      "row": 687
     },
     "message": "`error()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 686,
+    "noqa_row": 687,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -10317,17 +10482,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 71,
-      "row": 699
+      "row": 700
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": null,
     "location": {
       "column": 13,
-      "row": 699
+      "row": 700
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 699,
+    "noqa_row": 700,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -10336,17 +10501,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 94,
-      "row": 702
+      "row": 703
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": null,
     "location": {
       "column": 13,
-      "row": 702
+      "row": 703
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 702,
+    "noqa_row": 703,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -10355,17 +10520,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 66,
-      "row": 707
+      "row": 708
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": null,
     "location": {
       "column": 17,
-      "row": 707
+      "row": 708
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 707,
+    "noqa_row": 708,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -10374,17 +10539,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 49,
-      "row": 709
+      "row": 710
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": null,
     "location": {
       "column": 17,
-      "row": 709
+      "row": 710
     },
     "message": "`error()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 709,
+    "noqa_row": 710,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -10393,17 +10558,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 93,
-      "row": 711
+      "row": 712
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": null,
     "location": {
       "column": 5,
-      "row": 711
+      "row": 712
     },
     "message": "`error()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 711,
+    "noqa_row": 712,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -10412,17 +10577,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 92,
-      "row": 726
+      "row": 727
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": null,
     "location": {
       "column": 17,
-      "row": 726
+      "row": 727
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 726,
+    "noqa_row": 727,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -10431,17 +10596,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 58,
-      "row": 729
+      "row": 730
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": null,
     "location": {
       "column": 13,
-      "row": 728
+      "row": 729
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 728,
+    "noqa_row": 729,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -10450,17 +10615,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 85,
-      "row": 788
+      "row": 789
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 788
+      "row": 789
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 788,
+    "noqa_row": 789,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -10469,17 +10634,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 90,
-      "row": 794
+      "row": 795
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": null,
     "location": {
       "column": 5,
-      "row": 794
+      "row": 795
     },
     "message": "`critical()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 794,
+    "noqa_row": 795,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -10488,17 +10653,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 56,
-      "row": 797
+      "row": 798
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": null,
     "location": {
       "column": 5,
-      "row": 797
+      "row": 798
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 797,
+    "noqa_row": 798,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -10507,17 +10672,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 60,
-      "row": 799
+      "row": 800
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 799
+      "row": 800
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 799,
+    "noqa_row": 800,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -10526,17 +10691,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 57,
-      "row": 813
+      "row": 814
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": null,
     "location": {
       "column": 13,
-      "row": 813
+      "row": 814
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 813,
+    "noqa_row": 814,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -10545,17 +10710,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 56,
-      "row": 816
+      "row": 817
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": null,
     "location": {
       "column": 13,
-      "row": 816
+      "row": 817
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 816,
+    "noqa_row": 817,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -10564,17 +10729,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 76,
-      "row": 831
+      "row": 832
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 831
+      "row": 832
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 831,
+    "noqa_row": 832,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -10583,25 +10748,6 @@
     "code": "LOG015",
     "end_location": {
       "column": 90,
-      "row": 834
-    },
-    "filename": "/workspace/arm/ripper/utils.py",
-    "fix": null,
-    "location": {
-      "column": 9,
-      "row": 834
-    },
-    "message": "`debug()` call on root logger",
-    "name": "root-logger-call",
-    "noqa_row": 834,
-    "severity": "error",
-    "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
-  },
-  {
-    "cell": null,
-    "code": "LOG015",
-    "end_location": {
-      "column": 60,
       "row": 835
     },
     "filename": "/workspace/arm/ripper/utils.py",
@@ -10620,18 +10766,37 @@
     "cell": null,
     "code": "LOG015",
     "end_location": {
+      "column": 60,
+      "row": 836
+    },
+    "filename": "/workspace/arm/ripper/utils.py",
+    "fix": null,
+    "location": {
+      "column": 9,
+      "row": 836
+    },
+    "message": "`debug()` call on root logger",
+    "name": "root-logger-call",
+    "noqa_row": 836,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
+  },
+  {
+    "cell": null,
+    "code": "LOG015",
+    "end_location": {
       "column": 57,
-      "row": 841
+      "row": 842
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": null,
     "location": {
       "column": 13,
-      "row": 841
+      "row": 842
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 841,
+    "noqa_row": 842,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -10640,17 +10805,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 62,
-      "row": 846
+      "row": 847
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": null,
     "location": {
       "column": 5,
-      "row": 846
+      "row": 847
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 846,
+    "noqa_row": 847,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -10659,17 +10824,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 74,
-      "row": 857
+      "row": 858
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": null,
     "location": {
       "column": 5,
-      "row": 857
+      "row": 858
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 857,
+    "noqa_row": 858,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -10678,17 +10843,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 67,
-      "row": 859
+      "row": 860
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 859
+      "row": 860
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 859,
+    "noqa_row": 860,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -10697,17 +10862,17 @@
     "code": "SIM113",
     "end_location": {
       "column": 19,
-      "row": 871
+      "row": 872
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": null,
     "location": {
       "column": 13,
-      "row": 871
+      "row": 872
     },
     "message": "Use `enumerate()` for index variable `i` in `for` loop",
     "name": "enumerate-for-loop",
-    "noqa_row": 871,
+    "noqa_row": 872,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/enumerate-for-loop"
   },
@@ -10716,17 +10881,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 54,
-      "row": 875
+      "row": 876
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 875
+      "row": 876
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 875,
+    "noqa_row": 876,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -10735,17 +10900,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 85,
-      "row": 890
+      "row": 891
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": null,
     "location": {
       "column": 13,
-      "row": 890
+      "row": 891
     },
     "message": "`debug()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 890,
+    "noqa_row": 891,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -10754,17 +10919,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 74,
-      "row": 893
+      "row": 894
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 893
+      "row": 894
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 893,
+    "noqa_row": 894,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -10773,17 +10938,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 92,
-      "row": 905
+      "row": 906
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": null,
     "location": {
       "column": 9,
-      "row": 905
+      "row": 906
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 905,
+    "noqa_row": 906,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },
@@ -10792,17 +10957,17 @@
     "code": "LOG015",
     "end_location": {
       "column": 95,
-      "row": 913
+      "row": 914
     },
     "filename": "/workspace/arm/ripper/utils.py",
     "fix": null,
     "location": {
       "column": 17,
-      "row": 913
+      "row": 914
     },
     "message": "`info()` call on root logger",
     "name": "root-logger-call",
-    "noqa_row": 913,
+    "noqa_row": 914,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/root-logger-call"
   },

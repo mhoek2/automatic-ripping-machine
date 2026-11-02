@@ -20,43 +20,43 @@ $(function () {
         });
     }
 
-    $("#uiSettings").submit(function (e) {
+    $('#uiSettings').submit(function (e) {
         e.preventDefault();
-        sendSettings($("#uiSettings"), "/save_ui_settings");
+        sendSettings($('#uiSettings'), '/save_ui_settings');
     });
-    $("#ripperSettings").submit(function (e) {
+    $('#ripperSettings').submit(function (e) {
         e.preventDefault();
-        sendSettings($("#ripperSettings"), "/save_settings");
+        sendSettings($('#ripperSettings'), '/save_settings');
     });
-    $("#abcdeSettings").submit(function (e) {
+    $('#abcdeSettings').submit(function (e) {
         e.preventDefault();
-        sendSettings($("#abcdeSettings"), "/save_abcde_settings");
+        sendSettings($('#abcdeSettings'), '/save_abcde_settings');
     });
-    $("#appriseCfg").submit(function (e) {
+    $('#appriseCfg').submit(function (e) {
         e.preventDefault();
-        sendSettings($("#appriseCfg"), "/save_apprise_cfg");
+        sendSettings($('#appriseCfg'), '/save_apprise_cfg');
     });
-    $("#updateArm").submit(function (e) {
+    $('#updateArm').submit(function (e) {
         e.preventDefault();
-        sendSettings($("#updateArm"), "/update_arm")
+        sendSettings($('#updateArm'), '/update_arm')
     })
 
-    $(".settings-tab").on("click", function()
+    $('.settings-tab').on('click', function()
     {
-        const tab = $(this).data("tab");
+        const tab = $(this).data('tab');
 
-        $(".settings-tab")
-            .removeClass("active")
-            .attr("aria-selected", "false");
+        $('.settings-tab')
+            .removeClass('active')
+            .attr('aria-selected', 'false');
 
         $(this)
-            .addClass("active")
-            .attr("aria-selected", "true");
+            .addClass('active')
+            .attr('aria-selected', 'true');
 
-        $(".settings-tab-pane")
-            .removeClass("active");
+        $('.settings-tab-pane')
+            .removeClass('active');
 
-        $("#" + tab)
-            .addClass("active");
+        $('#' + tab)
+            .addClass('active');
     });
 });

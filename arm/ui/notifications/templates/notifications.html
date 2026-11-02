@@ -36,7 +36,10 @@
 {% block js %}
     {{ super() }}
 
-    <script type="text/javascript">
+    <script type="module">
+        import { activeTab } from './static/js/common.js';
+        import { formatRelativeTime } from './static/js/time.js';
+
         $(document).ready(function () {
             activeTab("notification");
 

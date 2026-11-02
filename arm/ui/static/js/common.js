@@ -1,53 +1,47 @@
-/*jshint multistr: true */
-/*jshint esversion: 6 */
-/*global $:false, jQuery:false */
-/* jshint node: true */
-/* jshint strict: false */
-
 // Rework this
-let activeServers = [];
+export const activeServers = [];
 
-const JOB_LIST_CONTAINER = "#joblist";
+export const JOB_LIST_CONTAINER = '#joblist';
 
 // arm/models/track.py
-const TrackState = Object.freeze({
-    TRACK_SUCCESS	: "success",
-    TRACK_FAILURE	: "fail",
-    TRACK_WAITING	: "waiting",
-    TRACK_RIPPING	: "ripping",
-    TRACK_RIPPED 	: "ripped",
-    TRACK_SKIPPED	: "skipped"
+export const TrackState = Object.freeze({
+    TRACK_SUCCESS	: 'success',
+    TRACK_FAILURE	: 'fail',
+    TRACK_WAITING	: 'waiting',
+    TRACK_RIPPING	: 'ripping',
+    TRACK_RIPPED 	: 'ripped',
+    TRACK_SKIPPED	: 'skipped'
 })
 
 // arm/models/job.py
-const JobState = Object.freeze({
+export const JobState = Object.freeze({
 	// Job Finished States
-	SUCCESS					: "success",
-	FAILURE					: "fail",
+	SUCCESS					: 'success',
+	FAILURE					: 'fail',
 
 	// Manual wait
-	MANUAL_WAIT_STARTED		: "waiting",
+	MANUAL_WAIT_STARTED		: 'waiting',
 
 	// Job Initialized or Pending
-	IDLE					: "active",
+	IDLE					: 'active',
 
 	// Video Ripping States
-	VIDEO_RIPPING			: "ripping",
-	VIDEO_WAITING			: "waiting",
-	VIDEO_INFO				: "info",
+	VIDEO_RIPPING			: 'ripping',
+	VIDEO_WAITING			: 'waiting',
+	VIDEO_INFO				: 'info',
 
 	// Audio Ripping States
-	AUDIO_RIPPING			: "ripping",
+	AUDIO_RIPPING			: 'ripping',
 
 	// Transcoding States
-	TRANSCODE_ACTIVE		: "transcoding",
-	TRANSCODE_WAITING		: "waiting_transcode",
+	TRANSCODE_ACTIVE		: 'transcoding',
+	TRANSCODE_WAITING		: 'waiting_transcode',
 
 	// Postprocessing states
-	POSTPROCESSING_MOVING	: "moving"
+	POSTPROCESSING_MOVING	: 'moving'
 });
 
-const JobStateGroup = Object.freeze({
+export const JobStateGroup = Object.freeze({
     FINISHED: new Set([
         JobState.SUCCESS,
         JobState.FAILURE,
@@ -71,68 +65,52 @@ const JobStateGroup = Object.freeze({
     ]),
 });
 
-const JOB_PIPELINE_STAGES = [
-	{ status: "active",             label: "Active",                icon: "fa-circle-play"      },
-	{ status: "waiting",            label: "Waiting",               icon: "fa-clock"            },
-	{ status: "info",               label: "Disc Info",             icon: "fa-compact-disc"     },
-	{ status: "ripping",            label: "Ripping",               icon: "fa-download"         },
-	{ status: "waiting_transcode",  label: "Waiting to transcode",  icon: "fa-hourglass-half"   },
-	{ status: "transcoding",        label: "Transcoding",           icon: "fa-film"             },
-	{ status: "moving",             label: "Moving",                icon: "fa-upload"           },
-	{ status: "success",            label: "Finished",              icon: "fa-flag-checkered"   }
+export const JOB_PIPELINE_STAGES = [
+	{ status: 'active',             label: 'Active',                icon: 'fa-circle-play'      },
+	{ status: 'waiting',            label: 'Waiting',               icon: 'fa-clock'            },
+	{ status: 'info',               label: 'Disc Info',             icon: 'fa-compact-disc'     },
+	{ status: 'ripping',            label: 'Ripping',               icon: 'fa-download'         },
+	{ status: 'waiting_transcode',  label: 'Waiting to transcode',  icon: 'fa-hourglass-half'   },
+	{ status: 'transcoding',        label: 'Transcoding',           icon: 'fa-film'             },
+	{ status: 'moving',             label: 'Moving',                icon: 'fa-upload'           },
+	{ status: 'success',            label: 'Finished',              icon: 'fa-flag-checkered'   }
 ];
 
 /**
  * Function to collect all child servers from arm.yaml config into links on the homepage
  */
-function collectChildServers() {
-    activeServers.push( location.origin );
+export function collectChildServers() {
+    activeServers.push(location.origin);
 
     // riiiiight ..
-    const childs = $("#children");
+    const childs = $('#children');
     const children = childs.text().trim();
     if (children) {
         const childLinks = [];
-        const childrenArr = children.split(",");
+        const childrenArr = children.split(',');
         $.each(childrenArr, function (_index, value) {
             activeServers.push(value);
             childLinks.push(`<a target="_blank" href="${value}">${value}</a>`);
         });
-        childs.html(`Children: <br />${childLinks.join("<br />")}`);
+        childs.html(`Children: <br />${childLinks.join('<br />')}`);
     }
 }
 
-function formatTrackLength(length, videoType) {
-	if (length == null || length === '')
-		return 'Unknown duration';
-
-	let seconds = Number(length);
-
-	if (!Number.isFinite(seconds))
-		return 'Unknown duration';
-
-	if (videoType === 'Music')
-		seconds = Math.round(seconds / 1000);
-
-	const hours = Math.floor(seconds / 3600);
-	const minutes = Math.floor((seconds % 3600) / 60);
-	const remaining = Math.floor(seconds % 60);
-
-	return hours
-		? `${hours}:${String(minutes).padStart(2, '0')}:${String(remaining).padStart(2, '0')}`
-		: `${minutes}:${String(remaining).padStart(2, '0')}`;
-}
-
-function safe_bool(state)
+export function safe_bool(state)
 {
-    if (typeof state === "undefined")
+    if (typeof state === 'undefined')
         return false
 
-    if (typeof state === "string")
-        return state.trim().toLowerCase() === "true";
+    if (typeof state === 'string')
+        return state.trim().toLowerCase() === 'true';
 
-    if (typeof state === "boolean")
+    if (typeof state === 'boolean')
         return state;
 
     return false;
+}
+
+export function activeTab(tab) {
+    $('.sidebar [id^="nav"]').removeClass('active');
+    $('.sidebar #nav' + tab).addClass('active');
 }

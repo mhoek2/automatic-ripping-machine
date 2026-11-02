@@ -1,7 +1,7 @@
-const ARM = {
+export const ARM = {
     storage: {
         get(key) {
-            return localStorage.getItem(key) === "true";
+            return localStorage.getItem(key) === 'true';
         },
 
         set(key, value) {
@@ -36,12 +36,12 @@ const ARM = {
             this.active = selector;
 
             modal
-                .addClass("open")
-                .attr("aria-hidden", "false");
+                .addClass('open')
+                .attr('aria-hidden', 'false');
 
-            $("body").addClass("modal-open");
+            $('body').addClass('modal-open');
 
-            modal.find(".arm-modal-dialog").trigger("focus");
+            modal.find('.arm-modal-dialog').trigger('focus');
         },
 
 		hide(selector = this.active, restoreFocus = true) {
@@ -50,8 +50,8 @@ const ARM = {
 			}
 
 			$(selector)
-				.removeClass("open")
-				.attr("aria-hidden", "true");
+				.removeClass('open')
+				.attr('aria-hidden', 'true');
 
 			if (this.active !== selector) {
 				return;
@@ -60,11 +60,11 @@ const ARM = {
 			$(document).trigger(`arm:modal-close_${this.active}`, {});
 
 			this.active = null;
-			$("body").removeClass("modal-open");
+			$('body').removeClass('modal-open');
 
 			// ??
 			if (restoreFocus && this.lastFocus) {
-				$(this.lastFocus).trigger("focus");
+				$(this.lastFocus).trigger('focus');
 			}
 
 			this.lastFocus = null;
@@ -75,16 +75,16 @@ const ARM = {
 };
 
 $(function() {
-	$(document).on("click", "[data-modal-close]", function() {
-		const modal = $(this).closest(".arm-modal");
+	$(document).on('click', '[data-modal-close]', function() {
+		const modal = $(this).closest('.arm-modal');
 
 		if (modal.length) {
-			ARM.modal.hide(`#${modal.attr("id")}`);
+			ARM.modal.hide(`#${modal.attr('id')}`);
 		}
 	});
 
-	$(document).on("keydown", function(e) {
-		if (e.key === "Escape" && ARM.modal.active) {
+	$(document).on('keydown', function(e) {
+		if (e.key === 'Escape' && ARM.modal.active) {
 			ARM.modal.hide();
 		}
 	});
