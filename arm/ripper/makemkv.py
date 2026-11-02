@@ -248,7 +248,7 @@ class CInfo:
     `CINFO:id,code,value`
     ```
     """
-    id: int  # pylint: disable=C0103
+    id: int
     """Attribute ID, see AP_ItemAttributeId in apdefs.h"""
     code: int
     """Message Code if Attribute Value is a constant string"""
