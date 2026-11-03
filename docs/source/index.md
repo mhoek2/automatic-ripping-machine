@@ -177,7 +177,7 @@ This guide assumes Docker is already installed and configured. If not, follow th
     sudo docker compose up -d
     ```
 
-45. Verify the Installation
+4. Verify the Installation
     ```bash
     # Veiw current status of the container
     sudo docker compose ps
@@ -192,7 +192,7 @@ This guide assumes Docker is already installed and configured. If not, follow th
     sudo docker compose down
     ```
 
-6. Access the Web Interface
+5. Access the Web Interface
     Open the following address in your browser:
 
     http://`<server-ip>`:8080
@@ -204,6 +204,36 @@ This guide assumes Docker is already installed and configured. If not, follow th
     # find ip on ubuntu:
     ip a
     ```
+
+
+## Update ARM
+::::{grid} 1
+:margin: 0 0 0 0
+:padding: 0 0 0 0
+
+:::{grid-item}
+```{admonition} Updating the ARM container
+:class: seealso
+
+Updating ARM is as simple as pulling the latest image and recreating the container.
+
+`* Before updating` \
+`Configuration and database files in the config and data folders are stored outside the container.
+These are usually preserved when the container is recreated, provided they are configured as persistent volumes.` \
+`But its good practise to create a backup`
+
+```bash
+# Make sure you run the following commands from the install directory containing your docker-compose.yml file.
+cd /stack/arm
+
+# Optional: Create a backup
+zip -r arm-backup-$(date +%F).zip config data
+
+# pull and recreate
+docker compose pull && docker compose up -d
+```   
+:::
+::::
 
 ## Install Docker on Ubuntu
 ::::{grid} 1

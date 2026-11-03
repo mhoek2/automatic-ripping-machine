@@ -85,6 +85,30 @@ A fork of the [Automatic Ripping Machine](https://github.com/automatic-ripping-m
     ```
 </details>
 
+## Update ARM
+> [!NOTE]
+> Updating ARM is as simple as pulling the latest image and recreating the container.
+<details>
+<summary>View steps</summary>
+
+`* Before updating` \
+`Configuration and database files in the config and data folders are stored outside the container.
+These are usually preserved when the container is recreated, provided they are configured as persistent volumes.` \
+`But its good practise to create a backup`
+
+```bash
+# Make sure you run the following commands from the install directory containing your docker-compose.yml file.
+cd /stack/arm
+
+# Optional: Create a backup
+zip -r arm-backup-$(date +%F).zip config data
+
+# pull and recreate
+docker compose pull && docker compose up -d
+``` 
+</details>
+
+
 ## Install Docker on Ubuntu
 > [!NOTE]
 > This is a quick guide. More detailed guides are available online or follow the official [Docker installation guide](https://docs.docker.com/engine/install/ubuntu/)!
