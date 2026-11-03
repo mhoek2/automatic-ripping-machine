@@ -1,6 +1,6 @@
-<div id="jobs-details-modal" class="arm-modal" aria-hidden="true">
+<div id="jobs_details_modal" class="arm-modal" aria-hidden="true">
     <div class="arm-modal-backdrop" data-modal-close></div>
-    <div class="arm-modal-dialog job-details-dialog" role="dialog" aria-modal="true" aria-labelledby="job-details-title" tabindex="-1">
+    <div class="arm-modal-dialog job-details-dialog" role="dialog" aria-modal="true" aria-labelledby="job_details_title" tabindex="-1">
         <div class="arm-modal-header">
             <span class="job-details-header-label">Job details</span>
             <button class="arm-modal-close" type="button" aria-label="Close dialog" data-modal-close>
@@ -12,21 +12,21 @@
             <div class="job-details-content">
                 <section class="job-details-overview">
                     <div class="job-details-poster">
-                        <img id="job-details-poster" src="" alt="Movie poster">
+                        <img id="job_details_poster" src="" alt="Movie poster">
                     </div>
                     <div class="job-details-info">
                         <div class="job-details-title-row">
-                            <h2 id="job-details-title">Unknown title</h2>
+                            <h2 id="job_details_title">Unknown title</h2>
                             <span id="job_status_badge_wrapper">
                                 <span class="status-dot"></span>
                                 <span class="status-text"></span>
                             </span>
                         </div>
-                        <div id="job-external-meta"></div>
-                        <p id="job-details-plot"></p>
-                        <div class="job-details-meta" id="job-details-meta"></div>
-                        <a id="job-details-log" href="#" class="arm-button arm-button-secondary">
-                            <i class="fa-solid fa-file-lines" aria-hidden="true"></i>
+                        <div id="job_external_meta"></div>
+                        <p id="job_details_plot"></p>
+                        <div class="job-details-meta" id="job_details_meta"></div>
+                        <a id="job_details_log" href="#" class="arm-button arm-button-secondary">
+                            <i class="fa-solid fa-terminal" aria-hidden="true"></i>
                             View log
                         </a>
                     </div>
@@ -48,11 +48,11 @@
                 {% if authenticated %}
                     <details class="job-details-section job-details-disclosure">
                         <summary>Technical details</summary>
-                        <div id="job-details-technical"></div>
+                        <div id="job_details_technical"></div>
                     </details>
                     <details class="job-details-section job-details-disclosure">
                         <summary>Configuration</summary>
-                        <div id="job-details-config"></div>
+                        <div id="job_details_config"></div>
                     </details>
                 {% endif %}
             </div>

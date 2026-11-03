@@ -387,7 +387,7 @@ export function renderJobActions(job, ids, authenticated) {
                 target="_blank",
 				href="logs?logfile=${job.logfile}&mode=tail"
 				data-tooltip="View Log">
-				<i class="fa-solid fa-file-lines"></i>
+				<i class="fa-solid fa-terminal"></i>
 			</a>
     `;
 
@@ -405,7 +405,7 @@ export function renderJobActions(job, ids, authenticated) {
 			<a class="icon-button"
 				href="customTitle?job_id=${ids.jobId}"
 				data-tooltip="Custom Title">
-				<i class="fa-solid fa-pen"></i>
+				<i class="fa-regular fa-pen-to-square"></i>
 			</a>`;
 	}
 

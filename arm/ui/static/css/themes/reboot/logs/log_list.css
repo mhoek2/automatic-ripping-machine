@@ -48,6 +48,10 @@
     white-space: nowrap;
 }
 
+.logs-table tbody th {
+    font-weight: 500;
+}
+
 .logs-table tbody tr:last-child th,
 .logs-table tbody tr:last-child td {
     border-bottom: 0;
@@ -59,10 +63,6 @@
 
 .logs-table tbody tr:hover {
     background: var(--color-surface-hover);
-}
-
-.logs-table tbody th {
-    font-weight: 500;
 }
 
 .logs-sort {
@@ -196,15 +196,12 @@
 
 .logs-footer > i {
     margin-bottom: 0.25rem;
-}
-
-.logs-footer > i {
     margin-top: 4px;
     color: var(--color-info);
 }
 
 /* Mobile: turn each logfile into a compact card. */
-@media (max-width: 700px) {
+@media (width <= 768px) {
     .logs-count {
         padding: 5px 9px;
         font-size: .75rem;
@@ -306,7 +303,7 @@
     }
 }
 
-@media (max-width: 380px) {
+@media (width <= 400px) {
     .logs-table tbody tr {
         gap: 14px 8px;
         padding: 12px;

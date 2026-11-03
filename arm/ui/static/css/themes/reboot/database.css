@@ -49,7 +49,7 @@
     filter: brightness(0.96);
 }
 
-@media (max-width: 1366px) {
+@media (width <= 1366px) {
     #search_container input {
         display: none;
     }

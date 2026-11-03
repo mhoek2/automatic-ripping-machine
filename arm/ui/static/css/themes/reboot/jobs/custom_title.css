@@ -73,7 +73,7 @@
     display: block;
 }
 
-@media (max-width: 600px) {
+@media (width <= 600px) {
     .custom-title-page {
         padding: 20px 12px;
     }

@@ -70,7 +70,7 @@
     border-top: 1px solid var(--color-border);
 }
 
-@media (max-width: 600px) {
+@media (width <= 600px) {
     .job-settings-page {
         padding: 20px 12px;
     }

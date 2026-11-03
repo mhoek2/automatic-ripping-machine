@@ -6,6 +6,10 @@ label {
 	font-weight: 500;
 }
 
+select {
+	cursor: pointer;
+}
+
 input,
 select {
 	width: 100%;
@@ -34,10 +38,6 @@ select:focus {
 
 input::placeholder {
 	color: var(--color-text-subtle);
-}
-
-select {
-	cursor: pointer;
 }
 
 .arm-checkbox {

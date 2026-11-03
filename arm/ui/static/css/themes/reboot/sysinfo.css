@@ -250,14 +250,7 @@
     flex-shrink: 0;
 }
 
-.sysinfo-storage-checks .server-check-status {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.25rem;
-    font-size: 0.75rem;
-}
-
-@media (max-width: 600px) {
+@media (width <= 600px) {
     .sysinfo-storage-header {
         flex-direction: column;
     }
@@ -414,9 +407,15 @@
     font-size: 12px;
 }
 
-.server-check-status i {
-    font-size: 14px;
-}
+    .server-check-status i {
+        font-size: 14px;
+    }
+    .sysinfo-storage-checks .server-check-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        font-size: 0.75rem;
+    }
 
 .server-check-meta {
     display: flex;
@@ -481,7 +480,7 @@
     letter-spacing: .05em;
 }
 
-@media (min-width: 1800px) {
+@media (width >= 1800px) {
     .sysinfo-card-system {
         grid-column: span 4;
     }
@@ -495,10 +494,9 @@
     }
 }
 
-
-@media (max-width: 1000px) {
+@media (width <= 1000px) {
     .sysinfo-card-system,
-    .sysinfo-card-storage, {
+    .sysinfo-card-storage {
         grid-column: span 6;
     }
 
@@ -507,7 +505,7 @@
     }
 }
 
-@media (max-width: 700px) {
+@media (width <= 768px) {
     .sysinfo {
         margin: 1.5em auto;
     }
@@ -552,7 +550,7 @@
     }
 }
 
-@media (max-width: 380px) {
+@media (width <= 380px) {
     .server-info-grid {
         grid-template-columns: minmax(0, 1fr);
     }

@@ -236,7 +236,7 @@ article.job-card[data-placeholder] .job-actions > *::before {
 }
 
 /* Keep the poster compact on mobile, matching real cards */
-@media (max-width: 650px) {
+@media (width <= 600px) {
     article.job-card[data-placeholder] .job-poster {
         min-height: 0;
         height: 220px;

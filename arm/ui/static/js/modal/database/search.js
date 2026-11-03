@@ -4,10 +4,10 @@ import { switchSearch } from '../../database.js';
 ARM.modal.database = ARM.modal.database || {};
 
 ARM.modal.database.search = {
-	modal: '#search-modal',
+	modal: '#search_modal',
 
 	get form() {
-		return $(this.modal).find('#search-modal-form');
+		return $(this.modal).find('#search_modal_form');
 	},
 
 	get input() {
@@ -15,7 +15,7 @@ ARM.modal.database.search = {
 	},
 
 	get error() {
-		return $(this.modal).find('#search-modal-error');
+		return $(this.modal).find('#search_modal_error');
 	},
 
 	open() {

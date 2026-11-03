@@ -1,8 +1,8 @@
-#jobs-details-modal .job-details-dialog {
+#jobs_details_modal .job-details-dialog {
     max-width: 1200px;
 }
 
-#jobs-details-modal .arm-modal-header {
+#jobs_details_modal .arm-modal-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -12,24 +12,24 @@
     background: var(--color-surface);
 }
 
-#jobs-details-modal .job-details-header-label {
+#jobs_details_modal .job-details-header-label {
     color: var(--color-text-secondary);
     font-size: 0.85rem;
     font-weight: 600;
     letter-spacing: 0.02em;
 }
 
-#jobs-details-modal .arm-modal-body {
+#jobs_details_modal .arm-modal-body {
     background: var(--color-surface);
 }
 
-#jobs-details-modal .job-details-content {
+#jobs_details_modal .job-details-content {
     display: flex;
     flex-direction: column;
     gap: 1.75rem;
 }
 
-#jobs-details-modal .job-details-overview {
+#jobs_details_modal .job-details-overview {
     position: relative;
     display: grid;
     grid-template-columns: 190px minmax(0, 1fr);
@@ -39,7 +39,7 @@
     border-bottom: 1px solid var(--color-border);
 }
 
-#jobs-details-modal .job-details-poster {
+#jobs_details_modal .job-details-poster {
     width: 100%;
     aspect-ratio: 2 / 3;
     overflow: hidden;
@@ -49,14 +49,14 @@
     box-shadow: 0 8px 24px rgb(0 0 0 / 18%);
 }
 
-#jobs-details-modal .job-details-poster img {
+#jobs_details_modal .job-details-poster img {
     display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-#jobs-details-modal .job-details-info {
+#jobs_details_modal .job-details-info {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -65,12 +65,12 @@
     padding: 0.35rem 0;
 }
 
-    #jobs-details-modal .job-details-info #job-external-meta {
+    #jobs_details_modal .job-details-info #job_external_meta {
         margin: 0.5em 0;
     }
 
 
-#jobs-details-modal .job-details-title-row {
+#jobs_details_modal .job-details-title-row {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -79,7 +79,7 @@
     min-width: 0;
 }
 
-#jobs-details-modal #job-details-title {
+#jobs_details_modal #job_details_title {
     flex: 0 1 auto;
     min-width: 0;
     margin: 0;
@@ -90,7 +90,7 @@
     overflow-wrap: anywhere;
 }
 
-#jobs-details-modal .job-details-info > p {
+#jobs_details_modal .job-details-info > p {
     max-width: 75ch;
     margin: 0;
     color: var(--color-text-secondary);
@@ -98,14 +98,14 @@
     line-height: 1.75;
 }
 
-#jobs-details-modal .job-details-meta {
+#jobs_details_modal .job-details-meta {
     display: flex;
     flex-wrap: wrap;
     gap: 0.65rem;
     width: 100%;
 }
 
-#jobs-details-modal .job-details-meta-item {
+#jobs_details_modal .job-details-meta-item {
     display: flex;
     flex-direction: column;
     gap: 0.3rem;
@@ -117,7 +117,7 @@
     background: var(--color-surface-raised);
 }
 
-#jobs-details-modal .job-details-meta-label {
+#jobs_details_modal .job-details-meta-label {
     color: var(--color-text-secondary);
     font-size: 0.7rem;
     font-weight: 600;
@@ -125,13 +125,13 @@
     text-transform: uppercase;
 }
 
-#jobs-details-modal .job-details-meta-value {
+#jobs_details_modal .job-details-meta-value {
     overflow-wrap: anywhere;
     font-size: 0.85rem;
     font-weight: 600;
 }
 
-#jobs-details-modal #job-details-log {
+#jobs_details_modal #job_details_log {
     display: inline-flex;
     align-items: center;
     gap: 0.55rem;
@@ -139,40 +139,40 @@
     text-decoration: none;
 }
 
-#jobs-details-modal .job-details-section {
+#jobs_details_modal .job-details-section {
     min-width: 0;
 }
 
-#jobs-details-modal .job-details-section > summary {
+#jobs_details_modal .job-details-section > summary {
     padding: 0.9rem 0;
     cursor: pointer;
     font-weight: 650;
     list-style-position: inside;
 }
 
-#jobs-details-modal .job-details-section > summary:hover {
+#jobs_details_modal .job-details-section > summary:hover {
     color: var(--color-accent);
 }
 
-#jobs-details-modal .progress-section {
+#jobs_details_modal .progress-section {
     padding: 0.25rem 0 1rem;
     border-bottom: 1px solid var(--color-border);
 }
 
-#jobs-details-modal .progress-section .job-progress {
+#jobs_details_modal .progress-section .job-progress {
     max-width: 800px;
     margin: 0 auto;
 }
 
-#jobs-details-modal .job-details-table {
+#jobs_details_modal .job-details-table {
     width: 100%;
     margin-top: 0.75rem;
     border-collapse: collapse;
     font-size: 0.875rem;
 }
 
-#jobs-details-modal .job-details-table th,
-#jobs-details-modal .job-details-table td {
+#jobs_details_modal .job-details-table th,
+#jobs_details_modal .job-details-table td {
     padding: 0.65rem 0.75rem;
     border-bottom: 1px solid var(--color-border);
     text-align: left;
@@ -180,88 +180,88 @@
     overflow-wrap: anywhere;
 }
 
-#jobs-details-modal .job-details-table th {
+#jobs_details_modal .job-details-table th {
     width: 35%;
     color: var(--color-text-secondary);
     font-weight: 600;
 }
 
-#jobs-details-modal .job-details-disclosure {
+#jobs_details_modal .job-details-disclosure {
     padding-top: 0.25rem;
     border-top: 1px solid var(--color-border);
 }
 
-@media (max-width: 700px) {
-    #jobs-details-modal .job-details-overview {
+@media (width <= 768px) {
+    #jobs_details_modal .job-details-overview {
         grid-template-columns: 130px minmax(0, 1fr);
         gap: 1.25rem;
     }
 
-    #jobs-details-modal .job-details-meta-item {
+    #jobs_details_modal .job-details-meta-item {
         min-width: 0;
         flex: 1 1 130px;
     }
 }
 
-@media (max-width: 500px) {
-    #jobs-details-modal .arm-modal-header {
+@media (width <= 500px) {
+    #jobs_details_modal .arm-modal-header {
         padding: 0.85rem 1rem;
     }
 
-    #jobs-details-modal .job-details-overview {
+    #jobs_details_modal .job-details-overview {
         grid-template-columns: 88px minmax(0, 1fr);
         gap: 1rem;
     }
 
-    #jobs-details-modal .job-details-info {
+    #jobs_details_modal .job-details-info {
         gap: 0.85rem;
         padding-top: 0;
     }
 
-    #jobs-details-modal #job-details-title {
+    #jobs_details_modal #job_details_title {
         font-size: 1.35rem;
     }
 
-    #jobs-details-modal .job-details-title-row {
+    #jobs_details_modal .job-details-title-row {
         align-items: flex-start;
         flex-direction: column;
         gap: 0.6rem;
     }
 
-    #jobs-details-modal .job-details-info > p {
+    #jobs_details_modal .job-details-info > p {
         font-size: 0.875rem;
         line-height: 1.6;
     }
 
-    #jobs-details-modal .job-details-meta {
+    #jobs_details_modal .job-details-meta {
         gap: 0.45rem;
     }
 
-    #jobs-details-modal .job-details-meta-item {
+    #jobs_details_modal .job-details-meta-item {
         flex: 1 1 100%;
         padding: 0.5rem 0.6rem;
     }
 
-    #jobs-details-modal .job-details-table {
+    #jobs_details_modal .job-details-table {
         font-size: 0.8rem;
     }
 
-    #jobs-details-modal .job-details-table th,
-    #jobs-details-modal .job-details-table td {
+    #jobs_details_modal .job-details-table th,
+    #jobs_details_modal .job-details-table td {
         padding: 0.5rem;
     }
 }
 
-@media (max-width: 360px) {
-    #jobs-details-modal .job-details-overview {
+@media (width <= 380px) {
+    #jobs_details_modal .job-details-overview {
         grid-template-columns: minmax(0, 1fr);
     }
 
-    #jobs-details-modal .job-details-poster {
+    #jobs_details_modal .job-details-poster {
         width: 100px;
     }
 
-    #jobs-details-modal .job-details-meta-item {
+    #jobs_details_modal .job-details-meta-item {
         flex-basis: calc(50% - 0.25rem);
     }
 }

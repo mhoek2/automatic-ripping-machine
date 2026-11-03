@@ -66,7 +66,7 @@ export async function fetchAllJobs(reset = false) {
 
     databaseLoading = true;
     setDatbaseInfitiniseScrollState(true);
-    $('#database-load-status').text('Loading jobs...');
+    $('#database_load_status').text('Loading jobs...');
 
     const params = {};
 
@@ -79,7 +79,7 @@ export async function fetchAllJobs(reset = false) {
 
         if (!data.success) {
             databaseHasMore = false;
-            $('#database-load-status').text(data.error || 'Failed to load jobs.');
+            $('#database_load_status').text(data.error || 'Failed to load jobs.');
             return;
         }
 
@@ -89,15 +89,15 @@ export async function fetchAllJobs(reset = false) {
         databaseHasMore = data.has_more;
 
         if (!Object.keys(data.results ?? {}).length) {
-            $('#database-load-status').text('No jobs found.');
+            $('#database_load_status').text('No jobs found.');
         } else if (!databaseHasMore) {
-            $('#database-load-status').text('All jobs loaded.');
+            $('#database_load_status').text('All jobs loaded.');
         } else {
-            $('#database-load-status').text('');
+            $('#database_load_status').text('');
         }
     } catch (error) {
         databaseHasMore = false;
-        $('#database-load-status').text('Failed to load jobs.');
+        $('#database_load_status').text('Failed to load jobs.');
         console.error(error);
     } finally {
         databaseLoading = false;
@@ -109,7 +109,7 @@ export async function fetchAllJobs(reset = false) {
 }
 
 export function checkDatabaseScroll() {
-	const container = $('.base_content')[0];
+	const container = $('.base-content')[0];
 
 	if (!container || !databaseInfiniteScrollEnabled || databaseLoading || !databaseHasMore)
 		return;

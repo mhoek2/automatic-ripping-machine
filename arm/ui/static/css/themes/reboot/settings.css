@@ -79,7 +79,7 @@
 }
 
 /* reponsive */
-@media (max-width: 700px) {
+@media (width <= 768px) {
     .settings-page {
         padding: 12px;
     }

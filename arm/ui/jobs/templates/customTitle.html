@@ -17,14 +17,14 @@
         <form class="custom-title-form" action="" method="get" novalidate>
 
             <div class="custom-title-field">
-                <label for="custom-title">Title</label>
-                <input type="text" id="custom-title" name="title" placeholder="Enter title..." value="{{ job.title if job.title != '' else '' }}" autocomplete="off" autofocus>
+                <label for="custom_title">Title</label>
+                <input type="text" id="custom_title" name="title" placeholder="Enter title..." value="{{ job.title if job.title != '' else '' }}" autocomplete="off" autofocus>
                 <div class="custom-title-error">Title can't be blank</div>
             </div>
 
             <div class="custom-title-field">
-                <label for="custom-year">Year</label>
-                <input type="text" id="custom-year" name="year" placeholder="Enter year..." value="{{ job.year if job.year != '' else '' }}" inputmode="numeric">
+                <label for="custom_year">Year</label>
+                <input type="text" id="custom_year" name="year" placeholder="Enter year..." value="{{ job.year if job.year != '' else '' }}" inputmode="numeric">
             </div>
 
             <input type="hidden" name="job_id" value="{{ job.job_id }}">

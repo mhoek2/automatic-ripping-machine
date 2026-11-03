@@ -5,7 +5,7 @@ import { startLogViewer } from '../../logs.js';
 ARM.modal.jobs = ARM.modal.jobs || {};
 
 ARM.modal.jobs.pipeline = {
-	modal		: '#jobs-pipeline-modal',
+	modal		: '#jobs_pipeline_modal',
 	job_id		: null,
 	log_viewer	: null,
 
@@ -24,7 +24,7 @@ ARM.modal.jobs.pipeline = {
 		_modal.job_id = job_id;
 		_modal.log_viewer = startLogViewer('tail', job.logfile);
 
-		$('#job-pipeline-modal-title').text(`
+		$('#jobs_pipeline_modal_title').text(`
 			${job.title} (${job.year})
 		`);
 

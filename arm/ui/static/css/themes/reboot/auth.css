@@ -62,7 +62,7 @@
     font-size: 11px;
 }
 
-@media (max-width: 480px) {
+@media (width <= 480px) {
     .login-page {
         padding: 16px;
     }
@@ -131,7 +131,7 @@
 	font-size: 11px;
 }
 
-@media (max-width: 600px) {
+@media (width <= 600px) {
 	.update-password-page {
 		padding: 20px 12px;
 	}

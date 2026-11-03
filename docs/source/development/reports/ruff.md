@@ -790,12 +790,12 @@
 | Line | Type | Message |
 |---:|---|---|
 | 1:1 | EXE002 | The file is executable but no shebang is present |
-| 3:1 | I001 | Import block is un-sorted or un-formatted |
-| 11:23 | RUF100 | Unused blanket `noqa` directive |
-| 12:36 | RUF100 | Unused blanket `noqa` directive |
-| 13:22 | RUF100 | Unused blanket `noqa` directive |
-| 15:25 | RUF100 | Unused blanket `noqa` directive |
-| 63:9 | I001 | Import block is un-sorted or un-formatted |
+| 2:1 | I001 | Import block is un-sorted or un-formatted |
+| 10:23 | RUF100 | Unused blanket `noqa` directive |
+| 11:36 | RUF100 | Unused blanket `noqa` directive |
+| 12:22 | RUF100 | Unused blanket `noqa` directive |
+| 14:25 | RUF100 | Unused blanket `noqa` directive |
+| 62:9 | I001 | Import block is un-sorted or un-formatted |
 
 ````
 :::

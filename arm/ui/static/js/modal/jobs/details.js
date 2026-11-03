@@ -6,7 +6,7 @@ import { formatTimestamp } from '../../time.js';
 ARM.modal.jobs = ARM.modal.jobs || {};
 
 ARM.modal.jobs.details = {
-	modal		: '#jobs-details-modal',
+	modal		: '#jobs_details_modal',
 	inited		: null,
 	job_id		: null,
 	log_viewer	: null,
@@ -93,17 +93,17 @@ ARM.modal.jobs.details = {
 
 		console.log(job);
 
-		modal.find('#job-details-title').text(
+		modal.find('#job_details_title').text(
 			`${job.title || 'Unknown title'}${job.year ? ` (${job.year})` : ''}`
 		);
 
-		modal.find('#job-details-poster')
+		modal.find('#job_details_poster')
 			.attr('src', job.poster_url || '')
 			.attr('alt', job.title || 'Movie poster');
 
-		modal.find('#job-details-plot').text(job.plot || '');
+		modal.find('#job_details_plot').text(job.plot || '');
 
-		modal.find('#job-details-log')
+		modal.find('#job_details_log')
 			.attr('href', job.logfile ? `/logs?logfile=${encodeURIComponent(job.logfile)}&mode=tail` : '#')
 			.toggle(!!job.logfile);
 
@@ -118,8 +118,8 @@ ARM.modal.jobs.details = {
 		if (!__is_authenticated_simple())
 			return;
 
-		_modal.renderTable('#job-details-technical', data.technical?.job || {});
-		_modal.renderTable('#job-details-config', job.config || {});
+		_modal.renderTable('#job_details_technical', data.technical?.job || {});
+		_modal.renderTable('#job_details_config', job.config || {});
 	},
 
 	renderStatusBadge(job) {
@@ -133,7 +133,7 @@ ARM.modal.jobs.details = {
 
 	renderExternalMeta(job){
 		const _modal = ARM.modal.jobs.details;
-		$(`${_modal.modal} #job-external-meta`).html('');
+		$(`${_modal.modal} #job_external_meta`).html('');
 
 		if (job.imdb_id && job.imdb_id !== 'None') {
 			const imdbLink = $('<a>')
@@ -144,12 +144,12 @@ ARM.modal.jobs.details = {
 				.attr('aria-label', 'View on IMDb')
 				.text('IMDb');
 
-			$(`${_modal.modal} #job-external-meta`).append(imdbLink);
+			$(`${_modal.modal} #job_external_meta`).append(imdbLink);
 		}
 	},
 
 	renderMeta(job) {
-		const meta = $('#job-details-meta').empty();
+		const meta = $('#job_details_meta').empty();
 
 		const dateInfo = formatTimestamp(job.start_time);
 

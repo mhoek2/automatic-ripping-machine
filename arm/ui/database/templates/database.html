@@ -39,7 +39,7 @@
 
     <div id="joblist" class="jobs-container"></div>
 
-    <div id="database-load-status" class="database-load-status" role="status" aria-live="polite">
+    <div id="database_load_status" class="database-load-status" role="status" aria-live="polite">
         Loading jobs...
     </div>
 
@@ -77,7 +77,7 @@
             })();
 
             // Fetch more when the user approaches the bottom.
-            $(".base_content").off("scroll.database").on("scroll.database", checkDatabaseScroll);
+            $(".base-content").off("scroll.database").on("scroll.database", checkDatabaseScroll);
 
             $("#get_all").on("click", function() {
                 setDatbaseInfitiniseScrollState(true);

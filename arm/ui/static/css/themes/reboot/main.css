@@ -5,7 +5,7 @@
 :root {
     /* Page */
     --color-background: #f5f6f8;
-    --color-surface: #ffffff;
+    --color-surface: #fff;
     --color-surface-raised: #f1f3f5;
     --color-surface-hover: #e9ecef;
 
@@ -17,7 +17,7 @@
     --color-text: #212529;
     --color-text-muted: #6c757d;
     --color-text-subtle: #868e96;
-    --color-text-inverse: #ffffff;
+    --color-text-inverse: #fff;
 
     /* Accent */
     --color-accent: #0d6efd;
@@ -34,23 +34,22 @@
     --color-action-starting-bg: #e3fafc;
 
     /* Status backgrounds */
-    --color-success-bg: rgba(64, 192, 87, .1);
-    --color-warning-bg: rgba(245, 159, 0, .1);
-    --color-danger-bg: rgba(250, 82, 82, .1);
-    --color-info-bg: rgba(51, 154, 240, .1);
+    --color-success-bg: rgb(64 192 87 / 10%);
+    --color-warning-bg: rgb(245 159 0 / 10%);
+    --color-danger-bg: rgb(250 82 82 / 10%);
+    --color-info-bg: rgb(51 154 240 / 10%);
 
     /* Controls */
-    --color-control: #ffffff;
+    --color-control: #fff;
     --color-control-hover: #f1f3f5;
 
     /* Tooltip */
     --color-tooltip: #212529;
-    --color-tooltip-text: #ffffff;
+    --color-tooltip-text: #fff;
 
     /* Shadows */
-    --shadow-card: 0 2px 8px rgba(0, 0, 0, .12);
-    --shadow-tooltip: 0 2px 8px rgba(0, 0, 0, .2);
-
+    --shadow-card: 0 2px 8px rgb(0 0 0 / 12%);
+    --shadow-tooltip: 0 2px 8px rgb(0 0 0 / 20%);
     --color-scrollbar-track: #f1f3f5;
     --color-scrollbar-thumb: #ced4da;
     --color-scrollbar-thumb-hover: #adb5bd;
@@ -88,10 +87,10 @@ html[data-theme="dark"] {
     --color-action-starting-bg: #093344;
 
     /* Status backgrounds */
-    --color-success-bg: rgba(74, 222, 128, .1);
-    --color-warning-bg: rgba(251, 191, 36, .1);
-    --color-danger-bg: rgba(248, 113, 113, .1);
-    --color-info-bg: rgba(96, 165, 250, .1);
+    --color-success-bg: rgb(74 222 128 / 10%);
+    --color-warning-bg: rgb(251 191 36 / 10%);
+    --color-danger-bg: rgb(248 113 113 / 10%);
+    --color-info-bg: rgb(96 165 250 / 10%);
 
     /* Controls */
     --color-control: #222;
@@ -102,9 +101,8 @@ html[data-theme="dark"] {
     --color-tooltip-text: #fff;
 
     /* Shadows */
-    --shadow-card: 0 2px 8px rgba(0, 0, 0, .2);
-    --shadow-tooltip: 0 2px 8px rgba(0, 0, 0, .4);
-
+    --shadow-card: 0 2px 8px rgb(0 0 0 / 20%);
+    --shadow-tooltip: 0 2px 8px rgb(0 0 0 / 40%);
     --color-scrollbar-track: #151515;
     --color-scrollbar-thumb: #444;
     --color-scrollbar-thumb-hover: #666;
@@ -117,13 +115,13 @@ body {
     margin: 0;
 }
 
-.base_container {
+.base-container {
     width: 100%;
     display: flex;
     flex-direction: row;
 }
 
-.base_content {
+.base-content {
     overflow-y: auto;
     overflow-x: hidden;
     height: 100vh;
@@ -132,21 +130,7 @@ body {
     margin-bottom: 8em;
 }
 
-
-/* feeder debug */
-.feeder_container {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-}
-
-.feeder_container > button {
-    all: reset;
-}
-
-
 /* page header */ 
-
 .page-header {
 	display: flex;
 	align-items: center;
@@ -249,7 +233,7 @@ body {
     font-size: 1rem;
 }
 
-@media (max-width: 480px) {
+@media (width <= 480px) {
     #footer {
         padding: 1rem;
         font-size: 0.8125rem;
@@ -257,7 +241,7 @@ body {
 }
 
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
 	.page-header {
 		align-items: stretch;
 		flex-direction: column;
@@ -276,7 +260,7 @@ body {
 	}
 }
 
-@media (max-width: 480px) {
+@media (width <= 480px) {
 	.page-header-title {
 		font-size: 1.25rem;
 	}

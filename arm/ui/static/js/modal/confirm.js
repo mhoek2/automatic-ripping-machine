@@ -1,7 +1,7 @@
 import { ARM } from './modal.js';
 
 ARM.modal.confirm = {
-	modal: '#confirm-modal',
+	modal: '#confirm_modal',
 	state: {
 		href: '',
 		activeJob: null,
@@ -66,7 +66,7 @@ ARM.modal.confirm = {
 		ARM.modal.confirm.state.activeJob = options.jobId ?? null;
 		ARM.modal.confirm.state.actionType = type;
 
-		$('#confirm-modal-title').text(action.title);
+		$('#confirm_modal_title').text(action.title);
 		$('#m-body').text(action.message);
 
 		$('#save-yes')
