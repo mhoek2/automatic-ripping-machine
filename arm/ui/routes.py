@@ -192,6 +192,7 @@ def unauthorized():
 
 
 @app.route('/get_notications', methods=['GET'])
+@login_required
 def get_notications():
     return jsonify(
         success = True,

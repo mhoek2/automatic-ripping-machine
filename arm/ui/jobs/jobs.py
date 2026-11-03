@@ -424,9 +424,6 @@ def feed_json():
         args = [valid_data[x] for x in valid_modes[mode]['args']]
         return_json = valid_modes[mode]['funct'](*args)
 
-    # add notifcations to all reponses?
-    return_json['notes'] = json_api.get_unseen_notifications()
-
     # return JSON data
     return app.response_class(
         response    = json.dumps(

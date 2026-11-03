@@ -3,7 +3,9 @@
     {% include 'includes/base/head.html' %}
 
     <body>
+        {% if authenticated %}
         <div id="notification_container" aria-live="polite" aria-atomic="false"></div>
+        {% endif %}
 
         <div class="base-container">
             {% include 'includes/base/sidebar.html' %}
@@ -23,12 +25,17 @@
         {% block js %}
         <script type="module">
             import { collectChildServers } from './static/js/common.js';
-            import { getNotifications } from './static/js/notification.js';
+            {% if authenticated %}
+                import { getNotifications } from './static/js/notification.js';
+            {% endif %}
 
             $(document).ready(function () {
                 collectChildServers();
-                getNotifications();
-                window.setInterval(getNotifications, 2000);
+
+                {% if authenticated %}
+                    getNotifications();
+                    window.setInterval(getNotifications, 2000);
+                {% endif %}
             });
         </script>
         {% endblock %}
