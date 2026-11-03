@@ -206,27 +206,21 @@ import subprocess
 from flask import jsonify
 
 @app.route("/feeder")
+@login_required
 def feeder():
     data = request.args.to_dict()
     command = data.get("action", "completed")
 
     print(f"FEEDER: {command}", flush=True)
 
-    result = subprocess.run([
+    process = subprocess.Popen([
         "python3",
         "/opt/arm/dev/feeder/feeder.py",
         json.dumps(data),
-    ])
-
-    if result.returncode != 0:
-        return jsonify({
-            "success": False,
-            "command": command,
-            "exit_code": result.returncode,
-        }), 500
+    ], start_new_session=True)
 
     return jsonify({
         "success": True,
         "command": command,
-        "exit_code": 0,
+        "pid": process.pid,
     })
