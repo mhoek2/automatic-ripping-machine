@@ -163,6 +163,7 @@ This guide assumes Docker is already installed and configured. If not, follow th
         - TZ=Europe/Amsterdam
         volumes:
         - ./config:/etc/arm/config
+        - ./data:/home/arm/db
         - ./home:/home/arm
         - ./logs:/home/arm/logs
         - ./media:/home/arm/media

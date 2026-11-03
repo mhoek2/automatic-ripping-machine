@@ -11,6 +11,7 @@ services:
       - TZ=Europe/Amsterdam
     volumes:
       - ./config:/etc/arm/config
+      - ./data:/home/arm/db
       - ./home:/home/arm
       - ./logs:/home/arm/logs
       - ./media:/home/arm/media

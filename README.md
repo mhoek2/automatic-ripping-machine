@@ -43,6 +43,7 @@ A fork of the [Automatic Ripping Machine](https://github.com/automatic-ripping-m
         - TZ=Europe/Amsterdam
         volumes:
         - ./config:/etc/arm/config
+        - ./data:/home/arm/db
         - ./home:/home/arm
         - ./logs:/home/arm/logs
         - ./media:/home/arm/media
