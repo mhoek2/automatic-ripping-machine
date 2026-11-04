@@ -462,10 +462,10 @@ export const sysinfo = {
             return;
 
         // Do not hide or overwrite the existing UI while pending.
-        if (data.updated === -1 || data.updated === undefined || data.updated === null)
+        if (data.is_latest === -1 || data.is_latest === undefined || data.is_latest === null)
             return;
 
-        if (data.updated)
+        if (data.is_latest)
         {
             $update.hide();
             return;

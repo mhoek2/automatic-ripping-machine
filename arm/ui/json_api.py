@@ -21,7 +21,7 @@ from arm.models.track import Track
 from arm.models.ui_settings import UISettings
 from arm.ui import app, db
 from arm.ui.forms import ChangeParamsForm
-from arm.ui.utils import job_id_validator, database_updater, authenticated_state
+from arm.ui.utils import job_id_validator, database_updater, endpoint_meta
 from arm.ui.settings import DriveUtils as drive_utils # noqa E402
 
 
@@ -103,7 +103,7 @@ def get_x_jobs(job_status):
         "mode"          : job_status,
         "results"       : job_results,
         "arm_name"      : cfg.arm_config['ARM_NAME'],
-        "authenticated" : authenticated_state()
+        "meta"          : endpoint_meta()
     }
 
 def get_jobs_infinite( limit, before ):
@@ -123,7 +123,7 @@ def get_jobs_infinite( limit, before ):
         results         = serialize_job_results(jobs),
         has_more        = has_more,
         next_cursor     = jobs[-1].job_id if jobs else None,
-        authenticated   = authenticated_state()
+        meta            = endpoint_meta()
     )
 
 def process_logfile(logfile, job, job_results):
@@ -411,7 +411,7 @@ def search(search_query):
         'success'       : True, 
         'mode'          : 'search', 
         'results'       : search_results,
-        'authenticated' : authenticated_state()
+        'meta'          : endpoint_meta()
     }
 
 

@@ -35,6 +35,9 @@ armui_cfg = ui_utils.arm_db_cfg()
 login_manager = LoginManager()
 login_manager.init_app(app)
 
+@app.context_processor
+def inject_endpoint_meta():
+    return {"meta": ui_utils.endpoint_meta()}
 
 @app.route('/')
 @app.route('/index.html')
@@ -69,7 +72,6 @@ def home():
         jobs = {}
 
     return render_template("index.html",
-        authenticated    = ui_utils.authenticated_state(),
         jobs             = jobs,
         children         = cfg.arm_config['ARM_CHILDREN'],
     )
@@ -198,7 +200,7 @@ def get_notications():
         success = True,
         notes   = json_api.get_unseen_notifications(),
     ) 
-    
+
 #
 # FEEDER
 #

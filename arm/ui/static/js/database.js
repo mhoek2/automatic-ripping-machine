@@ -28,7 +28,7 @@ function _addJobs(data) {
 		    job_refresh?.activeJobs?.push(job);
 
 		$(JOB_LIST_CONTAINER).append(
-			addJobItem(job, data.authenticated)
+			addJobItem(job, data.meta?.authenticated ?? false)
 		);
 	});
 }

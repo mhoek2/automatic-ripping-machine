@@ -48,7 +48,7 @@ export function refreshJobsSuccess(data, serverIndex, serverUrl, serverCount) {
         // exists
         if (job_index !== -1) {
             job_refresh.activeJobs[job_index] = job;
-            updateJobItem(job, data.authenticated);
+            updateJobItem(job, data.meta?.authenticated ?? false);
         }
 
         // add to list
@@ -58,7 +58,7 @@ export function refreshJobsSuccess(data, serverIndex, serverUrl, serverCount) {
             // only add unfinished jobs
             if (!JobStateGroup.FINISHED.has(job.status)) {
                 $(JOB_LIST_CONTAINER).append(
-                    addJobItem(job, data.authenticated)
+                    addJobItem(job, data.meta?.authenticated ?? false)
                 );
             }
         }

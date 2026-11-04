@@ -13,7 +13,7 @@
 			</a>
 		</li>
 
-		{% if authenticated %}
+		{% if meta.authenticated %}
 		<li id="navviewlogs">
 			<a class="nav-link" href="listlogs" data-tooltip="View Logs">
 				<i class="fa-solid fa-terminal"></i>
@@ -54,7 +54,7 @@
                 <i class="fa-solid fa-circle-half-stroke"></i>
                 <span>Switch Theme</span>
             </a>
-			{% if authenticated %}
+			{% if meta.authenticated %}
 				<a href="update_password" class="user-menu-item">
 					<i class="fa-solid fa-key"></i>
 					<span>Change Password</span>

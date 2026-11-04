@@ -39,6 +39,7 @@ from arm.ui.settings import DriveUtils as drive_utils
 from arm.ui.settings import health
 from arm.ui.forms import SettingsForm, UiSettingsForm, AbcdeForm, SystemInfoDrives
 import arm.ripper.utils as ripper_utils
+from arm.ripper.ARMInfo import ARMInfo  # noqa E402
 
 route_settings = Blueprint('route_settings', __name__,
                            template_folder='templates',
@@ -74,29 +75,37 @@ def get_server_stats( isInited = False ):
     current_time    = datetime.now()
     server_datetime = current_time.strftime(cfg.arm_config['DATE_FORMAT'])
 
-    # git
-    [arm_version_local, arm_version_remote] = ui_utils.git_check_version()
-    local_git_hash = ui_utils.get_git_revision_hash()
-
+    # ARMInfo
+    arminfo         = ARMInfo(cfg.arm_config["INSTALLPATH"], cfg.arm_config['DBFILE'])
+    local_version   = arminfo.arm_version
+    remote_version  = -1
+    is_latest       = -2
+    
     if not isInited:
-        git_is_uptodate = ui_utils.git_check_updates(local_git_hash)
-    else:
-        git_is_uptodate = -1
+        local_version, remote_version = arminfo.git_check_version()
+
+    if re.fullmatch(r'v?\d+\.\d+\.\d+', local_version):
+        is_latest = -1
+
+        if remote_version != "unknown":
+            local = tuple(map(int, local_version.lstrip('v').split('.')))
+            remote = tuple(map(int, remote_version.lstrip('v').split('.')))
+            is_latest = local >= remote
 
     return {
         'server_datetime':     server_datetime,
         'health':              health.fetch(isInited),
         'server_timezone':     server_timezone,
         'python_version':      platform.python_version(),
-        'arm_version_local':   arm_version_local,
-        'arm_version_remote':  arm_version_remote,
-        'git_commit':          local_git_hash,
+        'arm_version_local':   local_version,
+        'arm_version_remote':  remote_version,
+        'git_commit':          arminfo.git_hash,
         'movies_ripped':       movies,
         'series_ripped':       series,
         'cds_ripped':          cds,
         'no_failed_jobs':      failed_rips,
         'total_rips':          total_rips,
-        'updated':             git_is_uptodate,
+        'is_latest':           is_latest,
     }
 
 @route_settings.route('/serverstats', methods=['GET'])
@@ -135,7 +144,6 @@ def settings():
     session["page_title"] = "Settings"
 
     return render_template("settings/settings.html",
-        authenticated        = ui_utils.authenticated_state(),
         settings             = cfg.arm_config,
         settings_groups      = cfg.ARM_SETTINGS_GROUPS,
         ui_settings          = armui_cfg,

@@ -21,7 +21,7 @@
 
     <script type="application/javascript">
         function __is_authenticated_simple() {
-            {% if current_user.is_authenticated %}
+            {% if meta.authenticated %}
                 return true;
             {% else %}
                 return false;

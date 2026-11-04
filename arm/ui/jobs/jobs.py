@@ -82,19 +82,19 @@ def jobdetail_api():
 	#plot = " is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since 1966, when designers at Letraset and James Mosley, the librarian at St Bride Printing Library in London, took a 1914 Cicero translation and scrambled it to make dummy text for Letraset's Body Type sheets. It has survived not only many decades, but also the leap into el"
 	#background = ""
 
-	authenticated = ui_utils.authenticated_state()
+	meta = ui_utils.endpoint_meta()
 
 	return jsonify(
-        authenticated=authenticated,
-		success=True,
-		job={
+        meta        = meta,
+		success     = True,
+		job         = {
             **job_info,
-			'plot': plot,
-			'background': background,
+			'plot'          : plot,
+			'background'    : background,
 		},
-		technical={
-			'job': serialize_columns(job),
-		} if authenticated else -1,
+		technical   = {
+			'job'           : serialize_columns(job),
+		} if meta['authenticated'] else -1,
 	)
 
 @route_jobs.route('/jobdetail_track', methods=['POST'])
@@ -102,9 +102,9 @@ def jobdetail_api():
 def jobdetail_track():
 	data = request.get_json(silent=True) or {}
 
-	job_id = data.get('job_id')
-	track_id = data.get('track_id')
-	process = data.get('process')
+	job_id      = data.get('job_id')
+	track_id    = data.get('track_id')
+	process     = data.get('process')
 
 	if job_id is None or track_id is None or not isinstance(process, bool):
 		return jsonify(success=False, error='Invalid request'), 400
@@ -181,7 +181,6 @@ def title_search():
                                 year=request.args.get("year"), job_id=job_id))
     
     return render_template('titlesearch.html', 
-        authenticated    = ui_utils.authenticated_state(),
         title            = 'Update Title', 
         form             = form, 
         job              = job
@@ -213,7 +212,6 @@ def customtitle():
         return redirect(url_for('home'))
 
     return render_template('customTitle.html', 
-        authenticated    = ui_utils.authenticated_state(),
         title            = 'Change Title', 
         form             = form, 
         job              = job
@@ -243,7 +241,6 @@ def gettitle():
     dvd_info = ui_utils.metadata_selector("get_details", None, None, imdb_id)
     
     return render_template('showtitle.html', 
-        authenticated   = ui_utils.authenticated_state(),           
         results         = dvd_info, 
         job_id          = job_id
     )
@@ -310,7 +307,6 @@ def changeparams():
     form = ChangeParamsForm(obj=config)
 
     return render_template('changeparams.html', 
-        authenticated    = ui_utils.authenticated_state(),
         title            = 'Change Parameters', 
         form             = form, 
         config           = config
@@ -346,7 +342,6 @@ def list_titles():
         flash(f"No search results found for {title}", 'danger')
 
     return render_template('list_titles.html', 
-        authenticated    = ui_utils.authenticated_state(),
         results          = search_results, 
         job_id           = job_id,
         form             = form, 

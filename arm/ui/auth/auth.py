@@ -148,7 +148,6 @@ def update_password():
 
 
     return render_template('update_password.html', 
-        authenticated    = ui_utils.authenticated_state(),
         user             = user.email, 
         form             = form
     )

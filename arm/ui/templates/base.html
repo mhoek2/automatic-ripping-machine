@@ -3,7 +3,7 @@
     {% include 'includes/base/head.html' %}
 
     <body>
-        {% if authenticated %}
+        {% if meta.authenticated %}
         <div id="notification_container" aria-live="polite" aria-atomic="false"></div>
         {% endif %}
 
@@ -25,14 +25,14 @@
         {% block js %}
         <script type="module">
             import { collectChildServers } from './static/js/common.js';
-            {% if authenticated %}
+            {% if meta.authenticated %}
                 import { getNotifications } from './static/js/notification.js';
             {% endif %}
 
             $(document).ready(function () {
                 collectChildServers();
 
-                {% if authenticated %}
+                {% if meta.authenticated %}
                     getNotifications();
                     window.setInterval(getNotifications, 2000);
                 {% endif %}

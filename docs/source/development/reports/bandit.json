@@ -1,6 +1,6 @@
 {
   "errors": [],
-  "generated_at": "2026-11-03T12:01:57Z",
+  "generated_at": "2026-11-04T09:53:04Z",
   "metrics": {
     "_totals": {
       "CONFIDENCE.HIGH": 57,
@@ -11,7 +11,7 @@
       "SEVERITY.LOW": 35,
       "SEVERITY.MEDIUM": 13,
       "SEVERITY.UNDEFINED": 0,
-      "loc": 9625,
+      "loc": 9616,
       "nosec": 0,
       "skipped_tests": 0
     },
@@ -687,7 +687,7 @@
       "SEVERITY.LOW": 0,
       "SEVERITY.MEDIUM": 0,
       "SEVERITY.UNDEFINED": 0,
-      "loc": 137,
+      "loc": 136,
       "nosec": 0,
       "skipped_tests": 0
     },
@@ -726,7 +726,7 @@
       "SEVERITY.LOW": 0,
       "SEVERITY.MEDIUM": 0,
       "SEVERITY.UNDEFINED": 0,
-      "loc": 121,
+      "loc": 120,
       "nosec": 0,
       "skipped_tests": 0
     },
@@ -765,7 +765,7 @@
       "SEVERITY.LOW": 0,
       "SEVERITY.MEDIUM": 0,
       "SEVERITY.UNDEFINED": 0,
-      "loc": 354,
+      "loc": 348,
       "nosec": 0,
       "skipped_tests": 0
     },
@@ -804,7 +804,7 @@
       "SEVERITY.LOW": 0,
       "SEVERITY.MEDIUM": 0,
       "SEVERITY.UNDEFINED": 0,
-      "loc": 79,
+      "loc": 77,
       "nosec": 0,
       "skipped_tests": 0
     },
@@ -843,7 +843,7 @@
       "SEVERITY.LOW": 0,
       "SEVERITY.MEDIUM": 0,
       "SEVERITY.UNDEFINED": 0,
-      "loc": 83,
+      "loc": 82,
       "nosec": 0,
       "skipped_tests": 0
     },
@@ -856,7 +856,7 @@
       "SEVERITY.LOW": 3,
       "SEVERITY.MEDIUM": 0,
       "SEVERITY.UNDEFINED": 0,
-      "loc": 164,
+      "loc": 162,
       "nosec": 0,
       "skipped_tests": 0
     },
@@ -921,7 +921,7 @@
       "SEVERITY.LOW": 1,
       "SEVERITY.MEDIUM": 0,
       "SEVERITY.UNDEFINED": 0,
-      "loc": 379,
+      "loc": 378,
       "nosec": 0,
       "skipped_tests": 0
     },
@@ -934,7 +934,7 @@
       "SEVERITY.LOW": 8,
       "SEVERITY.MEDIUM": 1,
       "SEVERITY.UNDEFINED": 0,
-      "loc": 769,
+      "loc": 774,
       "nosec": 0,
       "skipped_tests": 0
     }
@@ -1909,7 +1909,7 @@
       "test_name": "request_without_timeout"
     },
     {
-      "code": "203 #\n204 import subprocess\n205 from flask import jsonify\n",
+      "code": "206 #\n207 import subprocess\n208 from flask import jsonify\n",
       "col_offset": 0,
       "end_col_offset": 17,
       "filename": "arm/ui/routes.py",
@@ -1920,18 +1920,18 @@
       },
       "issue_severity": "LOW",
       "issue_text": "Consider possible security implications associated with the subprocess module.",
-      "line_number": 204,
+      "line_number": 207,
       "line_range": [
-        204
+        207
       ],
       "more_info": "https://bandit.readthedocs.io/en/1.9.4/blacklists/blacklist_imports.html#b404-import-subprocess",
       "test_id": "B404",
       "test_name": "blacklist"
     },
     {
-      "code": "213 \n214     result = subprocess.run([\n215         \"python3\",\n216         \"/opt/arm/dev/feeder/feeder.py\",\n217         json.dumps(data),\n218     ])\n219 \n",
-      "col_offset": 13,
-      "end_col_offset": 6,
+      "code": "217 \n218     process = subprocess.Popen([\n219         \"python3\",\n220         \"/opt/arm/dev/feeder/feeder.py\",\n221         json.dumps(data),\n222     ], start_new_session=True)\n223 \n",
+      "col_offset": 14,
+      "end_col_offset": 30,
       "filename": "arm/ui/routes.py",
       "issue_confidence": "HIGH",
       "issue_cwe": {
@@ -1940,22 +1940,22 @@
       },
       "issue_severity": "LOW",
       "issue_text": "Starting a process with a partial executable path",
-      "line_number": 214,
+      "line_number": 218,
       "line_range": [
-        214,
-        215,
-        216,
-        217,
-        218
+        218,
+        219,
+        220,
+        221,
+        222
       ],
       "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b607_start_process_with_partial_path.html",
       "test_id": "B607",
       "test_name": "start_process_with_partial_path"
     },
     {
-      "code": "213 \n214     result = subprocess.run([\n215         \"python3\",\n216         \"/opt/arm/dev/feeder/feeder.py\",\n217         json.dumps(data),\n218     ])\n219 \n",
-      "col_offset": 13,
-      "end_col_offset": 6,
+      "code": "217 \n218     process = subprocess.Popen([\n219         \"python3\",\n220         \"/opt/arm/dev/feeder/feeder.py\",\n221         json.dumps(data),\n222     ], start_new_session=True)\n223 \n",
+      "col_offset": 14,
+      "end_col_offset": 30,
       "filename": "arm/ui/routes.py",
       "issue_confidence": "HIGH",
       "issue_cwe": {
@@ -1964,13 +1964,13 @@
       },
       "issue_severity": "LOW",
       "issue_text": "subprocess call - check for execution of untrusted input.",
-      "line_number": 214,
+      "line_number": 218,
       "line_range": [
-        214,
-        215,
-        216,
-        217,
-        218
+        218,
+        219,
+        220,
+        221,
+        222
       ],
       "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b603_subprocess_without_shell_equals_true.html",
       "test_id": "B603",
@@ -2077,7 +2077,7 @@
       "test_name": "blacklist"
     },
     {
-      "code": "416     try:\n417         manual_process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)\n418         stdout, stderr = manual_process.communicate()\n",
+      "code": "415     try:\n416         manual_process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)\n417         stdout, stderr = manual_process.communicate()\n",
       "col_offset": 25,
       "end_col_offset": 117,
       "filename": "arm/ui/settings/settings.py",
@@ -2088,9 +2088,9 @@
       },
       "issue_severity": "HIGH",
       "issue_text": "subprocess call with shell=True identified, security issue.",
-      "line_number": 417,
+      "line_number": 416,
       "line_range": [
-        417
+        416
       ],
       "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b602_subprocess_popen_with_shell_equals_true.html",
       "test_id": "B602",

@@ -33,7 +33,6 @@ def logs():
     session["page_title"] = "Logs"
 
     return render_template('log_content.html', 
-        authenticated    = ui_utils.authenticated_state(),
         file             = request.args['logfile'], 
         mode             = mode
     )
@@ -58,7 +57,6 @@ def listlogs(path):
     files = ui_utils.get_info(full_path)
 
     return render_template('log_list.html', 
-        authenticated    = ui_utils.authenticated_state(),
         files            = files, 
         date_format      = cfg.arm_config['DATE_FORMAT']
     )
