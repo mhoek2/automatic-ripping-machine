@@ -53,7 +53,6 @@ def arm_notification():
     session["page_title"] = "Notifications"
 
     return render_template('notifications.html',
-        authenticated        = ui_utils.authenticated_state(),
         notifications_new    = notifications_new
     )
 

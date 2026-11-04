@@ -921,7 +921,7 @@
 | 82:158 | E501 | Line too long (414 > 160) |
 | 134:9 | BLE001 | Do not catch blind exception: `Exception` |
 | 162:9 | BLE001 | Do not catch blind exception: `Exception` |
-| 269:5 | PLR2044 | Line with empty comment |
+| 266:5 | PLR2044 | Line with empty comment |
 
 ````
 :::
@@ -1020,10 +1020,9 @@
 | Line | Type | Message |
 |---:|---|---|
 | 12:1 | I001 | Import block is un-sorted or un-formatted |
-| 156:37 | SIM115 | Use a context manager for opening files |
-| 163:12 | BLE001 | Do not catch blind exception: `Exception` |
-| 204:1 | I001 | Import block is un-sorted or un-formatted |
-| 214:14 | PLW1510 | `subprocess.run` without explicit `check` argument |
+| 158:37 | SIM115 | Use a context manager for opening files |
+| 165:12 | BLE001 | Do not catch blind exception: `Exception` |
+| 207:1 | I001 | Import block is un-sorted or un-formatted |
 
 ````
 :::
@@ -1106,13 +1105,13 @@
 | 1:1 | EXE002 | The file is executable but no shebang is present |
 | 17:1 | I001 | Import block is un-sorted or un-formatted |
 | 19:8 | F401 | `re` imported but unused |
-| 207:15 | F541 | f-string without any placeholders |
-| 317:26 | RUF010 | Use explicit conversion flag |
-| 318:30 | RUF010 | Use explicit conversion flag |
-| 319:38 | RUF010 | Use explicit conversion flag |
-| 320:31 | RUF010 | Use explicit conversion flag |
-| 393:12 | BLE001 | Do not catch blind exception: `Exception` |
-| 407:16 | B005 | Using `.strip()` with multi-character strings is misleading |
+| 206:15 | F541 | f-string without any placeholders |
+| 316:26 | RUF010 | Use explicit conversion flag |
+| 317:30 | RUF010 | Use explicit conversion flag |
+| 318:38 | RUF010 | Use explicit conversion flag |
+| 319:31 | RUF010 | Use explicit conversion flag |
+| 392:12 | BLE001 | Do not catch blind exception: `Exception` |
+| 406:16 | B005 | Using `.strip()` with multi-character strings is misleading |
 
 ````
 :::

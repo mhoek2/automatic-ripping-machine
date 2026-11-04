@@ -18,7 +18,6 @@ export default [
                 ...globals.browser,
                 $                           : 'readonly',
                 jQuery                      : 'readonly',
-                authenticated               : 'readonly',
                 __is_authenticated_simple   : 'readonly',
             },
         },

@@ -135,7 +135,6 @@ def settings():
     session["page_title"] = "Settings"
 
     return render_template("settings/settings.html",
-        authenticated        = ui_utils.authenticated_state(),
         settings             = cfg.arm_config,
         settings_groups      = cfg.ARM_SETTINGS_GROUPS,
         ui_settings          = armui_cfg,

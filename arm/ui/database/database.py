@@ -36,7 +36,6 @@ def view_database():
     session["page_title"] = "Database"
 
     return render_template('database.html',
-        authenticated   = ui_utils.authenticated_state(),
         jobs            = [],
         date_format     = cfg.arm_config['DATE_FORMAT']
     )
@@ -52,7 +51,7 @@ def load_database_jobs():
             results         = {},
             has_more        = False,
             error           = "Database file does not exist",
-            authenticated   = ui_utils.authenticated_state()
+            meta            = ui_utils.endpoint_meta()
         ), 500
 
     armui_cfg = ui_utils.arm_db_cfg()

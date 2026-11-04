@@ -12222,7 +12222,7 @@
     "code": "PLR2044",
     "end_location": {
       "column": 6,
-      "row": 269
+      "row": 266
     },
     "filename": "/workspace/arm/ui/jobs/jobs.py",
     "fix": {
@@ -12232,11 +12232,11 @@
           "content": "",
           "end_location": {
             "column": 1,
-            "row": 270
+            "row": 267
           },
           "location": {
             "column": 1,
-            "row": 269
+            "row": 266
           }
         }
       ],
@@ -12244,11 +12244,11 @@
     },
     "location": {
       "column": 5,
-      "row": 269
+      "row": 266
     },
     "message": "Line with empty comment",
     "name": "empty-comment",
-    "noqa_row": 269,
+    "noqa_row": 266,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/empty-comment"
   },
@@ -12283,7 +12283,7 @@
       "applicability": "safe",
       "edits": [
         {
-          "content": "import datetime\r\nimport html\r\nimport os\r\nimport re\r\nimport subprocess\r\nfrom collections import deque\r\nfrom pathlib import Path\r\nfrom time import gmtime, strftime, time\r\n\r\nimport psutil\r\nfrom flask import jsonify, request\r\n\r\nimport arm.config.config as cfg\r\nfrom arm.models.config import Config\r\nfrom arm.models.job import Job, JobState\r\nfrom arm.models.notifications import Notifications\r\nfrom arm.models.track import Track\r\nfrom arm.models.ui_settings import UISettings\r\nfrom arm.ui import app, db\r\nfrom arm.ui.forms import ChangeParamsForm\r\nfrom arm.ui.settings import DriveUtils as drive_utils  # noqa E402\r\nfrom arm.ui.utils import authenticated_state, database_updater, job_id_validator\r\n\r\n\r\n",
+          "content": "import datetime\r\nimport html\r\nimport os\r\nimport re\r\nimport subprocess\r\nfrom collections import deque\r\nfrom pathlib import Path\r\nfrom time import gmtime, strftime, time\r\n\r\nimport psutil\r\nfrom flask import jsonify, request\r\n\r\nimport arm.config.config as cfg\r\nfrom arm.models.config import Config\r\nfrom arm.models.job import Job, JobState\r\nfrom arm.models.notifications import Notifications\r\nfrom arm.models.track import Track\r\nfrom arm.models.ui_settings import UISettings\r\nfrom arm.ui import app, db\r\nfrom arm.ui.forms import ChangeParamsForm\r\nfrom arm.ui.settings import DriveUtils as drive_utils  # noqa E402\r\nfrom arm.ui.utils import database_updater, endpoint_meta, job_id_validator\r\n\r\n\r\n",
           "end_location": {
             "column": 1,
             "row": 28
@@ -12949,17 +12949,17 @@
     "code": "SIM115",
     "end_location": {
       "column": 41,
-      "row": 156
+      "row": 158
     },
     "filename": "/workspace/arm/ui/routes.py",
     "fix": null,
     "location": {
       "column": 37,
-      "row": 156
+      "row": 158
     },
     "message": "Use a context manager for opening files",
     "name": "open-file-with-context-handler",
-    "noqa_row": 156,
+    "noqa_row": 158,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/open-file-with-context-handler"
   },
@@ -12968,17 +12968,17 @@
     "code": "BLE001",
     "end_location": {
       "column": 21,
-      "row": 163
+      "row": 165
     },
     "filename": "/workspace/arm/ui/routes.py",
     "fix": null,
     "location": {
       "column": 12,
-      "row": 163
+      "row": 165
     },
     "message": "Do not catch blind exception: `Exception`",
     "name": "blind-except",
-    "noqa_row": 163,
+    "noqa_row": 165,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/blind-except"
   },
@@ -12987,7 +12987,7 @@
     "code": "I001",
     "end_location": {
       "column": 26,
-      "row": 205
+      "row": 208
     },
     "filename": "/workspace/arm/ui/routes.py",
     "fix": {
@@ -12997,11 +12997,11 @@
           "content": "import subprocess\r\n\r\nfrom flask import jsonify\r\n\r\n\r\n",
           "end_location": {
             "column": 1,
-            "row": 207
+            "row": 210
           },
           "location": {
             "column": 1,
-            "row": 204
+            "row": 207
           }
         }
       ],
@@ -13009,48 +13009,13 @@
     },
     "location": {
       "column": 1,
-      "row": 204
+      "row": 207
     },
     "message": "Import block is un-sorted or un-formatted",
     "name": "unsorted-imports",
-    "noqa_row": 204,
+    "noqa_row": 207,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/unsorted-imports"
-  },
-  {
-    "cell": null,
-    "code": "PLW1510",
-    "end_location": {
-      "column": 28,
-      "row": 214
-    },
-    "filename": "/workspace/arm/ui/routes.py",
-    "fix": {
-      "applicability": "displayonly",
-      "edits": [
-        {
-          "content": ", check=False",
-          "end_location": {
-            "column": 6,
-            "row": 218
-          },
-          "location": {
-            "column": 6,
-            "row": 218
-          }
-        }
-      ],
-      "message": "Add explicit `check=False`"
-    },
-    "location": {
-      "column": 14,
-      "row": 214
-    },
-    "message": "`subprocess.run` without explicit `check` argument",
-    "name": "subprocess-run-without-check",
-    "noqa_row": 214,
-    "severity": "error",
-    "url": "https://docs.astral.sh/ruff/rules/subprocess-run-without-check"
   },
   {
     "cell": null,
@@ -13873,7 +13838,7 @@
     "code": "F541",
     "end_location": {
       "column": 49,
-      "row": 207
+      "row": 206
     },
     "filename": "/workspace/arm/ui/settings/settings.py",
     "fix": {
@@ -13883,11 +13848,11 @@
           "content": "\"Failed to update [UI] settings!\"",
           "end_location": {
             "column": 49,
-            "row": 207
+            "row": 206
           },
           "location": {
             "column": 15,
-            "row": 207
+            "row": 206
           }
         }
       ],
@@ -13895,11 +13860,11 @@
     },
     "location": {
       "column": 15,
-      "row": 207
+      "row": 206
     },
     "message": "f-string without any placeholders",
     "name": "f-string-missing-placeholders",
-    "noqa_row": 207,
+    "noqa_row": 206,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/f-string-missing-placeholders"
   },
@@ -13908,7 +13873,7 @@
     "code": "RUF010",
     "end_location": {
       "column": 49,
-      "row": 317
+      "row": 316
     },
     "filename": "/workspace/arm/ui/settings/settings.py",
     "fix": {
@@ -13918,6 +13883,41 @@
           "content": "f\"Drive id: {form_drive.id.data!s} \"",
           "end_location": {
             "column": 52,
+            "row": 316
+          },
+          "location": {
+            "column": 13,
+            "row": 316
+          }
+        }
+      ],
+      "message": "Replace with conversion flag"
+    },
+    "location": {
+      "column": 26,
+      "row": 316
+    },
+    "message": "Use explicit conversion flag",
+    "name": "explicit-f-string-type-conversion",
+    "noqa_row": 316,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/explicit-f-string-type-conversion"
+  },
+  {
+    "cell": null,
+    "code": "RUF010",
+    "end_location": {
+      "column": 55,
+      "row": 317
+    },
+    "filename": "/workspace/arm/ui/settings/settings.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "f\"Updated name: {form_drive.name.data!s} \"",
+          "end_location": {
+            "column": 58,
             "row": 317
           },
           "location": {
@@ -13929,7 +13929,7 @@
       "message": "Replace with conversion flag"
     },
     "location": {
-      "column": 26,
+      "column": 30,
       "row": 317
     },
     "message": "Use explicit conversion flag",
@@ -13942,7 +13942,7 @@
     "cell": null,
     "code": "RUF010",
     "end_location": {
-      "column": 55,
+      "column": 70,
       "row": 318
     },
     "filename": "/workspace/arm/ui/settings/settings.py",
@@ -13950,9 +13950,9 @@
       "applicability": "safe",
       "edits": [
         {
-          "content": "f\"Updated name: {form_drive.name.data!s} \"",
+          "content": "f\"Updated description: [{form_drive.description.data!s}] \"",
           "end_location": {
-            "column": 58,
+            "column": 74,
             "row": 318
           },
           "location": {
@@ -13964,7 +13964,7 @@
       "message": "Replace with conversion flag"
     },
     "location": {
-      "column": 30,
+      "column": 38,
       "row": 318
     },
     "message": "Use explicit conversion flag",
@@ -13977,7 +13977,7 @@
     "cell": null,
     "code": "RUF010",
     "end_location": {
-      "column": 70,
+      "column": 62,
       "row": 319
     },
     "filename": "/workspace/arm/ui/settings/settings.py",
@@ -13985,9 +13985,9 @@
       "applicability": "safe",
       "edits": [
         {
-          "content": "f\"Updated description: [{form_drive.description.data!s}] \"",
+          "content": "f\"Updated mode: [{form_drive.drive_mode.data!s}]\"",
           "end_location": {
-            "column": 74,
+            "column": 65,
             "row": 319
           },
           "location": {
@@ -13999,7 +13999,7 @@
       "message": "Replace with conversion flag"
     },
     "location": {
-      "column": 38,
+      "column": 31,
       "row": 319
     },
     "message": "Use explicit conversion flag",
@@ -14010,55 +14010,20 @@
   },
   {
     "cell": null,
-    "code": "RUF010",
-    "end_location": {
-      "column": 62,
-      "row": 320
-    },
-    "filename": "/workspace/arm/ui/settings/settings.py",
-    "fix": {
-      "applicability": "safe",
-      "edits": [
-        {
-          "content": "f\"Updated mode: [{form_drive.drive_mode.data!s}]\"",
-          "end_location": {
-            "column": 65,
-            "row": 320
-          },
-          "location": {
-            "column": 13,
-            "row": 320
-          }
-        }
-      ],
-      "message": "Replace with conversion flag"
-    },
-    "location": {
-      "column": 31,
-      "row": 320
-    },
-    "message": "Use explicit conversion flag",
-    "name": "explicit-f-string-type-conversion",
-    "noqa_row": 320,
-    "severity": "error",
-    "url": "https://docs.astral.sh/ruff/rules/explicit-f-string-type-conversion"
-  },
-  {
-    "cell": null,
     "code": "BLE001",
     "end_location": {
       "column": 21,
-      "row": 393
+      "row": 392
     },
     "filename": "/workspace/arm/ui/settings/settings.py",
     "fix": null,
     "location": {
       "column": 12,
-      "row": 393
+      "row": 392
     },
     "message": "Do not catch blind exception: `Exception`",
     "name": "blind-except",
-    "noqa_row": 393,
+    "noqa_row": 392,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/blind-except"
   },
@@ -14067,17 +14032,17 @@
     "code": "B005",
     "end_location": {
       "column": 43,
-      "row": 407
+      "row": 406
     },
     "filename": "/workspace/arm/ui/settings/settings.py",
     "fix": null,
     "location": {
       "column": 16,
-      "row": 407
+      "row": 406
     },
     "message": "Using `.strip()` with multi-character strings is misleading",
     "name": "strip-with-multi-characters",
-    "noqa_row": 407,
+    "noqa_row": 406,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/strip-with-multi-characters"
   },

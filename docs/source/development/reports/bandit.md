@@ -177,9 +177,9 @@
 
 | Line | Type | Message |
 |---:|---|---|
-| 204 | B404 (severity=LOW, confidence=HIGH) | Consider possible security implications associated with the subprocess module. |
-| 214 | B607 (severity=LOW, confidence=HIGH) | Starting a process with a partial executable path |
-| 214 | B603 (severity=LOW, confidence=HIGH) | subprocess call - check for execution of untrusted input. |
+| 207 | B404 (severity=LOW, confidence=HIGH) | Consider possible security implications associated with the subprocess module. |
+| 218 | B607 (severity=LOW, confidence=HIGH) | Starting a process with a partial executable path |
+| 218 | B603 (severity=LOW, confidence=HIGH) | subprocess call - check for execution of untrusted input. |
 
 ````
 :::
@@ -205,7 +205,7 @@
 | Line | Type | Message |
 |---:|---|---|
 | 20 | B404 (severity=LOW, confidence=HIGH) | Consider possible security implications associated with the subprocess module. |
-| 417 | B602 (severity=HIGH, confidence=HIGH) | subprocess call with shell=True identified, security issue. |
+| 416 | B602 (severity=HIGH, confidence=HIGH) | subprocess call with shell=True identified, security issue. |
 
 ````
 :::

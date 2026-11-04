@@ -983,7 +983,6 @@ def git_check_version():
 
     return local_version, remote_version
 
-
 def authenticated_state() -> bool:
     """
     Determines whether the current user is considered authenticated.
@@ -1008,3 +1007,9 @@ def authenticated_state() -> bool:
     #app.logger.debug(f'Authentication state: {authenticated}')
 
     return authenticated
+
+def endpoint_meta():
+    return {
+        "authenticated" : authenticated_state(),
+        "mode_dev"      : os.environ.get("MODE_DEV", "false").lower() == "true"
+    }
