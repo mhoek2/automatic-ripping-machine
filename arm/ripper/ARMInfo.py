@@ -3,6 +3,7 @@ Class definition
  ARM system information and version numbers
 """
 import os
+import subprocess
 import sys
 import re
 import getpass  # noqa E402
@@ -12,7 +13,7 @@ from alembic.script import ScriptDirectory
 from alembic.config import Config
 
 from arm.ripper import ProcessHandler
-
+import arm.config.config as cfg
 
 class ARMInfo:
     arm_version = 0
@@ -24,11 +25,13 @@ class ARMInfo:
     install_path = ""
     db_version = ""
     head_version = ""
+    git_hash = ""
 
     def __init__(self, install_path, db_file):
         self.install_path = install_path
         self.db_file = db_file
         self.get_git_commit()
+        self.get_git_revision_hash()
         self.get_arm_version()
         self.get_python_version()
         self.get_user_details()
@@ -60,18 +63,25 @@ class ARMInfo:
             self.git_branch = "unknown"
             self.git_commit = "unknown"
 
-    def get_arm_version(self):
+    def get_git_revision_hash(self):
+        """Get full hash of current git commit"""
         try:
-            version_file = open(os.path.join(self.install_path, 'VERSION'))
+            self.git_hash = subprocess.check_output(['git', 'rev-parse', 'HEAD'],
+                                            cwd=cfg.arm_config['INSTALLPATH']).decode('ascii').strip()
+            # Trunkate to seven characters (aligns with the github commit values reported)
+            self.git_hash = self.git_hash[:7]  
+        except subprocess.CalledProcessError as e:
+            self.git_hash = "unknown"
 
-            try:
-                self.arm_version = version_file.read().strip()
-
-            except (OSError, IOError) as e:
-                logging.info(f"ARM Version error: {e}")
-                self.arm_version = "unknown"
-
+    def get_arm_version(self):
+        version_file = os.path.join(self.install_path, 'VERSION')
+        try:
+            with open(version_file, encoding='utf-8') as f:
+                self.arm_version = f.read().strip() or "unknown"
         except FileNotFoundError:
+            self.arm_version = "local-build"
+        except OSError as e:
+            logging.info(f"ARM Version error: {e}")
             self.arm_version = "unknown"
 
     def get_python_version(self):
@@ -117,3 +127,38 @@ class ARMInfo:
             self.db_version = db_c.fetchone()[0]
         else:
             self.db_version = "unknown"
+
+    def git_check_version(self):
+        """
+        Check the installed ARM version against the latest stable GitHub release.
+
+        :return:
+            tuple: (local_version, remote_version)
+        """
+        install_path = cfg.arm_config['INSTALLPATH']
+        local_version = self.arm_version
+
+        try:
+            tags = subprocess.check_output(
+                ['git', 'ls-remote', '--tags', '--refs', 'origin'],
+                cwd=install_path,
+                stderr=subprocess.DEVNULL
+            ).decode('ascii').splitlines()
+
+            versions = [
+                tag.split('refs/tags/v', 1)[1]
+                for tag in tags
+                if 'refs/tags/v' in tag
+                and re.fullmatch(r'v\d+\.\d+\.\d+', tag.split('refs/tags/', 1)[1])
+            ]
+
+            remote_version = max(
+                versions,
+                key=lambda v: tuple(map(int, v.split('.')))
+            ) if versions else "unknown"
+
+        except (subprocess.CalledProcessError, OSError) as e:
+            logging.info(f"ARM remote version error: {e}")
+            remote_version = "unknown"
+
+        return local_version, remote_version
