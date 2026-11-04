@@ -153,8 +153,7 @@ This guide assumes Docker is already installed and configured. If not, follow th
     ```yaml
     services:
     arm:
-        image: ghcr.io/mhoek2/automatic-ripping-machine:latest-dev
-        container_name: arm_local
+        image: ghcr.io/mhoek2/automatic-ripping-machine:latest
         restart: unless-stopped
         privileged: true
         ports:
@@ -171,7 +170,7 @@ This guide assumes Docker is already installed and configured. If not, follow th
         - /dev:/dev
     ```
 
-    The current configuration uses the development image, final release will be available later.
+    Available package versions can be found [here](https://github.com/mhoek2/automatic-ripping-machine/pkgs/container/automatic-ripping-machine)
 
 3. From the `/stack/arm` directory, run Docker Compose to pull the image (if needed) and start the container in the background.
     ```bash
@@ -221,7 +220,7 @@ Updating ARM is as simple as pulling the latest image and recreating the contain
 `* Before updating` \
 `Configuration and database files in the config and data folders are stored outside the container.
 These are usually preserved when the container is recreated, provided they are configured as persistent volumes.` \
-`But its good practise to create a backup`
+`But its good practise to create a backup, and write down the current version`
 
 ```bash
 # Make sure you run the following commands from the install directory containing your docker-compose.yml file.

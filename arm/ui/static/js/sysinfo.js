@@ -36,7 +36,9 @@ export const sysinfo = {
                 this.updateStorageHealth(data.health);
                 this.updateServerHealth(data.health);
                 this.updateHardwareSupport(data.health?.tools);
-                this.updateServerVersion(data);
+
+                if (!isInited)
+                    this.updateServerVersion(data);
             })
             .fail((xhr, status, error) => {
                 console.error('Failed to load server stats:', status, error);

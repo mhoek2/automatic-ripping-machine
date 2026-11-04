@@ -883,67 +883,6 @@ def import_movie_add(poster_image, imdb_id, movie_group, my_path):
     db.session.add(new_movie)
     return movie_dict
 
-
-def get_git_revision_hash() -> str:
-    """Get full hash of current git commit"""
-    git_hash: str = 'unknown'
-    try:
-        git_hash = subprocess.check_output(['git', 'rev-parse', 'HEAD'],
-                                           cwd=cfg.arm_config['INSTALLPATH']).decode('ascii').strip()
-        # Trunkate to seven characters (aligns with the github commit values reported)
-        git_hash = git_hash[:7]
-        app.logger.debug(f"GIT revision: {git_hash}")
-    except subprocess.CalledProcessError as e:
-        app.logger.debug(f"GIT revision error: {e}")
-
-    return git_hash
-
-
-def get_git_revision_short_hash() -> str:
-    """Get short hash of current git commit"""
-    git_hash: str = 'unknown'
-    try:
-        subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD'],
-                                cwd=cfg.arm_config['INSTALLPATH']).decode('ascii').strip()
-    except subprocess.CalledProcessError as e:
-        app.logger.debug(f"GIT revision error: {e}")
-
-    return git_hash
-
-
-def git_check_updates(current_hash) -> bool:
-    """
-    Check the ARM commit hash against the remote (GitHub) commit hash
-    :param
-        current_hash: str - string of current ARM commit hash
-    :return:
-        arm_current: Bool - True for no update (or exceptions), False for update possible
-    """
-    # GitHub API url - branch main
-    url = "https://api.github.com/repos/mhoek2/automatic-ripping-machine/commits/master"
-    arm_current = True      # set True, any exceptions will return a true value
-
-    try:
-        response = requests.get(url, timeout=10)
-        response.raise_for_status()  # Raise an error for HTTP failures (4xx, 5xx)
-
-        latest_commit = response.json().get("sha", "").strip()
-        if not latest_commit:
-            app.logger.error("Failed to retrieve latest commit hash from GitHub API.")
-
-        # Compare local and remote hashes
-        arm_current = latest_commit.startswith(current_hash)
-
-        app.logger.debug(f"Remote hash: {latest_commit}")
-        app.logger.debug(f"Local hash: {current_hash}")
-        app.logger.debug(f"ARM current: {arm_current}")
-
-    except requests.RequestException as e:
-        app.logger.error(f"GitHub API request failed: {e}")
-
-    return arm_current
-
-
 def authenticated_state() -> bool:
     """
     Determines whether the current user is considered authenticated.

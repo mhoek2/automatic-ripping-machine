@@ -77,27 +77,26 @@ def get_server_stats( isInited = False ):
 
     # ARMInfo
     arminfo         = ARMInfo(cfg.arm_config["INSTALLPATH"], cfg.arm_config['DBFILE'])
-    local_version   = arminfo.arm_version
     remote_version  = -1
     is_latest       = -2
     
     if not isInited:
-        local_version, remote_version = arminfo.git_check_version()
+        remote_version = arminfo.get_remote_arm_version()
 
-    if re.fullmatch(r'v?\d+\.\d+\.\d+', local_version):
-        is_latest = -1
+        if re.fullmatch(r'v?\d+\.\d+\.\d+', arminfo.arm_version):
+            is_latest = -1
 
-        if remote_version != "unknown":
-            local = tuple(map(int, local_version.lstrip('v').split('.')))
-            remote = tuple(map(int, remote_version.lstrip('v').split('.')))
-            is_latest = local >= remote
+            if remote_version != "unknown":
+                local = tuple(map(int, arminfo.arm_version.lstrip('v').split('.')))
+                remote = tuple(map(int, remote_version.lstrip('v').split('.')))
+                is_latest = local >= remote
 
     return {
         'server_datetime':     server_datetime,
         'health':              health.fetch(isInited),
         'server_timezone':     server_timezone,
         'python_version':      platform.python_version(),
-        'arm_version_local':   local_version,
+        'arm_version_local':   arminfo.arm_version,
         'arm_version_remote':  remote_version,
         'git_commit':          arminfo.git_hash,
         'movies_ripped':       movies,

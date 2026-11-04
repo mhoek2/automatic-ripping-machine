@@ -1,8 +1,6 @@
 services:
   arm:
-    #image: arm-local:dev
-    image: ghcr.io/mhoek2/automatic-ripping-machine:latest-dev
-    container_name: arm_local
+    image: ghcr.io/mhoek2/automatic-ripping-machine:latest
     restart: unless-stopped
     privileged: true
     ports:
