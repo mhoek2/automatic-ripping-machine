@@ -4,6 +4,7 @@ Class definition
 """
 import os
 import subprocess
+import requests
 import sys
 import re
 import getpass  # noqa E402
@@ -32,7 +33,7 @@ class ARMInfo:
         self.db_file = db_file
         self.get_git_commit()
         self.get_git_revision_hash()
-        self.get_arm_version()
+        self.get_local_arm_version()
         self.get_python_version()
         self.get_user_details()
         self.get_db_head_version()
@@ -73,7 +74,7 @@ class ARMInfo:
         except subprocess.CalledProcessError as e:
             self.git_hash = "unknown"
 
-    def get_arm_version(self):
+    def get_local_arm_version(self):
         version_file = os.path.join(self.install_path, 'VERSION')
         try:
             with open(version_file, encoding='utf-8') as f:
@@ -83,6 +84,26 @@ class ARMInfo:
         except OSError as e:
             logging.info(f"ARM Version error: {e}")
             self.arm_version = "unknown"
+
+    def get_remote_arm_version(self):
+        """Get the latest stable version from GitHub tags."""
+        url = "https://api.github.com/repos/mhoek2/automatic-ripping-machine/tags"
+
+        try:
+            response = requests.get(url, timeout=10)
+            response.raise_for_status()
+
+            versions = [
+                tag['name'][1:]
+                for tag in response.json()
+                if re.fullmatch(r'v\d+\.\d+\.\d+', tag.get('name', ''))
+            ]
+
+            return max(versions, key=lambda v: tuple(map(int, v.split('.')))) if versions else "unknown"
+
+        except (requests.RequestException, ValueError, KeyError) as e:
+            logging.info(f"ARM remote version error: {e}")
+            return "unknown"
 
     def get_python_version(self):
         version = sys.version
@@ -127,38 +148,3 @@ class ARMInfo:
             self.db_version = db_c.fetchone()[0]
         else:
             self.db_version = "unknown"
-
-    def git_check_version(self):
-        """
-        Check the installed ARM version against the latest stable GitHub release.
-
-        :return:
-            tuple: (local_version, remote_version)
-        """
-        install_path = cfg.arm_config['INSTALLPATH']
-        local_version = self.arm_version
-
-        try:
-            tags = subprocess.check_output(
-                ['git', 'ls-remote', '--tags', '--refs', 'origin'],
-                cwd=install_path,
-                stderr=subprocess.DEVNULL
-            ).decode('ascii').splitlines()
-
-            versions = [
-                tag.split('refs/tags/v', 1)[1]
-                for tag in tags
-                if 'refs/tags/v' in tag
-                and re.fullmatch(r'v\d+\.\d+\.\d+', tag.split('refs/tags/', 1)[1])
-            ]
-
-            remote_version = max(
-                versions,
-                key=lambda v: tuple(map(int, v.split('.')))
-            ) if versions else "unknown"
-
-        except (subprocess.CalledProcessError, OSError) as e:
-            logging.info(f"ARM remote version error: {e}")
-            remote_version = "unknown"
-
-        return local_version, remote_version
