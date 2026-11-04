@@ -66,7 +66,7 @@ The following sections describe how to set up a development environment or to bu
 
    ```yaml
    image: arm-local:dev
-   # image: ghcr.io/mhoek2/automatic-ripping-machine:latest-dev-compose
+   # image: ghcr.io/mhoek2/automatic-ripping-machine:latest
    ```
 
 4. Open a terminal in the test directory and start the container:

@@ -33,8 +33,7 @@ A fork of the [Automatic Ripping Machine](https://github.com/automatic-ripping-m
     ```yaml
     services:
     arm:
-        image: ghcr.io/mhoek2/automatic-ripping-machine:latest-dev
-        container_name: arm_local
+        image: ghcr.io/mhoek2/automatic-ripping-machine:latest
         restart: unless-stopped
         privileged: true
         ports:
@@ -51,7 +50,7 @@ A fork of the [Automatic Ripping Machine](https://github.com/automatic-ripping-m
         - /dev:/dev
     ```
 
-    The current configuration uses the development image, final release will be available later.
+    Available package versions can be found [here](https://github.com/mhoek2/automatic-ripping-machine/pkgs/container/automatic-ripping-machine)
 
 3. From the `/stack/arm` directory, run Docker Compose to pull the image (if needed) and start the container in the background.
     ```bash
@@ -95,7 +94,7 @@ A fork of the [Automatic Ripping Machine](https://github.com/automatic-ripping-m
 `* Before updating` \
 `Configuration and database files in the config and data folders are stored outside the container.
 These are usually preserved when the container is recreated, provided they are configured as persistent volumes.` \
-`But its good practise to create a backup`
+`But its good practise to create a backup, and write down the current version`
 
 ```bash
 # Make sure you run the following commands from the install directory containing your docker-compose.yml file.
@@ -200,7 +199,7 @@ docker compose pull && docker compose up -d
 
    ```yaml
    image: arm-local:dev
-   # image: ghcr.io/mhoek2/automatic-ripping-machine:latest-dev-compose
+   # image: ghcr.io/mhoek2/automatic-ripping-machine:latest
    ```
 
 4. Open a terminal in the test directory and start the container:
