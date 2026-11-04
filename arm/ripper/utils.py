@@ -35,8 +35,15 @@ NOTIFY_TITLE = "ARM notification"
 class RipperException(Exception):
     pass
 
+def get_server_url(job=False):
+    base_url = cfg.arm_config.get("UI_BASE_URL", "").strip()
+    if base_url:
+        return base_url.rstrip("/")
 
-def notify(job, title: str, body: str):
+    port = job.config.WEBSERVER_PORT if job and job.config else cfg.arm_config.get("WEBSERVER_PORT", 8080)
+    return f"http://{check_ip()}:{port}"
+
+def notify(job, title: str, body: str, send_remote = True):
     """
     Send notifications with apprise\n
     :param job: Current Job
@@ -59,6 +66,9 @@ def notify(job, title: str, body: str):
     database_adder(notification)
 
     bash_notify(cfg.arm_config, title, body)
+
+    if not send_remote:
+        return
 
     # Sent to remote sites
     # Create an Apprise instance
@@ -101,20 +111,20 @@ def notify_entry(job):
     notification = Notifications(f"New Job: {job.job_id} has started. Disctype: {job.disctype}",
                                  f"New job has started to rip - {job.label},"
                                  f"{job.disctype} at {datetime.datetime.now()}")
+ 
     database_adder(notification)
+    
     if job.disctype in ["dvd", "bluray"]:
-        if cfg.arm_config["UI_BASE_URL"] == "":
-            display_address = (f"http://{check_ip()}:{job.config.WEBSERVER_PORT}")
-        else:
-            display_address = str(cfg.arm_config["UI_BASE_URL"])
         # Send the notifications
         notify(job, NOTIFY_TITLE,
                f"Found disc: {job.title}. Disc type is {job.disctype}. Main Feature is {job.config.MAINFEATURE}."
-               f"Edit entry here: {display_address}/jobdetail?job_id={job.job_id}")
+               f"Edit entry here: {get_server_url(job)}/#detail_job_id=0_{job.job_id}")
     elif job.disctype == "music":
         notify(job, NOTIFY_TITLE, f"Found music CD: {job.label}. Ripping all tracks.")
+        
     elif job.disctype == "data":
         notify(job, NOTIFY_TITLE, "Found data disc.  Copying data.")
+        
     else:
         raise RipperException("Could not determine disc type")
 
@@ -365,17 +375,18 @@ def scan_emby():
         logging.info("EMBY_REFRESH config parameter is false.  Skipping emby scan.")
 
 
-def delete_raw_files(dir_list):
+def delete_job_files(dir_list):
     """
     Delete the raw folders from arm after job has finished
     :param list dir_list: Python list containing strings of the folders to be deleted
 
     """
     if cfg.arm_config["DELRAWFILES"]:
-        for raw_folder in dir_list:
+        for raw_folder in dict.fromkeys(path for path in dir_list if path):
             try:
-                logging.info(f"Removing raw path - {raw_folder}")
-                shutil.rmtree(raw_folder)
+                if os.path.exists(raw_folder):
+                    logging.info(f"Removing raw path - {raw_folder}")
+                    shutil.rmtree(raw_folder)
             except UnboundLocalError as error:
                 logging.debug(f"No raw files found to delete in {raw_folder}- {error}")
             except OSError as error:
@@ -613,7 +624,7 @@ def put_track(job, t_no, seconds, aspect, fps, mainfeature, source, filename="",
         chapters=chapters,
         filesize=filesize
     )
-    job_track.ripped = (seconds > int(job.config.MINLENGTH))
+
     database_adder(job_track)
 
 

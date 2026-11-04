@@ -1,0 +1,7 @@
+ruff
+bandit
+pip-audit
+sphinx
+sphinx-design
+myst-parser
+pydata-sphinx-theme

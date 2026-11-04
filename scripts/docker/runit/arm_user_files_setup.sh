@@ -7,30 +7,40 @@
 # If the container is run again without specifying UID and GID, this script
 # resets the UID and GID of all files in ARM directories to the defaults
 
-set -euo pipefail
+set -euxo pipefail
 
 export ARM_HOME="/home/arm"
 DEFAULT_UID=1000
 DEFAULT_GID=1000
 
 
-# Function to check if the ARM user has ownership of the requested folder
+# Function to check if the ARM user can access the requested folder.
+# Prefers strict UID/GID ownership match, but falls back to an actual
+# read/write access test (covers NFS mounts where ownership can't be changed).
 check_folder_ownership() {
-    local check_dir="$1"  # Get the folder path from the first argument
-    local folder_uid=$(stat -c "%u" "$check_dir")
-    local folder_gid=$(stat -c "%g" "$check_dir")
+    local check_dir="$1"
+    local folder_uid folder_gid
+    folder_uid=$(stat -c "%u" "$check_dir")
+    folder_gid=$(stat -c "%g" "$check_dir")
 
     echo "Checking ownership of $check_dir"
 
-    if [ "$folder_uid" != "$ARM_UID" ] || [ "$folder_gid" != "$ARM_GID" ]; then
-        echo "---------------------------------------------"
-        echo "[ERROR]: ARM does not have permissions to $check_dir using $ARM_UID:$ARM_GID"
-        echo "Check your user permissions and restart ARM. Folder permissions--> $folder_uid:$folder_gid"
-        echo "---------------------------------------------"
-        exit 1
+    if [[ "$folder_uid" = "$ARM_UID" ]] && [[ "$folder_gid" = "$ARM_GID" ]]; then
+        echo "[OK]: ARM UID and GID set correctly, ARM has access to '$check_dir' using $ARM_UID:$ARM_GID"
+        return 0
     fi
 
-    echo "[OK]: ARM UID and GID set correctly, ARM has access to '$check_dir' using $ARM_UID:$ARM_GID"
+    # Ownership doesn't match — test actual read/write access (NFS, group perms, ACLs)
+    if su -s /bin/sh arm -c "test -r '${check_dir}' && test -w '${check_dir}'" 2>/dev/null; then
+        echo "[OK]: ARM can access '$check_dir' via group/ACL (owner $folder_uid:$folder_gid, ARM $ARM_UID:$ARM_GID)"
+        return 0
+    fi
+
+    echo "---------------------------------------------"
+    echo "[ERROR]: ARM does not have permissions to $check_dir using $ARM_UID:$ARM_GID" >&2
+    echo "Check your user permissions and restart ARM. Folder permissions--> $folder_uid:$folder_gid"
+    echo "---------------------------------------------"
+    exit 1
 }
 
 ### Setup User
@@ -53,31 +63,69 @@ echo "Adding arm user to 'render' group"
 usermod -a -G render arm
 
 ### Setup Files
-chown -R arm:arm /opt/arm
+# Use --quiet to suppress errors from read-only bind-mounted files.
+# The || true ensures the script continues even if some files are on a
+# read-only filesystem (e.g. rescan_drive.sh mounted with :ro).
+chown -R --quiet arm:arm /opt/arm || true
+
+# Fix /home/arm ownership after usermod changes the UID.
+# The image bakes /home/arm as UID 1000; if ARM_UID differs,
+# the directory must be re-owned before the access check.
+chown arm:arm "$ARM_HOME" 2>/dev/null || true
 
 # Check ownership of the ARM home folder
 check_folder_ownership "/home/arm"
 
 # setup needed/expected dirs if not found
+# Create as the arm user so NFS directories get the correct ownership
+# from the start (avoids root:root on NFS with root_squash).
 SUBDIRS="media media/completed media/raw media/movies media/transcode logs logs/progress db music .MakeMKV"
+WRITE_WARNINGS=""
 for dir in $SUBDIRS ; do
   thisDir="$ARM_HOME/$dir"
   if [[ ! -d "$thisDir" ]] ; then
     echo "Creating dir: $thisDir"
-    mkdir -p "$thisDir"
-    # Set the default ownership to arm instead of root
-    chown -R arm:arm "$thisDir"
+    /sbin/setuser arm mkdir -p "$thisDir" 2>/dev/null || mkdir -p "$thisDir"
+  fi
+  # Try to fix ownership — Docker volumes mount as root by default.
+  # Use || true so NFS mounts with root_squash don't kill startup.
+  chown arm:arm "$thisDir" 2>/dev/null || true
+  # Verify the arm user can actually write to the directory.
+  # On NFS with root_squash, mkdir-as-root + failed chown leaves
+  # root-owned dirs that the arm user cannot write to.
+  # Skip check for media/transcode — it is intentionally mounted read-only
+  # from the transcoder work dir (for the file browser to show in-progress transcodes).
+  if [[ "$dir" != "media/transcode" ]] && ! su -s /bin/sh arm -c "test -w '${thisDir}'" 2>/dev/null; then
+    WRITE_WARNINGS="${WRITE_WARNINGS}\n  [WARN] $thisDir is NOT writable by arm ($ARM_UID:$ARM_GID)"
   fi
 done
 
+if [[ -n "$WRITE_WARNINGS" ]]; then
+  echo "---------------------------------------------"
+  echo -e "[WARNING] Some directories are not writable by the arm user:${WRITE_WARNINGS}"
+  echo ""
+  echo "This typically happens when Docker created the directory as root"
+  echo "on an NFS mount with root_squash enabled. Fix by running on the"
+  echo "NFS server or a client without root_squash:"
+  echo "  chown $ARM_UID:$ARM_GID <directory>"
+  echo "---------------------------------------------"
+fi
+
 echo "Removing any link between music and Music"
-if [ -h /home/arm/Music ]; then
+if [[ -h /home/arm/Music ]]; then
   echo "Music symbolic link found, removing link"
   unlink /home/arm/Music
 fi
 
 ##### Setup ARM-specific config files if not found
-# Check ownership of the ARM config folder
+# Create config dir if missing, then fix ownership.
+# Docker bind-mounts create the target directory as root if it doesn't
+# exist on the host, so we always attempt chown before checking.
+if [[ ! -d /etc/arm/config ]]; then
+  echo "Creating dir: /etc/arm/config"
+  mkdir -p /etc/arm/config
+fi
+chown arm:arm /etc/arm/config 2>/dev/null || true
 check_folder_ownership "/etc/arm/config"
 
 mkdir -p /etc/arm/config
@@ -86,8 +134,8 @@ for conf in $CONFS; do
   thisConf="/etc/arm/config/${conf}"
   if [[ ! -f "${thisConf}" ]] ; then
     echo "Config not found! Creating config file: ${thisConf}"
-    # Don't overwrite with defaults during reinstall
-    cp --no-clobber "/opt/arm/setup/${conf}" "${thisConf}"
+    # Use install to set ownership atomically — cp creates files as root (#1660)
+    install -o arm -g arm -m 644 "/opt/arm/setup/${conf}" "${thisConf}"
   fi
 done
 
@@ -95,18 +143,18 @@ done
 # abcde.conf is expected in /etc by the abcde installation
 echo "Checking location of abcde configuration files"
 # Test if abcde.conf is a hyperlink, if so remove it
-if [ -h /etc/arm/config/abcde.conf ]; then
+if [[ -h /etc/arm/config/abcde.conf ]]; then
   echo "Old hyper link exists removing!"
   unlink /etc/arm/config/abcde.conf
 fi
 # check if abcde is in config main location - only copy if it doesnt exist
-if ! [ -f /etc/arm/config/abcde.conf ]; then
+if ! [[ -f /etc/arm/config/abcde.conf ]]; then
   echo "abcde.conf doesnt exist"
-  cp /opt/arm/setup/.abcde.conf /etc/arm/config/abcde.conf
+  install -o arm -g arm -m 644 /opt/arm/setup/.abcde.conf /etc/arm/config/abcde.conf
   # chown arm:arm /etc/arm/config/abcde.conf
 fi
 # The system link to the fake default file -not really needed but as a precaution to the -C variable being blank
-if ! [ -h /etc/abcde.conf ]; then
+if ! [[ -h /etc/abcde.conf ]]; then
   echo "/etc/abcde.conf link doesnt exist"
   ln -sf /etc/arm/config/abcde.conf /etc/abcde.conf
 fi

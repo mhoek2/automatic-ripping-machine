@@ -1,0 +1,93 @@
+.preview-showcase {
+
+}
+    .preview-showcase img {
+        box-shadow: 5px 5px 11px 0px #222832;
+    }
+
+.admonition, div.admonition {
+    margin: 1.5625em 0 !important;
+}
+
+
+ ol {
+    list-style: none !important;
+    counter-reset: item;
+ }
+    ol li {
+        counter-increment: item;
+        margin-bottom: 5px;
+        position: relative;
+        padding-left: 2em;
+    }
+    ol li:before {
+        content: counter(item);
+        position: absolute;
+        left: 0;
+        top: 0;
+        align-items: center;
+        display: inline-flex;
+        justify-content: center;
+        min-width: 25px;
+        height: 24px;
+        border-radius: 5px;
+        font-size: .875rem;
+        padding: 0 .25rem;
+        letter-spacing: .15px;
+        line-height: 1;
+        text-align: center;
+        color: #f1f1f1;
+        background-color: #38bdf82b;
+    }
+    html[data-theme="light"] ol li:before {
+        color: #2e7695;
+    }
+
+/* Light theme */
+html[data-theme="light"] .landing {
+    margin-bottom: 100px;
+    padding: 0.1rem 0.5rem 0.6rem 0;
+    background-image: linear-gradient(
+        270deg,
+        #38bdf800 0%,
+        #38bdf81c 74%
+    );
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - 1.5rem));
+    -webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - 1.5rem));
+}
+
+html[data-theme="light"] .landing-title {
+    color: #0f2b46;
+    text-shadow: 0 1px 0 rgb(255 255 255 / 50%);
+}
+
+html[data-theme="light"] .btn-development {
+    color: #111827 !important;
+    border-color: #1f2937 !important;
+    background-color: rgb(255 255 255 / 65%) !important;
+}
+
+html[data-theme="light"] .btn-development:hover {
+    color: #000 !important;
+    border-color: #000 !important;
+    background-color: rgb(236 248 254) !important;
+}
+
+
+/* Dark theme */
+html[data-theme="dark"] .landing {
+    margin-bottom: 100px;
+    padding: 0.1rem 0.5rem 0.6rem 0;
+    background-image: linear-gradient(
+        270deg,
+        #38bdf800 0%,
+        #38bdf82b 74%
+    );
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - 1.5rem));
+    -webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - 1.5rem));
+}
+
+html[data-theme="dark"] .landing-title {
+    color: #e0f2fe;
+    text-shadow: 0 0 24px rgb(56 189 248 / 12%);
+}

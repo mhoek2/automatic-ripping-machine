@@ -1,0 +1,106 @@
+.ripper-settings {
+    columns: 3 420px;
+    column-gap: 16px;
+}
+
+.ripper-settings-group {
+    display: inline-block;
+    width: 100%;
+    margin: 0 0 16px;
+    box-sizing: border-box;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    box-shadow: var(--shadow-card);
+    break-inside: avoid;
+}
+
+.ripper-settings-group-header {
+    padding: 10px 14px;
+    background: var(--color-surface-raised);
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-text);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+}
+
+.ripper-settings-group-body {
+    display: flex;
+    flex-direction: column;
+}
+
+.ripper-setting {
+    display: grid;
+    grid-template-columns: 150px minmax(0, 1fr) 30px;
+    align-items: center;
+    gap: 8px;
+    min-height: 40px;
+    padding: 5px 10px;
+    background: var(--color-surface);
+}
+
+.ripper-setting + .ripper-setting {
+    border-top: 1px solid var(--color-border);
+}
+
+.ripper-setting:hover {
+    background: var(--color-surface-hover);
+}
+
+.ripper-setting-input:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+}
+
+.ripper-setting-info {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-subtle);
+    text-decoration: none;
+}
+
+.ripper-setting-info:hover {
+    color: var(--color-info);
+}
+
+.ripper-settings-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 16px;
+}
+
+/* Larger configuration groups */
+.ripper-settings-group:nth-child(5),
+.ripper-settings-group:nth-child(8),
+.ripper-settings-group:nth-child(9),
+.ripper-settings-group:nth-child(10),
+.ripper-settings-group:nth-child(11) {
+    grid-column: span 6;
+}
+
+@media (width <= 1200px) {
+    .ripper-settings-group,
+    .ripper-settings-group:nth-child(n) {
+        grid-column: span 6;
+    }
+}
+
+@media (width <= 768px) {
+    .ripper-settings {
+        grid-template-columns: 1fr;
+    }
+
+    .ripper-settings-group,
+    .ripper-settings-group:nth-child(n) {
+        grid-column: span 1;
+    }
+
+    .ripper-setting {
+        grid-template-columns: 120px minmax(0, 1fr) 30px;
+    }
+}

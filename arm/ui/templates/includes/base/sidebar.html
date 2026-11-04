@@ -1,0 +1,75 @@
+{% block nav %}
+<nav class="sidebar">
+	<div class="sidebar-logo">
+		<div class="logo">
+			<img src="{{ url_for('static', filename='img/arm40nw.png') }}" width="114" height="40" alt="">
+		</div>
+	</div>
+
+	<ul class="sidebar-menu">
+		<li id="navhome">
+			<a class="nav-link" href="index.html" data-tooltip="Home">
+				<i class="fa-solid fa-house"></i>
+			</a>
+		</li>
+
+		{% if authenticated %}
+		<li id="navviewlogs">
+			<a class="nav-link" href="listlogs" data-tooltip="View Logs">
+				<i class="fa-solid fa-terminal"></i>
+			</a>
+		</li>
+
+		<li id="navdatabase">
+			<a class="nav-link" href="database" data-tooltip="History">
+				<i class="fa-solid fa-clock-rotate-left"></i>
+			</a>
+		</li>
+
+		<li id="navarmsettings">
+			<a class="nav-link" href="settings" data-tooltip="Settings">
+				<i class="fa-solid fa-gear"></i>
+			</a>
+		</li>
+
+		<li id="navnotification">
+			<a class="nav-link" href="notifications" data-tooltip="Notifications">
+				<i class="fa-solid fa-bell"></i>
+				{% if notify_count %}
+					<span class="notification-badge">{{ notify_count }}</span>
+				{% endif %}
+			</a>
+		</li>
+		{% endif %}
+	</ul>
+
+    
+    <div class="sidebar-user">
+        <button id="user-menu-toggle" class="nav-link" type="button" data-tooltip="User">
+            <i class="fa-regular fa-circle-user"></i>
+        </button>
+
+        <div id="user-menu" class="user-menu">
+            <a href="#" id="theme_toggle" class="user-menu-item" type="button">
+                <i class="fa-solid fa-circle-half-stroke"></i>
+                <span>Switch Theme</span>
+            </a>
+			{% if authenticated %}
+				<a href="update_password" class="user-menu-item">
+					<i class="fa-solid fa-key"></i>
+					<span>Change Password</span>
+				</a>
+				<a href="logout" class="user-menu-item">
+					<i class="fa-solid fa-right-from-bracket"></i>
+					<span>Logout</span>
+				</a>
+			{% else %}
+            <a href="login" class="user-menu-item" data-tooltip="Login to ARM">
+                <i class="fa-solid fa-right-to-bracket"></i>
+                <span>Login</span>
+            </a>
+    		{% endif %}
+        </div>
+    </div>
+</nav>
+{% endblock %}

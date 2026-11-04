@@ -1,0 +1,245 @@
+{% block sysinfo %}
+<div class="sysinfo">
+    <div class="sysinfo-grid">
+
+        <!-- SYSTEM -->
+        <section class="sysinfo-card sysinfo-card-system">
+            <div class="sysinfo-card-header">
+                <span>System</span>
+            </div>
+
+            <div class="sysinfo-card-body">
+                <div class="sysinfo-item">
+                    <div class="sysinfo-label">
+                        <span>Name</span>
+                        <span class="sysinfo-value" data-server="name"></span>
+                    </div>
+                    <div class="sysinfo-description" data-server="description"></div>
+                </div>
+
+                <div class="sysinfo-item">
+                    <div class="sysinfo-label">
+                        <span>CPU</span>
+                        <span class="sysinfo-value" data-server="cpu"></span>
+                    </div>
+                </div>
+
+                <div class="sysinfo-item">
+                    <div class="sysinfo-label">
+                        <span>Temperature</span>
+                        <span class="sysinfo-value" data-serverutil="cpu_temp"></span>
+                    </div>
+                    <div class="sysinfo-progress">
+                        <div class="sysinfo-progress-bar" data-progress="cpu_temp"></div>
+                    </div>
+                </div>
+
+                <div class="sysinfo-item">
+                    <div class="sysinfo-label">
+                        <span>CPU usage</span>
+                        <span class="sysinfo-value" data-serverutil="cpu_util"></span>
+                    </div>
+                    <div class="sysinfo-progress">
+                        <div class="sysinfo-progress-bar" data-progress="cpu_util"></div>
+                    </div>
+                </div>
+
+                <!-- MEMORY -->
+                <div class="sysinfo-item sysinfo-memory">
+                    <div class="sysinfo-label">
+                        <span>System memory</span>
+                        <span class="sysinfo-value" data-serverutil="memory_percent"></span>
+                    </div>
+
+                    <div class="sysinfo-memory-bar" role="img" aria-label="System memory usage">
+                        <div class="sysinfo-memory-used" data-memory-segment="used"></div>
+                        <div class="sysinfo-memory-free" data-memory-segment="free"></div>
+                    </div>
+
+                    <div class="sysinfo-memory-legend">
+                        <div class="sysinfo-memory-legend-item">
+                            <span class="sysinfo-memory-dot total"></span>
+                            <span class="sysinfo-memory-legend-label">Total</span>
+                            <strong data-memory="total">—</strong>
+                        </div>
+
+                        <div class="sysinfo-memory-legend-item">
+                            <span class="sysinfo-memory-dot used"></span>
+                            <span class="sysinfo-memory-legend-label">Used</span>
+                            <strong data-memory="used">—</strong>
+                        </div>
+
+                        <div class="sysinfo-memory-legend-item">
+                            <span class="sysinfo-memory-dot free"></span>
+                            <span class="sysinfo-memory-legend-label">Free</span>
+                            <strong data-memory="free">—</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- STORAGE -->
+        <section class="sysinfo-card sysinfo-card-storage">
+            <div class="sysinfo-card-header">
+                <span>Storage</span>
+            </div>
+
+            <div class="sysinfo-card-body">
+                <div class="sysinfo-storage-list" data-health-directories>
+                    <div class="sysinfo-empty-state">Waiting for checks…</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SERVER DETAILS -->
+        {% if authenticated %}
+        <section class="server-details">
+            <div class="server-details-header">
+                <span>Server details</span>
+
+                <span class="server-health-summary" data-health-summary>
+                    <i class="fa-solid fa-circle-minus"></i>
+                    Waiting for checks
+                </span>
+            </div>
+
+            <div class="server-details-body">
+
+                <!-- SYSTEM INFORMATION -->
+                <section class="server-section">
+                    <div class="server-section-heading">
+                        <span>System information</span>
+                    </div>
+
+                    <div class="server-info-grid">
+                        <div class="server-info-item">
+                            <span>Datetime</span>
+                            <code data-serverstat="server_datetime"></code>
+                        </div>
+
+                        <div class="server-info-item">
+                            <span>Timezone</span>
+                            <code data-serverstat="server_timezone"></code>
+                        </div>
+
+                        <div class="server-info-item">
+                            <span>Python</span>
+                            <code data-serverstat="python_version"></code>
+                        </div>
+
+                        <div class="server-info-item">
+                            <span>ARM version</span>
+                            <code data-serverstat="arm_version_local"></code>
+                        </div>
+
+                        <div class="server-info-item">
+                            <span>Git commit</span>
+                            <code data-serverstat="git_commit"></code>
+                        </div>
+
+                        <div class="server-info-item" data-serverstat-update>
+                            <span>Update available</span>
+                            <div class="server-info-update">
+                                <a
+                                    href="https://github.com/mhoek2/automatic-ripping-machine"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >View project</a>
+                                <code data-serverstat="arm_version_remote"></code>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+
+                <!-- EXTERNAL TOOLS -->
+                <section class="server-section">
+                    <div class="server-section-heading">
+                        <span>External tools</span>
+                    </div>
+
+                    <div class="server-check-list" data-health-tools>
+                        <div class="sysinfo-empty-state">Waiting for checks…</div>
+                    </div>
+                </section>
+
+
+                <!-- HARDWARE TRANSCODING -->
+                <section class="server-section">
+                    <div class="server-section-heading">
+                        <span>Hardware transcoding</span>
+                    </div>
+
+                    <div class="server-check-list" data-hardware-list>
+                        <div class="server-check-row" data-hw-support="intel">
+                            <span class="server-check-name">Intel Quick Sync</span>
+                            <span class="server-check-status">
+                                <i class="fa-solid fa-circle-minus"></i>
+                                Waiting
+                            </span>
+                        </div>
+
+                        <div class="server-check-row" data-hw-support="nvidia">
+                            <span class="server-check-name">NVIDIA NVENC</span>
+                            <span class="server-check-status">
+                                <i class="fa-solid fa-circle-minus"></i>
+                                Waiting
+                            </span>
+                        </div>
+
+                        <div class="server-check-row" data-hw-support="amd">
+                            <span class="server-check-name">AMD VCN</span>
+                            <span class="server-check-status">
+                                <i class="fa-solid fa-circle-minus"></i>
+                                Waiting
+                            </span>
+                        </div>
+                    </div>
+                </section>
+
+
+                <!-- RIP STATISTICS -->
+                <section class="server-section">
+                    <div class="server-section-heading">
+                        <span>Rip statistics</span>
+                    </div>
+
+                    <div class="rip-stats">
+                        <div class="rip-stat">
+                            <div class="rip-stat-value" data-serverstat="total_rips">—</div>
+                            <div class="rip-stat-label">Total rips</div>
+                        </div>
+
+                        <div class="rip-stat">
+                            <div class="rip-stat-value" data-serverstat="movies_ripped">—</div>
+                            <div class="rip-stat-label">Movies</div>
+                        </div>
+
+                        <div class="rip-stat">
+                            <div class="rip-stat-value" data-serverstat="series_ripped">—</div>
+                            <div class="rip-stat-label">Series</div>
+                        </div>
+
+                        <div class="rip-stat">
+                            <div class="rip-stat-value" data-serverstat="cds_ripped">—</div>
+                            <div class="rip-stat-label">Audio</div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </section>
+        {% endif %}
+
+    </div>
+</div>
+
+<script type="module">
+    import { sysinfo } from './static/js/sysinfo.js';
+
+    $(document).ready(function () {
+        sysinfo.start();
+    });
+</script>
+{% endblock %}

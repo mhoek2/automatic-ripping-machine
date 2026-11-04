@@ -10,12 +10,12 @@ from collections import deque
 from pathlib import Path
 import datetime
 import psutil
-from flask import request
+from flask import request, jsonify
 from time import time, strftime, gmtime
 
 import arm.config.config as cfg
 from arm.models.config import Config
-from arm.models.job import Job, JobState, JOB_STATUS_FINISHED
+from arm.models.job import Job, JobState
 from arm.models.notifications import Notifications
 from arm.models.track import Track
 from arm.models.ui_settings import UISettings
@@ -25,58 +25,106 @@ from arm.ui.utils import job_id_validator, database_updater, authenticated_state
 from arm.ui.settings import DriveUtils as drive_utils # noqa E402
 
 
-def get_notifications():
+def get_unseen_notifications():
     """Get all current notifications"""
     all_notification = Notifications.query.filter_by(seen=False)
     notification = [a.get_d() for a in all_notification]
     return notification
 
 
-def get_x_jobs(job_status):
-    """
-    function for getting all Failed/Successful jobs \n
-    or\n
-    currently active jobs from the database\n
+def serialize_job_results(jobs):
+    """Serialize jobs using the same format as the existing JSON API."""
+    job_results = {}
 
-    :return: dict/json
-    """
-    success = False
+    for i, job in enumerate(jobs):
+        result = {}
+        job_log = os.path.join(cfg.arm_config['LOGPATH'], str(job.logfile))
+        process_logfile(job_log, job, result)
+
+        tracks = job.tracks.all()
+        
+        result['tracks'] = [
+			{
+				'track_id': track.track_id,
+				'track_number': track.track_number,
+				'filename': track.filename,
+				'length': track.length,
+				'fps': track.fps,
+				'aspect_ratio': track.aspect_ratio,
+				'main_feature': track.main_feature,
+				'status': track.status,
+				'ripped': track.ripped,
+				'process': track.process,
+			}
+			for track in tracks
+		]
+        
+        result['manual_edit'] = (
+            job.manual_mode
+            and job.status == JobState.MANUAL_WAIT_STARTED.value
+            and len(tracks) > 0
+            and not job.manual_start
+        )
+
+        try:
+            result['config'] = job.config.get_d()
+        except AttributeError:
+            result['config'] = {}
+            app.logger.debug("couldn't get config")
+
+        for key, value in job.get_d().items():
+            if key != "config":
+                result[str(key)] = str(value)
+
+        job_results[i] = result
+
+    return job_results
+
+def get_x_jobs(job_status):
+    """Get successful, failed, or active jobs."""
     if job_status == "joblist":
-        jobs = db.session.query(Job).filter(~Job.finished).all()
-    elif JobState(job_status) in JOB_STATUS_FINISHED:
-        jobs = Job.query.filter_by(status=job_status)
+        cutoff = datetime.datetime.now() - datetime.timedelta(hours=3)
+        
+        jobs = Job.query.filter(
+            db.or_(
+                ~Job.finished,
+                Job.start_time >= cutoff,
+            )
+        ).all()
+    elif JobState(job_status) in JobState.JOB_STATUS_FINISHED:
+        jobs = Job.query.filter_by(status=job_status).all()
     else:
         raise ValueError(f"{job_status} is not a valid option")
 
-    job_results = {}
-    i = 0
-    for j in jobs:
-        job_results[i] = {}
-        job_log = os.path.join(cfg.arm_config['LOGPATH'], str(j.logfile))
-        process_logfile(job_log, j, job_results[i])
-        try:
-            job_results[i]['config'] = j.config.get_d()
-        except AttributeError:
-            job_results[i]['config'] = "config not found"
-            app.logger.debug("couldn't get config")
+    job_results = serialize_job_results(jobs)
 
-        for key, value in j.get_d().items():
-            if key != "config":
-                job_results[i][str(key)] = str(value)
-        i += 1
-    if jobs:
-        app.logger.debug("jobs  - we have " + str(len(job_results)) + " jobs")
-        success = True
+    return {
+        "success"       : bool(jobs),
+        "mode"          : job_status,
+        "results"       : job_results,
+        "arm_name"      : cfg.arm_config['ARM_NAME'],
+        "authenticated" : authenticated_state()
+    }
 
-    # Get authentication state
-    authenticated = authenticated_state()
+def get_jobs_infinite( limit, before ):
+    """Get jobs using infinite scroller"""
+    query = Job.query
 
-    return {"success": success,
-            "mode": job_status,
-            "results": job_results,
-            "arm_name": cfg.arm_config['ARM_NAME'],
-            "authenticated": authenticated}
+    if before is not None:
+        query = query.filter(Job.job_id < before)
 
+    jobs = query.order_by(db.desc(Job.job_id)).limit(limit + 1).all()
+
+    has_more = len(jobs) > limit
+    jobs = jobs[:limit]
+
+    return jsonify(
+        success         = True,
+        results         = serialize_job_results(jobs),
+        has_more        = has_more,
+        next_cursor     = jobs[-1].job_id if jobs else None,
+        authenticated   = authenticated_state()
+    )
 
 def process_logfile(logfile, job, job_results):
     """
@@ -87,16 +135,20 @@ def process_logfile(logfile, job, job_results):
         :return: should be dict for the json api
     """
     app.logger.debug(f"Disc Type: {job.disctype}, Status: {job.status}")
+
     if job.disctype in {"dvd", "bluray"}:
         if job.status == JobState.VIDEO_RIPPING.value:
             app.logger.debug("using mkv - " + logfile)
             return process_makemkv_logfile(job, job_results)
+        
         if job.status == JobState.TRANSCODE_ACTIVE.value:
             app.logger.debug("using handbrake")
             return process_handbrake_logfile(logfile, job, job_results)
+        
     if job.disctype == "music" and job.status == JobState.AUDIO_RIPPING.value:
         app.logger.debug("using audio disc")
         return process_audio_logfile(job.logfile, job, job_results)
+    
     return job_results
 
 
@@ -354,78 +406,64 @@ def search(search_query):
             if key != "config":
                 search_results[i][str(key)] = str(value)
         i += 1
-    return {'success': True, 'mode': 'search', 'results': search_results}
+
+    return {
+        'success'       : True, 
+        'mode'          : 'search', 
+        'results'       : search_results,
+        'authenticated' : authenticated_state()
+    }
 
 
 def delete_job(job_id, mode):
-    """
-    json api version of delete jobs\n
-    :param job_id: job id to delete || str "all"/"title"
-    :param str mode: should always be 'delete'
-    :return: json/dict to be returned if success or fail
-    """
+    """Delete a job and its related database records."""
     try:
-        json_return = {}
-        app.logger.debug(f"job_id= {job_id}")
-        # Find the job the user wants to delete
-        if mode == 'delete' and job_id is not None:
-            # User wants to wipe the whole database
-            # Make a backup and everything
-            # The user can only access this by typing it manually
-            if job_id == 'all':
-                #  # if this gets put in final, the DB will need optimised
-                #  if os.path.isfile(cfg.arm_config['DBFILE']):  # noqa: S125
-                #    # Make a backup of the database file
-                #    cmd = f"cp {cfg.arm_config['DBFILE']} {cfg.arm_config['DBFILE'])}.bak"
-                #    app.logger.info(f"cmd  -  {cmd}")
-                #    os.system(cmd)
-                #  Track.query.delete()
-                #  Job.query.delete()
-                #  Config.query.delete()
-                #  db.session.commit()
-                app.logger.debug("Admin is requesting to delete all jobs from database!!! No deletes went to db")
-                json_return = {'success': True, 'job': job_id, 'mode': mode}
-            elif job_id == "title":
-                #  The user can only access this by typing it manually
-                #  This shouldn't be left on when on a full server
-                # This causes db corruption!
-                # logfile = request.args['title']
-                # Job.query.filter_by(title=logfile).delete()
-                # db.session.commit()
-                # app.logger.debug("Admin is requesting to delete all jobs with (x) title.")
-                json_return = {'success': True, 'job': job_id, 'mode': mode}
-                # Not sure this is the greatest way of handling this
-            else:
-                try:
-                    post_value = int(job_id)
-                    app.logger.debug(f"Admin requesting delete job {job_id} from database!")
-                except ValueError:
-                    app.logger.debug("Admin is requesting to delete a job but didnt provide a valid job ID")
-                    notification = Notifications(f"Job: {job_id} couldn't be Deleted!",
-                                                 "Couldn't find a job with that ID")
-                    db.session.add(notification)
-                    db.session.commit()
-                    return {'success': False, 'job': 'invalid', 'mode': mode, 'error': 'Not a valid job'}
-                else:
-                    app.logger.debug("No errors: job_id=" + str(post_value))
-                    drive_utils.job_cleanup(job_id)
-                    Track.query.filter_by(job_id=job_id).delete()
-                    Job.query.filter_by(job_id=job_id).delete()
-                    Config.query.filter_by(job_id=job_id).delete()
-                    notification = Notifications(f"Job: {job_id} was Deleted!",
-                                                 f'Job with id: {job_id} was successfully deleted from the database')
-                    db.session.add(notification)
-                    db.session.commit()
-                    app.logger.debug(f"Admin deleting  job {job_id} was successful")
-                    json_return = {'success': True, 'job': job_id, 'mode': mode}
-    # If we run into problems with the database changes
-    # error out to the log and roll back
+        app.logger.debug(f"job_id={job_id}")
+
+        if mode != 'delete' or job_id is None:
+            return {'success': False, 'error': 'Invalid request', 'mode': mode}
+
+        if job_id == 'all':
+            app.logger.warning("Delete-all requested; no jobs were deleted")
+            return {'success': True, 'job': job_id, 'mode': mode}
+
+        if job_id == 'title':
+            app.logger.warning("Delete-by-title requested; no jobs were deleted")
+            return {'success': True, 'job': job_id, 'mode': mode}
+
+        try:
+            post_value = int(job_id)
+        except (ValueError, TypeError):
+            return {'success': False, 'job': 'invalid', 'mode': mode, 'error': 'Not a valid job ID'}
+
+        job = Job.query.filter_by(job_id=post_value).first()
+
+        if job is None:
+            app.logger.warning(f"Cannot delete job {post_value}: job not found")
+            return {'success': False, 'job': post_value, 'mode': mode, 'error': 'Job not found'}
+
+        app.logger.info(f"Deleting job {post_value}")
+
+        drive_utils.job_cleanup(post_value)
+        Track.query.filter_by(job_id=post_value).delete()
+        Config.query.filter_by(job_id=post_value).delete()
+        db.session.delete(job)
+
+        notification = Notifications(
+            f"Job: {post_value} was Deleted!",
+            f"Job with id: {post_value} was successfully deleted from the database"
+        )
+        db.session.add(notification)
+        db.session.commit()
+
+        app.logger.info(f"Job {post_value} was successfully deleted")
+        return {'success': True, 'job': post_value, 'mode': mode}
+
     except Exception as err:
         db.session.rollback()
-        app.logger.error(f"Error:db-1 {err}")
-        json_return = {'success': False}
+        app.logger.exception(f"Error deleting job {job_id}: {err}")
+        return {'success': False, 'job': job_id, 'mode': mode, 'error': 'Failed to delete job'}
 
-    return json_return
 
 
 def generate_log(logpath, job_id):

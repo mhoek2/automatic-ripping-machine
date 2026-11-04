@@ -83,23 +83,33 @@ class JobState(str, enum.Enum):
     TRANSCODE_ACTIVE = "transcoding"
     TRANSCODE_WAITING = "waiting_transcode"
 
+    # Postprocessing states
+    POSTPROCESSING_MOVING = "moving"
 
-JOB_STATUS_FINISHED = {
-    JobState.SUCCESS,
-    JobState.FAILURE,
-}
-JOB_STATUS_RIPPING = {
-    JobState.AUDIO_RIPPING,
-    JobState.VIDEO_RIPPING,
-    JobState.MANUAL_WAIT_STARTED,  # <-- not ripping, but undistinguishable
-    JobState.VIDEO_WAITING,
-    JobState.VIDEO_INFO,
-}
-JOB_STATUS_TRANSCODING = {
-    JobState.TRANSCODE_ACTIVE,
-    JobState.TRANSCODE_WAITING,
-}
+class JobStateGroup:
+    """Groups of job states for categorization and filtering."""
 
+    FINISHED = {
+        JobState.SUCCESS,
+        JobState.FAILURE,
+    }
+
+    RIPPING = {
+        JobState.AUDIO_RIPPING,
+        JobState.VIDEO_RIPPING,
+        JobState.MANUAL_WAIT_STARTED,
+        JobState.VIDEO_WAITING,
+        JobState.VIDEO_INFO,
+    }
+
+    TRANSCODING = {
+        JobState.TRANSCODE_ACTIVE,
+        JobState.TRANSCODE_WAITING,
+    }
+
+    POSTPROCESSING = {
+        JobState.POSTPROCESSING_MOVING,
+    }
 
 class Job(db.Model):
     """
@@ -309,11 +319,11 @@ class Job(db.Model):
 
     @hybrid_property
     def finished(self):
-        return JobState(self.status) in JOB_STATUS_FINISHED
+        return JobState(self.status) in JobStateGroup.FINISHED
 
     @finished.expression
     def finished(cls):
-        return cls.status.in_([js.value for js in JOB_STATUS_FINISHED])
+        return cls.status.in_([js.value for js in JobStateGroup.FINISHED])
 
     @property
     def idle(self):
@@ -321,7 +331,7 @@ class Job(db.Model):
 
     @property
     def ripping(self):
-        return JobState(self.status) in JOB_STATUS_RIPPING
+        return JobState(self.status) in JobStateGroup.RIPPING
 
     @property
     def run_time(self):

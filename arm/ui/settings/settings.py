@@ -29,7 +29,6 @@ from flask import render_template, request, flash, \
     redirect, Blueprint, session, url_for
 
 import arm.ui.utils as ui_utils
-from arm.ripper.ProcessHandler import arm_subprocess
 from arm.ui import app, db
 from arm.models.job import Job
 from arm.models.system_drives import SystemDrives
@@ -37,8 +36,8 @@ from arm.models.system_info import SystemInfo
 from arm.models.ui_settings import UISettings
 import arm.config.config as cfg
 from arm.ui.settings import DriveUtils as drive_utils
+from arm.ui.settings import health
 from arm.ui.forms import SettingsForm, UiSettingsForm, AbcdeForm, SystemInfoDrives
-from arm.ui.settings.ServerUtil import ServerUtil
 import arm.ripper.utils as ripper_utils
 
 route_settings = Blueprint('route_settings', __name__,
@@ -62,7 +61,50 @@ def is_read_only(path: os.PathLike) -> bool:
 
 route_settings.add_app_template_filter(mask_last, name='mask_last')
 
+def get_server_stats( isInited = False ):
+    # stats for info page
+    failed_rips = Job.query.filter_by(status="fail").count()
+    total_rips  = Job.query.filter_by().count()
+    movies      = Job.query.filter_by(video_type="movie").count()
+    series      = Job.query.filter_by(video_type="series").count()
+    cds         = Job.query.filter_by(disctype="music").count()
 
+    # Get the current server time and timezone
+    server_timezone = os.environ.get("TZ", "Etc/UTC")
+    current_time    = datetime.now()
+    server_datetime = current_time.strftime(cfg.arm_config['DATE_FORMAT'])
+
+    # git
+    [arm_version_local, arm_version_remote] = ui_utils.git_check_version()
+    local_git_hash = ui_utils.get_git_revision_hash()
+
+    if not isInited:
+        git_is_uptodate = ui_utils.git_check_updates(local_git_hash)
+    else:
+        git_is_uptodate = -1
+
+    return {
+        'server_datetime':     server_datetime,
+        'health':              health.fetch(isInited),
+        'server_timezone':     server_timezone,
+        'python_version':      platform.python_version(),
+        'arm_version_local':   arm_version_local,
+        'arm_version_remote':  arm_version_remote,
+        'git_commit':          local_git_hash,
+        'movies_ripped':       movies,
+        'series_ripped':       series,
+        'cds_ripped':          cds,
+        'no_failed_jobs':      failed_rips,
+        'total_rips':          total_rips,
+        'updated':             git_is_uptodate,
+    }
+
+@route_settings.route('/serverstats', methods=['GET'])
+def serverstats():
+    is_inited = request.args.get('is_inited', '').lower() == 'true'
+
+    return {'data': get_server_stats( is_inited ) }
+    
 @route_settings.route('/settings')
 @login_required
 def settings():
@@ -73,43 +115,12 @@ def settings():
     needing to open a text editor
     """
 
-    # stats for info page
-    failed_rips = Job.query.filter_by(status="fail").count()
-    total_rips = Job.query.filter_by().count()
-    movies = Job.query.filter_by(video_type="movie").count()
-    series = Job.query.filter_by(video_type="series").count()
-    cds = Job.query.filter_by(disctype="music").count()
-
-    # Get the current server time and timezone
-    server_timezone = os.environ.get("TZ", "Etc/UTC")
-    current_time = datetime.now()
-    server_datetime = current_time.strftime(cfg.arm_config['DATE_FORMAT'])
-    [arm_version_local, arm_version_remote] = ui_utils.git_check_version()
-    local_git_hash = ui_utils.get_git_revision_hash()
-
-    stats = {'server_datetime': server_datetime,
-             'server_timezone': server_timezone,
-             'python_version': platform.python_version(),
-             'arm_version_local': arm_version_local,
-             'arm_version_remote': arm_version_remote,
-             'git_commit': local_git_hash,
-             'movies_ripped': movies,
-             'series_ripped': series,
-             'cds_ripped': cds,
-             'no_failed_jobs': failed_rips,
-             'total_rips': total_rips,
-             'updated': ui_utils.git_check_updates(local_git_hash),
-             'hw_support': check_hw_transcode_support()
-             }
+    # server stats for info page
+    serverstats = get_server_stats();
+    app.logger.debug(f"stats: {serverstats}")
 
     # ARM UI config
     armui_cfg = ui_utils.arm_db_cfg()
-
-    # Get system details from Server Info and Config
-    server = SystemInfo.query.filter_by(id="1").first()
-    serverutil = ServerUtil()
-    arm_path = cfg.arm_config['TRANSCODE_PATH']
-    media_path = cfg.arm_config['COMPLETED_PATH']
 
     # System Drives (CD/DVD/Blueray drives)
     drive_utils.update_job_status()
@@ -123,57 +134,23 @@ def settings():
 
     session["page_title"] = "Settings"
 
-    app.logger.debug(f"stats: {stats}")
-
     return render_template("settings/settings.html",
-                           settings=cfg.arm_config,
-                           ui_settings=armui_cfg,
-                           stats=stats,
-                           apprise_cfg=cfg.apprise_config,
-                           form=form,
-                           jsoncomments=comments,
-                           abcde_cfg=cfg.abcde_config,
-                           server=server,
-                           serverutil=serverutil,
-                           arm_path=arm_path,
-                           media_path=media_path,
-                           drives=drives,
-                           form_drive=form_drive,
-                           ripper_read_only=is_read_only(cfg.arm_config_path),
-                           apprise_read_only=is_read_only(cfg.apprise_config_path),
-                           abcde_read_only=is_read_only(cfg.abcde_config_path))
-
-
-def check_hw_transcode_support():
-    cmd = f"nice {cfg.arm_config['HANDBRAKE_CLI']}"
-
-    app.logger.debug(f"Sending command: {cmd}")
-    hw_support_status = {
-        "nvidia": False,
-        "intel": False,
-        "amd": False
-    }
-    try:
-        hand_brake_output = arm_subprocess(f"{cmd}", shell=True, check=True)
-
-        # NVENC
-        if re.search(r'nvenc: version ([0-9\\.]+) is available', str(hand_brake_output)):
-            app.logger.info("NVENC supported!")
-            hw_support_status["nvidia"] = True
-        # Intel QuickSync
-        if re.search(r'qsv:\sis(.*?)available\son', str(hand_brake_output)):
-            app.logger.info("Intel QuickSync supported!")
-            hw_support_status["intel"] = True
-        # AMD VCN
-        if re.search(r'vcn:\sis(.*?)available\son', str(hand_brake_output)):
-            app.logger.info("AMD VCN supported!")
-            hw_support_status["amd"] = True
-        app.logger.info("Handbrake call successful")
-        app.logger.debug(hand_brake_output)
-    except subprocess.CalledProcessError:
-        pass
-    return hw_support_status
-
+        authenticated        = ui_utils.authenticated_state(),
+        settings             = cfg.arm_config,
+        settings_groups      = cfg.ARM_SETTINGS_GROUPS,
+        ui_settings          = armui_cfg,
+        serverstats          = serverstats,
+        apprise_cfg          = cfg.apprise_config,
+        apprise_groups       = cfg.APPRISE_SETTINGS_GROUPS,
+        form                 = form,
+        jsoncomments         = comments,
+        abcde_cfg            = cfg.abcde_config,
+        drives               = drives,
+        form_drive           = form_drive,
+        ripper_read_only     = is_read_only(cfg.arm_config_path),
+        apprise_read_only   = is_read_only(cfg.apprise_config_path),
+        abcde_read_only     = is_read_only(cfg.abcde_config_path)
+      )
 
 @route_settings.route('/save_settings', methods=['POST'])
 @login_required
@@ -186,8 +163,10 @@ def save_settings():
     # Load up the comments.json, so we can comment the arm.yaml
     comments = ui_utils.generate_comments()
     success = False
+    message = "Failed to update [Ripper] settings!"
     arm_cfg = {}
     form = SettingsForm()
+
     if form.validate_on_submit():
         # Build the new arm.yaml with updated values from the user
         arm_cfg = ui_utils.build_arm_cfg(request.form.to_dict(), comments)
@@ -197,13 +176,18 @@ def save_settings():
                 settings_file.write(arm_cfg)
                 settings_file.close()
             success = True
+            message = "Updated [Ripper] settings!"
             importlib.reload(cfg)
             # Set the ARM Log level to the config
             app.logger.info(f"Setting log level to: {cfg.arm_config['LOGLEVEL']}")
             app.logger.setLevel(cfg.arm_config['LOGLEVEL'])
         except OSError as e:
             # arm.yaml is read-only
-            app.logger.error(f"{cfg.arm_config_path} is read-only", exc_info=e)
+            message += f" - {cfg.arm_config_path} is read-only"
+            app.logger.error(message, exc_info=e)
+
+    # notification
+    ripper_utils.notify(None, "ARM Settings", message, send_remote=False)
 
     return {'success': success, 'settings': cfg.arm_config, 'form': 'arm ripper settings'}
 
@@ -220,6 +204,7 @@ def save_ui_settings():
     """
     form = UiSettingsForm()
     success = False
+    message = f"Failed to update [UI] settings!"
     arm_ui_cfg = UISettings.query.get(1)
     if form.validate_on_submit():
         use_icons = (str(form.use_icons.data).strip().lower() == "true")
@@ -233,6 +218,11 @@ def save_ui_settings():
         arm_ui_cfg.notify_refresh = format(form.notify_refresh.data)
         db.session.commit()
         success = True
+        message = "Updated [UI] settings!"
+
+    # notification
+    ripper_utils.notify(None, "ARM Settings", message, send_remote=False)
+
     # Masking the jinja update, otherwise an error is thrown
     # sqlalchemy.orm.exc.DetachedInstanceError: Instance <UISettings at 0x7f294c109fd0>
     # app.jinja_env.globals.update(armui_cfg=arm_ui_cfg)
@@ -248,6 +238,7 @@ def save_abcde():
     Overview - Save 'abcde Config' page settings to the database. Not a user page
     """
     success = False
+    message = "Failed to update [ABCDE] settings!"
     abcde_cfg_str = ""
     form = AbcdeForm()
     if form.validate():
@@ -261,10 +252,15 @@ def save_abcde():
                 abcde_file.write(clean_abcde_str)
                 abcde_file.close()
             success = True
+            message = "Updated [ABCDE] settings!"
             # Update the abcde config
             cfg.abcde_config = clean_abcde_str
         except OSError as e:
-            app.logger.error(f"{cfg.abcde_config_path} is read-only", exc_info=e)
+            message += f" - {cfg.abcde_config_path} is read-only"
+            app.logger.error(message, exc_info=e)
+
+    # notification
+    ripper_utils.notify(None, "ARM Settings", message, send_remote=False)
 
     # If we get to here, there was no post-data
     return {'success': success,
@@ -281,6 +277,8 @@ def save_apprise_cfg():
     Overview - Save 'Apprise Config' page settings to database. Not a user page
     """
     success = False
+    message = "Failed to update [APPRISE] settings!"
+
     # Since we can't be sure of any values, we can't validate it
     if request.method == 'POST':
         # Save updated apprise.yaml
@@ -291,10 +289,15 @@ def save_apprise_cfg():
                 settings_file.write(apprise_cfg)
                 settings_file.close()
             success = True
+            message = "Updated [APPRISE] settings!"
             importlib.reload(cfg)
         except OSError as e:
-            app.logger.error(f"{cfg.apprise_config_path} is read-only", exc_info=e)
-    # If we get to here there was no post data
+            message += f" - {cfg.apprise_config_path} is read-only"
+            app.logger.error(message, exc_info=e)
+
+    # notification
+    ripper_utils.notify(None, "ARM Settings", message, send_remote=False)
+
     return {'success': success, 'settings': cfg.apprise_config, 'form': 'Apprise config'}
 
 
@@ -320,12 +323,20 @@ def server_info():
         drive.name = str(form_drive.name.data).strip()
         drive.drive_mode = str(form_drive.drive_mode.data).strip()
         db.session.commit()
-        flash(f"Updated Drive {drive.name} details", "success")
-        # Return to the systeminfo page (refresh page)
+        
+        flash(f"Updated Drive {drive.name} settings", "success")
+        ripper_utils.notify(None, "ARM notification", f"Updated drive settings for: {drive.name}({drive.mount})", send_remote=False)
+
         return redirect(url_for(REDIRECT_SETTINGS))
     else:
-        flash("Error: Unable to update drive details", "error")
-        # Return for GET
+        app.logger.warning("Form validation failed: %s", form_drive.errors)
+        app.logger.warning("Submitted form data: %s", request.form)
+        errors = "; ".join(f"{field}: {', '.join(messages)}" for field, messages in form_drive.errors.items())
+
+        message = f"Failed to update drive settings: \n{errors}"
+        flash(message, "error")
+        ripper_utils.notify(None, "ARM notification", message, send_remote=False)
+
         return redirect(url_for(REDIRECT_SETTINGS))
 
 
@@ -433,14 +444,14 @@ def testapprise():
     Overview - Send a test notification to Apprise.
     """
     # Send a sample notification
-    message = "This is a notification by the ARM-Notification Test!"
-    if cfg.arm_config["UI_BASE_URL"] and cfg.arm_config["WEBSERVER_PORT"]:
-        message = message + f" Server URL: http://{cfg.arm_config['UI_BASE_URL']}:{cfg.arm_config['WEBSERVER_PORT']}"
+    message = f"This is a notification by the ARM-Notification Test! {ripper_utils.get_server_url()}"
+    
     ripper_utils.notify(None, "ARM notification", message)
     flash("Test notification sent ", "success")
     return redirect(url_for(REDIRECT_SETTINGS))
 
 
+# hmm
 @route_settings.route('/updatesysinfo')
 def update_sysinfo():
     """

@@ -1,0 +1,9 @@
+[tool.ruff]
+exclude = [
+    ".git",
+    "**/migrations/**",
+]
+line-length = 160
+
+[tool.ruff.lint]
+extend-select = ["E501"]

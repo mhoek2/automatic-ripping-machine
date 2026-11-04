@@ -1,0 +1,138 @@
+<style>
+    .feeder-container {
+        position: absolute;
+        top: 10px;
+        right: 2em;
+        height: fit-content;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+    }
+
+    .feeder-group {
+        position: relative;
+        display: flex;
+    }
+
+    .feeder-toggle {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .feeder-dropdown-label {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.65rem 0.9rem;
+        border: 1px solid var(--color-border);
+        border-radius: 0.5rem;
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .feeder-chevron {
+        margin-left: auto;
+        transition: transform 0.2s ease;
+    }
+
+    .feeder-group:hover .feeder-chevron {
+        transform: rotate(180deg);
+    }
+
+    .feeder-dropdown {
+        position: absolute;
+        top: calc(100% - 0.15rem);
+        left: 0;
+        z-index: 100;
+        display: none;
+        min-width: 100%;
+        padding: 0.35rem;
+        border-radius: 0.5rem;
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 20%);
+    }
+
+    .feeder-toggle:checked ~ .feeder-dropdown {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .feeder-group:hover .feeder-dropdown {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .feeder-dropdown button {
+        padding: 0.55rem 0.75rem;
+        border: 0;
+        border-radius: 0.3rem;
+        background: transparent;
+        color: inherit;
+        text-align: left;
+        white-space: nowrap;
+        cursor: pointer;
+    }
+
+    .feeder-dropdown button:hover {
+        background: var(--color-surface-hover, rgb(128 128 128 / 15%));
+    }
+
+    .feeder-toggle:focus-visible + .feeder-dropdown-label {
+        outline: 2px solid var(--color-accent, #5794f2);
+        outline-offset: 2px;
+    }
+</style>
+
+<div class="feeder-container">
+    <div class="feeder-group">
+        <label class="arm-checkbox">
+            <div>Manual Drive </div>
+            <input type="checkbox" id="feeder_drive_mode">
+            <span></span>
+        </label>
+    </div>
+	<div class="feeder-group">
+		<input type="checkbox" id="feeder-ripping-toggle" class="feeder-toggle">
+		<label for="feeder-ripping-toggle" class="feeder-dropdown-label">
+			<i class="fa-solid fa-compact-disc"></i>
+			Ripping
+			<i class="fa-solid fa-chevron-down feeder-chevron"></i>
+		</label>
+		<div class="feeder-dropdown" id="feeder-ripping"></div>
+	</div>
+
+	<div class="feeder-group">
+		<input type="checkbox" id="feeder-transcoding-toggle" class="feeder-toggle">
+		<label for="feeder-transcoding-toggle" class="feeder-dropdown-label">
+			<i class="fa-solid fa-film"></i>
+			Transcoding
+			<i class="fa-solid fa-chevron-down feeder-chevron"></i>
+		</label>
+		<div class="feeder-dropdown" id="feeder-transcoding"></div>
+	</div>
+
+	<div class="feeder-group">
+		<input type="checkbox" id="feeder-global-toggle" class="feeder-toggle">
+		<label for="feeder-global-toggle" class="feeder-dropdown-label">
+			<i class="fa-solid fa-globe"></i>
+			Global
+			<i class="fa-solid fa-chevron-down feeder-chevron"></i>
+		</label>
+		<div class="feeder-dropdown" id="feeder-global"></div>
+	</div>
+<!--
+	<div class="feeder-group">
+		<input type="checkbox" id="feeder-global-toggle" class="feeder-toggle">
+		<label for="feeder-global-toggle" class="feeder-dropdown-label">
+			<i class="fa-solid fa-globe"></i>
+			Manual
+			<i class="fa-solid fa-chevron-down feeder-chevron"></i>
+		</label>
+		<div class="feeder-dropdown" id="feeder-simulate"></div>
+	</div>
+-->
+</div>

@@ -87,7 +87,7 @@ def _tray_status(devpath, logger=logging):
         os.close(disk_check)
 
 
-class SystemDrives(db.Model):  # pylint: disable=too-many-instance-attributes
+class SystemDrives(db.Model):
     """
     Class to hold the system cd/dvd/Blu-ray drive information
     """

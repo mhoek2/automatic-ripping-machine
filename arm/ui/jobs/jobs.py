@@ -1,8 +1,9 @@
 """
 ARM route blueprint for jobs pages
 Covers
-- jobdetail [GET]
-- jobdetailload [POST]
+- jobdetail_api [GET]
+- jobdetail_track [POST]
+- jobdetail_ready [POST]
 - titlesearch [GET]
 - custometitle [GET]
 - gettitle / customtitle [GET]
@@ -30,92 +31,140 @@ route_jobs = Blueprint('route_jobs', __name__,
                        static_folder='../static')
 
 
-@route_jobs.route('/jobdetail')
+from datetime import date, datetime
+
+from flask import jsonify, request
+
+
+@route_jobs.route('/jobdetail_api', methods=['GET'])
+# @login_required
+def jobdetail_api():
+	"""
+	Return job details, tracks, and technical fields as JSON.
+	"""
+	job_id = request.args.get('job_id', type=int)
+
+	if job_id is None:
+		return jsonify(success=False, error='Invalid job ID'), 400
+
+	job = db.session.get(Job, job_id)
+
+	if job is None:
+		return jsonify(success=False, error='Job not found'), 404
+
+	def serialize_value(value):
+		if isinstance(value, (datetime, date)):
+			return value.isoformat()
+		return value
+
+	def serialize_columns(model):
+		return {
+			column.key: serialize_value(getattr(model, column.key))
+			for column in model.__table__.columns
+		}
+
+	job_info = json_api.serialize_job_results([job])
+	if len(job_info) is not 1:
+		return jsonify(success=False, error='Invalid job info'), 404
+    
+	job_info = job_info[0]
+
+    # this should be stored in the database once, and updated when changing title manually ..
+	meta = ui_utils.metadata_selector("get_details", job.title, job.year, job.imdb_id)
+ 	 
+	if meta and 'Error' not in meta:
+		plot = meta['Plot'] if 'Plot' in meta else "There was a problem getting the plot"
+		background = meta['background_url'] if 'background_url' in meta else None
+	else:
+		plot = ""
+		background = None
+
+	#plot = " is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since 1966, when designers at Letraset and James Mosley, the librarian at St Bride Printing Library in London, took a 1914 Cicero translation and scrambled it to make dummy text for Letraset's Body Type sheets. It has survived not only many decades, but also the leap into el"
+	#background = ""
+
+	authenticated = ui_utils.authenticated_state()
+
+	return jsonify(
+        authenticated=authenticated,
+		success=True,
+		job={
+            **job_info,
+			'plot': plot,
+			'background': background,
+		},
+		technical={
+			'job': serialize_columns(job),
+		} if authenticated else -1,
+	)
+
+@route_jobs.route('/jobdetail_track', methods=['POST'])
 @login_required
-def jobdetail():
-    """
-    Page for showing in-depth details about a job
+def jobdetail_track():
+	data = request.get_json(silent=True) or {}
 
-    Shows Job/Config/Track class details
-    displays them in a clear and easy to ready format
-    """
-    manual_edit = False
+	job_id = data.get('job_id')
+	track_id = data.get('track_id')
+	process = data.get('process')
 
-    # Initialise form
-    track_form = TrackFormDynamic()
+	if job_id is None or track_id is None or not isinstance(process, bool):
+		return jsonify(success=False, error='Invalid request'), 400
 
-    job_id = request.args.get('job_id')
-    if (job := Job.query.get(job_id)) is None:
-        raise ValueError('Job not found')
+	job = db.session.get(Job, job_id)
 
-    # Check if a manual job, waiting for input and user has not provided input
-    if job.manual_mode and job.status == JobState.MANUAL_WAIT_STARTED.value and not job.manual_start:
-        manual_edit = True
+	if job is None:
+		return jsonify(success=False, error='Job not found'), 404
 
-    # Get Job and Track data
-    tracks = job.tracks.all()
-    track_form.track_ref.min_entries = len(tracks)
-    app.logger.debug(f"Found [{len(tracks)}] tracks")
-    track_form.track_ref.entries.clear()
-    # Loop through each track entry and build the WTForms dynamically
-    for track_row in tracks:
-        track_form.track_ref.append_entry({'track_ref': track_row.track_id,
-                                           'checkbox': track_row.process})
-    # For Jobs that are not waiting and in manual mode, disable the process checkbox
-    if not manual_edit:
-        for entry in track_form.track_ref.entries:
-            entry.checkbox.render_kw = {'disabled': 'disabled'}
+	manual_edit = (
+		job.manual_mode
+		and job.status == JobState.MANUAL_WAIT_STARTED.value
+		and not job.manual_start
+	)
 
-    search_results = ui_utils.metadata_selector("get_details", job.title, job.year, job.imdb_id)
+	if not manual_edit:
+		return jsonify(success=False, error='Track selection is locked'), 409
 
-    if search_results and 'Error' not in search_results:
-        job.plot = search_results['Plot'] if 'Plot' in search_results else "There was a problem getting the plot"
-        job.background = search_results['background_url'] if 'background_url' in search_results else None
+	track = job.tracks.filter_by(track_id=track_id).first()
 
-    return render_template('jobdetail.html',
-                           jobs=job,
-                           tracks=tracks,
-                           s=search_results,
-                           manual_edit=manual_edit,
-                           form=track_form)
+	if track is None:
+		return jsonify(success=False, error='Track not found'), 404
+
+	try:
+		track.process = process
+		db.session.commit()
+	except Exception:
+		db.session.rollback()
+		app.logger.exception('Failed to update track selection')
+		return jsonify(success=False, error='Failed to update track'), 500
+
+	return jsonify(success=True, track_id=track_id, process=process)
 
 
-@route_jobs.route('/jobdetailload', methods=['POST'])
+@route_jobs.route('/jobdetail_ready', methods=['POST'])
 @login_required
-def jobdetail_load():
-    """
-    Process updated track ID fields against a job and load to the ARM database if valid
-    All data passed via POST
-    """
-    # Initialise form
-    track_form = TrackFormDynamic()
+def jobdetail_ready():
+	data = request.get_json(silent=True) or {}
 
-    job_id = request.args.get('job_id')
-    job = Job.query.get(job_id)
+	job_id = data.get('job_id')
 
-    # Data passed back from webpage, process and update track fields
-    if request.method == 'POST' and track_form.validate_on_submit():
-        app.logger.debug(f"Job id [{job.job_id}]")
-        app.logger.debug(f"Returned [{len(track_form.track_ref.entries)}] tracks")
-        for track_row in track_form.track_ref.entries:
-            # app.logger.debug(f"Track deets [{track_row}]")
-            track_id = track_row.data['track_ref']
-            checkbox_value = track_row.data['checkbox']
-            app.logger.debug(f"Setting [{track_id}] to [{checkbox_value}]")
+	if job_id is None:
+		return jsonify(success=False, error='Invalid request'), 400
 
-            db_track = job.tracks.filter_by(track_id=track_id).first()
-            if db_track:
-                db_track.process = checkbox_value
-                db.session.commit()
+	job = db.session.get(Job, job_id)
 
-        # Set job to ready
-        job.manual_start = True
-        db.session.commit()
-        app.logger.debug(f"Setting [{job.job_id}] to [{job.manual_start}], lets get ripping")
-        flash("Tracks was updated", "success")
+	if job is None:
+		return jsonify(success=False, error='Job not found'), 404
 
-    return redirect(url_for('route_jobs.jobdetail', job_id=job_id))
+    # Set job to ready
+	try:
+		job.manual_start = True
+		db.session.commit()
+		app.logger.debug(f"Setting [{job.job_id}] to [{job.manual_start}], lets get ripping")
+	except Exception:
+		db.session.rollback()
+		app.logger.exception('Failed to set job ready')
+		return jsonify(success=False, error='Failed to set job ready'), 500
 
+	return jsonify(success=True)
 
 @route_jobs.route('/titlesearch')
 @login_required
@@ -130,7 +179,13 @@ def title_search():
         flash(f'Search for {request.args.get("title")}, year={request.args.get("year")}', 'success')
         return redirect(url_for('route_jobs.list_titles', title=request.args.get("title"),
                                 year=request.args.get("year"), job_id=job_id))
-    return render_template('titlesearch.html', title='Update Title', form=form, job=job)
+    
+    return render_template('titlesearch.html', 
+        authenticated    = ui_utils.authenticated_state(),
+        title            = 'Update Title', 
+        form             = form, 
+        job              = job
+    )
 
 
 @route_jobs.route('/customTitle')
@@ -154,9 +209,15 @@ def customtitle():
                                      f'{request.args.get("title")} ({request.args.get("year")})')
         db.session.add(notification)
         ui_utils.database_updater(args, job)
-        flash(f'Custom title changed. Title={job.title}, Year={job.year}.', "success")
+
         return redirect(url_for('home'))
-    return render_template('customTitle.html', title='Change Title', form=form, job=job)
+
+    return render_template('customTitle.html', 
+        authenticated    = ui_utils.authenticated_state(),
+        title            = 'Change Title', 
+        form             = form, 
+        job              = job
+    )
 
 
 @route_jobs.route('/gettitle')
@@ -180,7 +241,12 @@ def gettitle():
         flash(constants.NO_JOB, "danger")
         raise ValidationError(constants.NO_JOB)
     dvd_info = ui_utils.metadata_selector("get_details", None, None, imdb_id)
-    return render_template('showtitle.html', results=dvd_info, job_id=job_id)
+    
+    return render_template('showtitle.html', 
+        authenticated   = ui_utils.authenticated_state(),           
+        results         = dvd_info, 
+        job_id          = job_id
+    )
 
 
 @route_jobs.route('/updatetitle')
@@ -229,20 +295,8 @@ def updatetitle():
                                  f'{request.args.get("title")} ({request.args.get("year")})')
     db.session.add(notification)
     db.session.commit()
-    flash(f'Title: {old_title} ({old_year}) was updated to '
-          f'{request.args.get("title")} ({request.args.get("year")})', "success")
+
     return redirect("/")
-
-
-@route_jobs.route('/activerips')
-@login_required
-def rips():
-    """
-    This no longer works properly because of the 'transcoding' status
-    """
-    active_jobs = Job.query.filter_by(~Job.finished)
-    return render_template('activerips.html', jobs=active_jobs)
-
 
 @route_jobs.route('/changeparams')
 @login_required
@@ -254,7 +308,13 @@ def changeparams():
     job = Job.query.get(config_id)
     config = job.config
     form = ChangeParamsForm(obj=config)
-    return render_template('changeparams.html', title='Change Parameters', form=form, config=config)
+
+    return render_template('changeparams.html', 
+        authenticated    = ui_utils.authenticated_state(),
+        title            = 'Change Parameters', 
+        form             = form, 
+        config           = config
+    )
 
 
 @route_jobs.route('/list_titles')
@@ -284,8 +344,15 @@ def list_titles():
     if search_results is None or 'Error' in search_results or (
             'Search' in search_results and len(search_results['Search']) < 1):
         flash(f"No search results found for {title}", 'danger')
-    return render_template('list_titles.html', results=search_results, job_id=job_id,
-                           form=form, title=title, year=year)
+
+    return render_template('list_titles.html', 
+        authenticated    = ui_utils.authenticated_state(),
+        results          = search_results, 
+        job_id           = job_id,
+        form             = form, 
+        title            = title, 
+        year             = year
+    )
 
 
 @route_jobs.route('/json', methods=['GET'])
@@ -332,6 +399,11 @@ def feed_json():
                 'funct': json_api.get_x_jobs,
                 'args': (JobState.SUCCESS.value,),
             },
+            'getalljobs': {
+                'funct': json_api.get_x_jobs,
+                'args': ("all",),
+            },
+
             'fixperms': {'funct': ui_utils.fix_permissions, 'args': ('j_id',)},
             'joblist': {'funct': json_api.get_x_jobs, 'args': ('joblist',)},
             'send_item': {'funct': ui_utils.send_to_remote_db, 'args': ('j_id',)},
@@ -346,13 +418,19 @@ def feed_json():
         valid_modes = {
             'joblist': {'funct': json_api.get_x_jobs, 'args': ('joblist',)},
         }
+    
     # prepare JSON data
     if mode in valid_modes:
         args = [valid_data[x] for x in valid_modes[mode]['args']]
         return_json = valid_modes[mode]['funct'](*args)
-    return_json['notes'] = json_api.get_notifications()
 
     # return JSON data
-    return app.response_class(response=json.dumps(return_json, indent=4, sort_keys=True),
-                              status=200,
-                              mimetype=constants.JSON_TYPE)
+    return app.response_class(
+        response    = json.dumps(
+                            return_json, 
+                            indent          = 4, 
+                            sort_keys       = True
+                      ),
+        status      = 200,
+        mimetype    = constants.JSON_TYPE
+    )

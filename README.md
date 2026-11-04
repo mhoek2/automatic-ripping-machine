@@ -1,84 +1,228 @@
 # Automatic Ripping Machine (ARM)
-[![CI](https://github.com/automatic-ripping-machine/automatic-ripping-machine/actions/workflows/main.yml/badge.svg)](https://github.com/automatic-ripping-machine/automatic-ripping-machine/actions/workflows/main.yml) [![Publish Docker Image](https://github.com/automatic-ripping-machine/automatic-ripping-machine/actions/workflows/publish-image.yml/badge.svg)](https://github.com/automatic-ripping-machine/automatic-ripping-machine/actions/workflows/publish-image.yml)
-[![Docker](https://img.shields.io/docker/pulls/automaticrippingmachine/automatic-ripping-machine.svg)](https://hub.docker.com/r/automaticrippingmachine/automatic-ripping-machine)
-
-[![GitHub forks](https://img.shields.io/github/forks/automatic-ripping-machine/automatic-ripping-machine)](https://github.com/automatic-ripping-machine/automatic-ripping-machine/network)
-[![GitHub stars](https://img.shields.io/github/stars/automatic-ripping-machine/automatic-ripping-machine)](https://github.com/automatic-ripping-machine/automatic-ripping-machine/stargazers)
-[![GitHub issues](https://img.shields.io/github/issues/automatic-ripping-machine/automatic-ripping-machine)](https://github.com/automatic-ripping-machine/automatic-ripping-machine/issues)
-[![GitHub pull requests](https://img.shields.io/github/issues-pr/automatic-ripping-machine/automatic-ripping-machine)](https://github.com/automatic-ripping-machine/automatic-ripping-machine/pulls)
-[![GitHub contributors](https://img.shields.io/github/contributors/automatic-ripping-machine/automatic-ripping-machine)](https://github.com/automatic-ripping-machine/automatic-ripping-machine/graphs/contributors)
-[![GitHub last commit](https://img.shields.io/github/last-commit/automatic-ripping-machine/automatic-ripping-machine?)](https://github.com/automatic-ripping-machine/automatic-ripping-machine/commits/main)
-
-[![GitHub license](https://img.shields.io/github/license/automatic-ripping-machine/automatic-ripping-machine)](https://github.com/automatic-ripping-machine/automatic-ripping-machine/blob/main/LICENSE)
-
-[![GitHub release (latest by date)](https://img.shields.io/github/v/release/automatic-ripping-machine/automatic-ripping-machine?label=Latest%20Stable%20Version)](https://github.com/automatic-ripping-machine/automatic-ripping-machine/releases)
-[![GitHub release Date](https://img.shields.io/github/release-date/automatic-ripping-machine/automatic-ripping-machine?label=Latest%20Stable%20Released)](https://github.com/automatic-ripping-machine/automatic-ripping-machine/releases)
-![Python Versions](https://img.shields.io/badge/Python_Versions-3.9_|_3.10_|_3.11_|_3.12-blue?logo=python)
-
-
-
-[![Wiki](https://img.shields.io/badge/Wiki-Get%20Help-brightgreen)](https://github.com/automatic-ripping-machine/automatic-ripping-machine/wiki)
-[![Discord](https://img.shields.io/discord/576479573886107699)](https://discord.gg/FUSrn8jUcR)
-
-
-
-## Overview
-
-Insert an optical disc (Blu-ray, DVD, CD) and checks to see if it's audio, video (Movie or TV), or data, then rips it.
-
-See: https://b3n.org/automatic-ripping-machine
-
-
-## Features
-
-- Detects insertion of disc using udev
-- Determines disc type...
-  - If video (Blu-ray or DVD)
-    - Retrieve title from disc or [OMDb API](http://www.omdbapi.com/) to name the folder "Movie Title (Year)" so that Plex or Emby can pick it up
-    - Determine if video is Movie or TV using [OMDb API](http://www.omdbapi.com/)
-    - Rip using MakeMKV or HandBrake (can rip all features or main feature)
-    - Eject disc and queue up Handbrake transcoding when done
-    - Transcoding jobs are asynchronously batched from ripping
-    - Send notifications via IFTTT, Pushbullet, Slack, Discord, and many more!
-  - If audio (CD) - rip using abcde (get disc-data and album art from [musicbrainz](https://musicbrainz.org/))
-  - If data (Blu-ray, DVD, DVD-Audio or CD) - make an ISO backup
-- Headless, designed to be run from a server
-- Can rip from multiple-optical drives in parallel
-- Python Flask UI to interact with ripping jobs, view logs, update jobs, etc
-
-
-
-## Usage
-
-- Insert disc
-- Wait for disc to eject
-- Repeat
-
-
-## Requirements
-
-- A system capable of running Docker containers
-- One or more optical drives to rip Blu-rays, DVDs, and CDs
-- Lots of drive space (I suggest using a NAS) to store your movies
-
-
-## Install
-
-[For normal installation please see the wiki](https://github.com/automatic-ripping-machine/automatic-ripping-machine/wiki/).
-
-[For docker installation please see here](https://github.com/automatic-ripping-machine/automatic-ripping-machine/wiki/docker).
-
-[For WSL Integration please see here]()
-
-## Troubleshooting
- [Please see the wiki for troubleshooting](https://github.com/automatic-ripping-machine/automatic-ripping-machine/wiki/).
-
-## Contributing
-
-Pull requests are welcome.  Please see the [Contributing Guide](https://github.com/automatic-ripping-machine/automatic-ripping-machine/wiki/Contributing-Guide)
-
-If you set ARM up in a different environment (hardware/OS/virtual/etc.), please consider [submitting a howto to the wiki](https://github.com/automatic-ripping-machine/automatic-ripping-machine/wiki).
+A fork of the [Automatic Ripping Machine](https://github.com/automatic-ripping-machine/automatic-ripping-machine) with updates to the UI, keeping true to usage of Flask, which is sufficient for its purpose.
 
 ## License
-
 [MIT License](LICENSE)
+
+> [!IMPORTANT]
+> **Prerequisites**
+>
+> - A system running Ubuntu Linux.
+> - Docker Engine and the Docker Compose plugin installed.
+> - A user account with `sudo` privileges.
+> - A working internet connection to download the ARM Docker image.
+> - A DVD or Blu-ray drive connected to the system for ripping media.
+>
+> This guide assumes Docker is already installed and configured. If not, follow the [Quick Guide](#install-docker-on-ubuntu) or the official [Docker installation guide](https://docs.docker.com/engine/install/ubuntu/) first.
+
+
+## Install ARM
+> [!NOTE]
+> This guide covers a simple setup of Automatic Ripping Machine (ARM) using Docker Compose.
+<details>
+<summary>View steps</summary>
+
+1. Create a directory for ARM and its configuration files.
+    ```bash
+    sudo mkdir -p /stack/arm
+    cd /stack/arm
+    sudo nano docker-compose.yml
+    ```
+
+2. Paste the following configuration into `docker-compose.yml` and save the file.
+    ```yaml
+    services:
+    arm:
+        image: ghcr.io/mhoek2/automatic-ripping-machine:latest-dev
+        container_name: arm_local
+        restart: unless-stopped
+        privileged: true
+        ports:
+        - "8080:8080"
+        environment:
+        - TZ=Europe/Amsterdam
+        volumes:
+        - ./config:/etc/arm/config
+        - ./data:/home/arm/db
+        - ./home:/home/arm
+        - ./logs:/home/arm/logs
+        - ./media:/home/arm/media
+        - ./music:/home/arm/Music
+        - /dev:/dev
+    ```
+
+    The current configuration uses the development image, final release will be available later.
+
+3. From the `/stack/arm` directory, run Docker Compose to pull the image (if needed) and start the container in the background.
+    ```bash
+    sudo docker compose up -d
+    ```
+
+45. Verify the Installation
+    ```bash
+    # Veiw current status of the container
+    sudo docker compose ps
+
+    # To view the container logs:
+    sudo docker compose logs -f
+
+    # To restart the container:
+    sudo docker compose restart
+
+    # To stop the container:
+    sudo docker compose down
+    ```
+
+6. Access the Web Interface
+    Open the following address in your browser:
+
+    http://<server-ip>:8080
+
+    Replace `<server-ip>` with the IP address of your Ubuntu server. If you're accessing ARM directly on the same machine, use `http://localhost:8080`.
+ 
+    ```bash
+    # find ip on ubuntu:
+    ip a
+    ```
+</details>
+
+## Update ARM
+> [!NOTE]
+> Updating ARM is as simple as pulling the latest image and recreating the container.
+<details>
+<summary>View steps</summary>
+
+`* Before updating` \
+`Configuration and database files in the config and data folders are stored outside the container.
+These are usually preserved when the container is recreated, provided they are configured as persistent volumes.` \
+`But its good practise to create a backup`
+
+```bash
+# Make sure you run the following commands from the install directory containing your docker-compose.yml file.
+cd /stack/arm
+
+# Optional: Create a backup
+zip -r arm-backup-$(date +%F).zip config data
+
+# pull and recreate
+docker compose pull && docker compose up -d
+``` 
+</details>
+
+
+## Install Docker on Ubuntu
+> [!NOTE]
+> This is a quick guide. More detailed guides are available online or follow the official [Docker installation guide](https://docs.docker.com/engine/install/ubuntu/)!
+
+<details>
+<summary>View steps</summary>
+ 
+1. Install the required packages and add the official Docker repository.
+    ```bash
+    sudo apt install -y ca-certificates curl gnupg lsb-release software-properties-common
+
+    sudo mkdir -p /etc/apt/keyrings
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+
+    echo \
+        "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+        $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    ```
+
+2. Install
+    ```bash
+    sudo apt update
+    sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+    ```
+
+3. Enable Docker
+    ```bash
+    sudo systemctl enable docker
+    sudo systemctl start docker
+    sudo systemctl status docker
+    ```
+
+4. Verify Installation
+    ```bash
+    docker version
+    docker compose version
+    ```
+</details>
+
+## Development
+
+> [!CAUTION]
+> The following sections describe how to set up a development environment and build and run a local ARM Docker image.
+
+<details>
+<summary>VS Code Development Environment</summary>
+
+1. Clone the repository.
+2. Copy `setup/arm.yml` to `dev/config`.
+3. Open the repository in VS Code.
+4. Open a terminal and navigate to the `dev` directory:
+
+   ```bash
+   cd dev
+   ```
+
+5. Start the development environment:
+
+   ```bash
+   docker compose up -d
+   ```
+
+6. To restart the services after making changes, run:
+
+   ```bash
+   docker compose restart
+   ```
+
+</details>
+
+<details>
+<summary>Build and Run a Local Docker Image</summary>
+
+### Build the Image
+
+1. Open the repository root folder in VS Code.
+2. Open a terminal and build the local image:
+
+   ```bash
+   docker build -t arm-local:dev .
+   ```
+
+### Run the Image
+
+1. Create a separate test directory on your computer.
+2. Copy the root `docker-compose.yml` into the test directory.
+3. Edit the copied `docker-compose.yml` to use the local image instead of the remote image:
+
+   ```yaml
+   image: arm-local:dev
+   # image: ghcr.io/mhoek2/automatic-ripping-machine:latest-dev-compose
+   ```
+
+4. Open a terminal in the test directory and start the container:
+
+   ```bash
+   docker compose up -d --force-recreate
+   ```
+
+### Update the Local Image
+
+Whenever you make code changes, rebuild the image and recreate the container:
+
+1. In the repository root, rebuild the image:
+
+   ```bash
+   docker build -t arm-local:dev .
+   ```
+
+2. In the test directory, recreate the container using the updated image:
+
+   ```bash
+   docker compose up -d --force-recreate
+   ```
+
+</details>

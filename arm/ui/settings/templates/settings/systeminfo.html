@@ -1,15 +1,10 @@
-{% extends "base.html" %}
-{% block title %}Home{% endblock %}
+{% block tab_sysinfo %}
+    <div id="system_stats" class="settings-tab-pane">
 
-{% block nav %}{{ super() }}{% endblock %}
+        <div style="margin-left: 2em">
+            <p>Current CPU and System information - <a href="updatesysinfo">Update system information</a></p>
+        </div>
 
-{% block content %}
-  <p class="text-center">
-      <h5 class="text-center"><strong>System Information</strong></h5>
-  </p>
-
-   {% include 'settings/sysinfo.html' %}
-   {% include 'settings/drives.html' %}
-
+        {% include 'includes/sysinfo.html' %}
+    </div>
 {% endblock %}
-{% block js %}{{ super() }}{% endblock %}

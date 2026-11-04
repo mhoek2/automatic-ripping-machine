@@ -21,14 +21,12 @@ from flask_login import LoginManager, login_required, \
 from sqlalchemy.exc import SQLAlchemyError
 
 import arm.ui.utils as ui_utils
-from arm.ui import app, db, constants
+from arm.ui import app, db, constants, json_api
 from arm.models.job import Job
-from arm.models.system_info import SystemInfo
 from arm.models.user import User
 import arm.config.config as cfg
 from arm.ui.forms import DBUpdate
-from arm.ui.settings.ServerUtil import ServerUtil
-from arm.ui.settings.settings import check_hw_transcode_support
+
 
 # This attaches the armui_cfg globally to let the users use any bootswatch skin from cdn
 armui_cfg = ui_utils.arm_db_cfg()
@@ -47,20 +45,14 @@ def home():
     """
     # Check the database is current
     db_update = ui_utils.arm_db_check()
-    # Push out HW transcode status for the homepage
-    stats = {'hw_support': check_hw_transcode_support()}
+
     if not db_update["db_current"] or not db_update["db_exists"]:
         dbform = DBUpdate(request.form)
         app.logger.debug(f"Error with ARM DB: [{db_update['db_current']}]-[{db_update['db_exists']}]")
         return render_template("support/databaseupdate.html",
-                               db_update=db_update,
-                               dbform=dbform)
-
-    # Get system details from Server Info and Config
-    server = SystemInfo.query.filter_by(id="1").first()
-    serverutil = ServerUtil()
-    arm_path = cfg.arm_config['TRANSCODE_PATH']
-    media_path = cfg.arm_config['COMPLETED_PATH']
+            db_update   = db_update,
+            dbform      = dbform
+        )
 
     # Page titles
     session["arm_name"] = cfg.arm_config['ARM_NAME']
@@ -76,17 +68,11 @@ def home():
     else:
         jobs = {}
 
-    # Set authentication state for index
-    authenticated = ui_utils.authenticated_state()
-
-    app.logger.debug(f'Authentication state: {authenticated}')
-
     return render_template("index.html",
-                           authenticated=authenticated,
-                           jobs=jobs,
-                           children=cfg.arm_config['ARM_CHILDREN'],
-                           server=server, serverutil=serverutil,
-                           arm_path=arm_path, media_path=media_path, stats=stats)
+        authenticated    = ui_utils.authenticated_state(),
+        jobs             = jobs,
+        children         = cfg.arm_config['ARM_CHILDREN'],
+    )
 
 
 @app.route('/error')
@@ -95,7 +81,10 @@ def was_error(error):
     Catch all error page
     :return: Error page
     """
-    return render_template(constants.ERROR_PAGE, title='error', error=error)
+    return render_template(constants.ERROR_PAGE, 
+        title   = 'error',
+        error   = error
+    )
 
 
 @app.errorhandler(Exception)
@@ -120,7 +109,9 @@ def handle_exception(sent_error):
                                   status=200,
                                   mimetype=constants.JSON_TYPE)
 
-    return render_template(constants.ERROR_PAGE, error=sent_error), 500
+    return render_template(constants.ERROR_PAGE, 
+        error = sent_error
+    ), 500
 
 
 @app.route('/setup')
@@ -197,3 +188,39 @@ def unauthorized():
     :return: Page redirect
     """
     return redirect('/login')
+
+
+
+@app.route('/get_notications', methods=['GET'])
+@login_required
+def get_notications():
+    return jsonify(
+        success = True,
+        notes   = json_api.get_unseen_notifications(),
+    ) 
+    
+#
+# FEEDER
+#
+import subprocess
+from flask import jsonify
+
+@app.route("/feeder")
+@login_required
+def feeder():
+    data = request.args.to_dict()
+    command = data.get("action", "completed")
+
+    print(f"FEEDER: {command}", flush=True)
+
+    process = subprocess.Popen([
+        "python3",
+        "/opt/arm/dev/feeder/feeder.py",
+        json.dumps(data),
+    ], start_new_session=True)
+
+    return jsonify({
+        "success": True,
+        "command": command,
+        "pid": process.pid,
+    })

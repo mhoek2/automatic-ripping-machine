@@ -1,39 +1,45 @@
 <!doctype html>
-<html lang="en">
-    <!-- HTML Header -->
-    {% include 'head.html' %}
-    <body style="padding: 70px 15px 50px;">
-        <!-- HTML Navigation -->
-        {% include 'nav.html' %}
-        <!-- Errors -->
-        <div id="content" class="h-100 content" style="width: 99%;padding-top: 51px;padding-left: 15px;">
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% for category, message in messages %}
-                        <div id="message1" class="alert alert-{{ category if category !=" message
-            " else 'info' }} text-center"
-                             role="alert">
-                            <h4 class="alert-heading">{{ message|safe }}</h4>
-                        </div>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
-            {% block content %}{% endblock %}</div>
-        <!-- Footer -->
-        <div id="footer" class="container-fluid h-100">
-            <div class="row" style="height: 30px;"></div>
-            <div class="row h-100" style="height: 40px;">
-                <div class="col-sm-12 h-100">
-                    {% block footer %}
-                        <p class="text-center h-100" style="margin-bottom: auto; margin-top: auto"> Automatic Ripping Machine.
-                            Find us on <a
-                                    href="https://github.com/automatic-ripping-machine/automatic-ripping-machine">github</a>.
-                        </p>
-                    {% endblock %}
+<html data-theme="dark" lang="en">
+    {% include 'includes/base/head.html' %}
+
+    <body>
+        {% if authenticated %}
+        <div id="notification_container" aria-live="polite" aria-atomic="false"></div>
+        {% endif %}
+
+        <div class="base-container">
+            {% include 'includes/base/sidebar.html' %}
+            
+            <div class="base-content">
+                <div id="content">
+                    {% include 'includes/base/flash.html' %}
+
+                    {% block content %}{% endblock %}
                 </div>
+
+                <!-- Footer -->
+                {% include 'includes/base/footer.html' %}
             </div>
         </div>
+
         {% block js %}
+        <script type="module">
+            import { collectChildServers } from './static/js/common.js';
+            {% if authenticated %}
+                import { getNotifications } from './static/js/notification.js';
+            {% endif %}
+
+            $(document).ready(function () {
+                collectChildServers();
+
+                {% if authenticated %}
+                    getNotifications();
+                    window.setInterval(getNotifications, 2000);
+                {% endif %}
+            });
+        </script>
         {% endblock %}
+
+        {% include 'includes/base/feeder.html' %}
     </body>
 </html>
