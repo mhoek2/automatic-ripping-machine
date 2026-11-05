@@ -56,7 +56,7 @@ Development
 :align: left
 :target: blank
 
-See Latest Package
+Latest: ::version::
 ```
 :::
 ::::

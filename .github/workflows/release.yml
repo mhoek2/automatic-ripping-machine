@@ -193,6 +193,7 @@ jobs:
 
   docs:
     name: Build and Deploy Documentation
+    needs: publish
     runs-on: ubuntu-latest
 
     permissions:
