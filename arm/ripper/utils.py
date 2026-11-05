@@ -921,6 +921,8 @@ def check_for_wait(job):
 
 def get_drive_mode(devpath: str) -> str:
     """
+    *deprecated
+
     Retrieve the drive mode for a specified device path.
 
     This function queries the database for a drive associated with the provided

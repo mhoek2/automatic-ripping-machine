@@ -659,7 +659,8 @@ def makemkv_backup(job, rawpath):
 def makemkv_mkv(job, rawpath):
     """Rip Blu-ray/DVD titles using MakeMKV."""
     # Get drive mode for the current drive
-    mode = utils.get_drive_mode(job.devpath)
+    #mode = utils.get_drive_mode(job.devpath)
+    mode = 'manual' if job.manual_mode else 'auto'
     logging.info(f"Job running in {mode} mode")
     
     # Get track info form mkv rip
