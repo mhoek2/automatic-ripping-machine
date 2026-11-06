@@ -189,13 +189,13 @@
             line-height: 1.4;
             white-space: nowrap;
         }
-            .job-meta-item .job-mode-badge .job-mode-auto {
+            .job-meta-item .job-mode-badge.job-mode-auto {
                 color: var(--color-success);
                 background: var(--color-success-bg);
                 border-color: color-mix(in srgb, var(--color-success) 25%, transparent);
             }
 
-            .job-meta-item .job-mode-badge .job-mode-manual {
+            .job-meta-item .job-mode-badge.job-mode-manual {
                 color: var(--color-info);
                 background: var(--color-info-bg);
                 border-color: color-mix(in srgb, var(--color-info) 25%, transparent);

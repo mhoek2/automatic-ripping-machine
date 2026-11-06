@@ -1,6 +1,6 @@
 import { ARM } from '../modal.js';
-import { safe_bool } from '../../common.js';
-import { getActiveJob, renderTracks, renderJobStatusBadge, renderJobPipeline, renderProgress } from '../../jobs/job.js';
+import { JobState, safe_bool } from '../../common.js';
+import { getJobIds, getActiveJob, renderTracks, renderJobStatusBadge, renderJobPipeline, renderProgress } from '../../jobs/job.js';
 import { formatTimestamp } from '../../time.js';
 
 ARM.modal.jobs = ARM.modal.jobs || {};
@@ -148,13 +148,81 @@ ARM.modal.jobs.details = {
 		}
 	},
 
-	renderMeta(job) {
-		const meta = $('#job_details_meta').empty();
+	renderMetaRippingMode(job) {
+		const metadata_wait = (
+			job.status.toLowerCase() === JobState.MANUAL_WAIT_STARTED &&
+			!safe_bool(job.manual_trackselect_enabled)
+		);
 
+		const manual_mode = safe_bool(job.manual_mode);
+		const mode_item = $('<div>').addClass('job-details-meta-item');
+
+		// label
+		$('<span>').addClass('job-details-meta-label').text('Ripping mode').appendTo(mode_item);
+
+		// action
+		if (metadata_wait && __is_authenticated_simple()) {
+			const toggle = $('<div>').addClass('job-mode-toggle');
+
+			$.each(['auto', 'manual'], function (_, mode) {
+				const button = $('<button>', {
+					type: 'button',
+					class: `job-mode-option ${manual_mode === (mode === 'manual') ? 'active' : ''}`,
+					text: mode.charAt(0).toUpperCase() + mode.slice(1)
+				}).on('click', function () {
+					if ($(this).hasClass('active')) return;
+
+					const selected_mode = mode;
+					const local_job_id = getJobIds(job).jobId;
+
+					toggle.find('button').prop('disabled', true);
+
+					$.ajax({
+						url			: '/jobdetail_mode',
+						method		: 'POST',
+						contentType	: 'application/json',
+						headers		: {
+							'X-CSRFToken': $('meta[name="csrf-token"]').attr('content')
+						},
+						data		: JSON.stringify({
+							job_id		: local_job_id,
+							mode		: selected_mode
+						})
+					}).done(function (response) {
+						if (response.success) {
+							toggle.find('button').removeClass('active');
+							button.addClass('active');
+						}
+					}).fail(function () {
+						console.error('Failed to update ripping mode.');
+					}).always(function () {
+						toggle.find('button').prop('disabled', false);
+					});
+				});
+
+				toggle.append(button);
+			});
+
+			mode_item.append(toggle);
+		} 
+
+		// locked view
+		else {
+			$('<span>')
+				.addClass('job-details-meta-value')
+				.text(manual_mode ? 'Manual' : 'Auto')
+				.appendTo(mode_item);
+		}
+
+		return mode_item;
+	},
+
+	renderMeta(job) {
+		const _modal = ARM.modal.jobs.details;
+		const meta = $(`${_modal.modal} #job_details_meta`).empty();
 		const dateInfo = formatTimestamp(job.start_time);
 
 		const fields = [
-			['Ripping mode',	safe_bool(job.manual_mode) ? 'Manual' : 'Auto'],
 			['Disc type', 		job.disctype],
 			['Video type', 		job.video_type],
 			['Disc label', 		job.label],
@@ -162,22 +230,26 @@ ARM.modal.jobs.details = {
 			['Started', 		dateInfo.relative]
 		];
 
+		// Ripping mode
+		meta.append(_modal.renderMetaRippingMode(job));
+
+		// other metadata
 		fields.forEach(([label, value]) => {
 			if (value === null || value === '' || value === 'None')
 				return;
 
 			const item = $('<div>', {
-				class: 'job-details-meta-item'
+				class	: 'job-details-meta-item'
 			});
 
 			$('<span>', {
-				class: 'job-details-meta-label',
-				text: label
+				class	: 'job-details-meta-label',
+				text	: label
 			}).appendTo(item);
 
 			$('<span>', {
-				class: 'job-details-meta-value',
-				text: value
+				class	: 'job-details-meta-value',
+				text	: value
 			}).appendTo(item);
 
 			meta.append(item);
@@ -224,6 +296,7 @@ ARM.modal.jobs.details = {
 		console.log(job);
 
 		_modal.renderStatusBadge(job);
+		_modal.renderMeta(job);
 		_modal.renderJobProgressPipeline(job);
 
 		renderTracks(job, _modal.modal);

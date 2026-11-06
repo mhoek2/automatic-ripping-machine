@@ -316,44 +316,30 @@ export function renderProgress(job) {
 }
 
 export function renderJobMeta(job, ids) {
-    return `
-        <div class="job-meta">
-            <div class="job-meta-item">
-                <span class="job-meta-label">Ripping Mode</span>
-                <span data-field="mode" class="job-mode-badge ${safe_bool(job.manual_mode) ? 'job-mode-manual' : 'job-mode-auto'}">
-                    ${safe_bool(job.manual_mode) ? 'Manual' : 'Auto'}
-                </span>
-            </div>
-            <div class="job-meta-item">
-                <span class="job-meta-label">Type</span>
-                <span data-field="video_type">${job.video_type}</span>
-            </div>
-            <div class="job-meta-item">
-                <span class="job-meta-label">Year</span>
-                <span data-field="year">${job.year}</span>
-            </div>
-            <div class="job-meta-item">
-                <span class="job-meta-label">Device</span>
-                <span data-field="devpath">${job.devpath}</span>
-            </div>
-            <div class="job-meta-item">
-                <span class="job-meta-label">Ripper</span>
-                <span data-field="ripper">${getRipperName(job, ids)}</span>
-            </div>
-            <div class="job-meta-item">
-                <span class="job-meta-label">Method</span>
-                <span data-field="ripmethod">${job.config.RIPMETHOD}</span>
-            </div>
-            <div class="job-meta-item">
-                <span class="job-meta-label">Feature</span>
-                <span data-field="mainfeature">${job.config.MAINFEATURE}</span>
-            </div>
-            <div class="job-meta-item">
-                <span class="job-meta-label">Length</span>
-                <span data-field="length">${job.config.MINLENGTH} – ${job.config.MAXLENGTH}</span>
-            </div>
+	const fields = [
+		['Type',    'video_type',   job.video_type],
+		['Year',    'year',         job.year],
+		['Device',  'devpath',      job.devpath],
+		['Ripper',  'ripper',       getRipperName(job, ids)],
+		['Method',  'ripmethod',    job.config.RIPMETHOD],
+		['Feature', 'mainfeature',  job.config.MAINFEATURE],
+		['Length',  'length',       `${job.config.MINLENGTH} – ${job.config.MAXLENGTH}`]
+	];
+
+	return `
+        <div class="job-meta-item">
+            <span class="job-meta-label">Ripping Mode</span>
+            <span data-field="mode" class="job-mode-badge ${safe_bool(job.manual_mode) ? 'job-mode-manual' : 'job-mode-auto'}">
+                ${safe_bool(job.manual_mode) ? 'Manual' : 'Auto'}
+            </span>
         </div>
-    `;
+        ${fields.map(([label, field, value]) => `
+            <div class="job-meta-item">
+                <span class="job-meta-label">${label}</span>
+                <span data-field="${field}">${value ?? ''}</span>
+            </div>
+        `).join('')}
+	`;
 }
 
 export function renderJobActions(job, ids, authenticated) {
@@ -472,7 +458,9 @@ export function renderJob(job, authenticated, placeholder=false) {
                     </div>
                 </header>
 
-                ${renderJobMeta(job, ids)}
+                <div class="job-meta">
+                    ${renderJobMeta(job, ids)}
+                </div>
 
                 <div id="job_progress_section">${renderProgress(job)}</div>
 
@@ -507,6 +495,7 @@ export function updateJobItem(job, authenticated) {
     const poster        = _card.find('.job-poster');
     const status        = _card.find('#job_status_badge_wrapper');
     const start_time    = _card.find('#job_start_time');
+    const meta          = _card.find('.job-meta');
     const progress      = _card.find('#job_progress_section');
     const actions       = _card.find('#job_actions');
 
@@ -528,13 +517,8 @@ export function updateJobItem(job, authenticated) {
     if (actions.length)
         actions.html(renderJobActions(job, ids, authenticated));
 
-    _card.find('[data-field="year"]').text(job.year);
-    _card.find('[data-field="video_type"]').text(job.video_type);
-    _card.find('[data-field="devpath"]').text(job.devpath);
-    _card.find('[data-field="ripper"]').text(getRipperName(job, getJobIds(job)));
-    _card.find('[data-field="ripmethod"]').text(job.config.RIPMETHOD);
-    _card.find('[data-field="mainfeature"]').text(job.config.MAINFEATURE);
-    _card.find('[data-field="length"]').text(`${job.config.MINLENGTH} - ${job.config.MAXLENGTH}`);
+    if (meta.length)
+        meta.html(renderJobMeta(job, ids));
 }
 
 export function removeJobItem(job) {
