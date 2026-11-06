@@ -491,7 +491,7 @@ export function updateJobItem(job, authenticated) {
     const dateInfo      = formatTimestamp(job.start_time);
     const jobTitle      = getJobTitle(job);
 
-    const title         = _card.find('#job__title');
+    const title         = _card.find('#job_title');
     const poster        = _card.find('.job-poster');
     const status        = _card.find('#job_status_badge_wrapper');
     const start_time    = _card.find('#job_start_time');
