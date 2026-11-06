@@ -927,7 +927,7 @@ def process_manual_tracks(job, rawpath):
 
     # Process Tracks
     # Notify user: tracks are ready and wait for 30 minutes
-    if manual_wait(job): 
+    if manual_trackselect_wait(job): 
         # Response from user provided, process requested tracks
         job.status = JobState.VIDEO_RIPPING.value
         job.stop_time = None
@@ -1380,7 +1380,7 @@ def run(options, select):
     logging.info("MakeMKV exits gracefully.")
 
 
-def manual_wait(job) -> bool:
+def manual_trackselect_wait(job) -> bool:
     """
     Pause execution to allow for user interaction and monitor job readiness.
 

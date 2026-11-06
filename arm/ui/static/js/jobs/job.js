@@ -1,5 +1,5 @@
 import { TrackState, JobState, JobStateGroup, JOB_PIPELINE_STAGES, safe_bool } from '../common.js';
-import { formatTimestamp, formatTimeToMilisecconds, formatCountdown, formatTrackLength } from '../time.js';
+import { formatTimestamp, getWaitTimeRemaining, formatTrackLength, SECONDS_PER_MINUTE, MILLISECONDS_PER_SECOND } from '../time.js';
 import { job_refresh } from './state.js';
 
 export function getJobIds(job) {
@@ -13,12 +13,12 @@ export function getJobIds(job) {
 	};
 }
 
-export function getManualWaitTimeRemaining(job) {
-    const milliseconds = formatTimeToMilisecconds(job.stop_time);
+export function getManualTrackSelectTimeRemaining(job) {
+    return getWaitTimeRemaining(job, 30 * SECONDS_PER_MINUTE * MILLISECONDS_PER_SECOND);
+}
 
-    if (Number.isNaN(milliseconds)) return { relative: '', title: '' };
-
-    return formatCountdown(milliseconds + 30 * 60 * 1000);
+export function getManualMetaWaitTimeRemaining(job) {
+    return getWaitTimeRemaining(job, parseInt(job.config.MANUAL_WAIT_TIME ?? SECONDS_PER_MINUTE) * MILLISECONDS_PER_SECOND);
 }
 
 export function getActiveJob(job_id) {
@@ -66,12 +66,16 @@ export function jobHasProgress(job) {
 export function getStatusClass(job) {
     let status = `status-${job.status.toLowerCase().replace(/[^a-z0-9_-]/g, '')}`
 
-    // waiting for user input
-    if (safe_bool(job.manual_edit) && !safe_bool(job.manual_start))
-        status += ' status-manual-edit-pending';
+    if (!safe_bool(job.manual_trackselect_enabled) && job.status.toLowerCase() === JobState.MANUAL_WAIT_STARTED)
+        status = ' status-manual-meta-wait';
 
+    // track selection wait
+    if (safe_bool(job.manual_trackselect_enabled) && !safe_bool(job.manual_start))
+        status += ' status-manual-trackselect-wait';
+
+    // post track selection wait. ARM to pickup/continue the job (max 1 minute)
     if (safe_bool(job.manual_start) && job.status.toLowerCase() === JobState.VIDEO_WAITING)
-        status += ' status-manual-starting';
+        status += ' status-manual-trackselect-done';
 
     return status;
 }
@@ -81,9 +85,16 @@ export function renderJobStatusBadge(job) {
 
     let manual_info = '';
 
-    if (safe_bool(job.manual_edit) && !safe_bool(job.manual_start))
-        manual_info = getManualWaitTimeRemaining(job).relative;
+    // metadata wait
+    if (!safe_bool(job.manual_trackselect_enabled) && job.status.toLowerCase() === JobState.MANUAL_WAIT_STARTED)
+        manual_info = getManualMetaWaitTimeRemaining(job).relative;
 
+    // track selection wait
+    if (safe_bool(job.manual_trackselect_enabled) && !safe_bool(job.manual_start)) {
+        manual_info = getManualTrackSelectTimeRemaining(job).relative;
+    }
+
+    // post track selection wait. ARM to pickup/continue the job (max 1 minute)
     if (safe_bool(job.manual_start) && job.status.toLowerCase() === JobState.VIDEO_WAITING)
         manual_info = 'Starting soon';
 
@@ -104,8 +115,8 @@ export function renderTracks(job, root) {
     const container = modal.find('#tracks .tracks-list').empty();
     const actions = modal.find('#tracks .tracks-actions').empty();
 
-    const manual_time_remaining = getManualWaitTimeRemaining(job);
-    const manual_edit = job.manual_edit && !manual_time_remaining.expired && (__is_authenticated_simple());
+    const manual_trackselect_time_remaining = getManualTrackSelectTimeRemaining(job);
+    const manual_trackselect_enabled = job.manual_trackselect_enabled && !manual_trackselect_time_remaining.expired && (__is_authenticated_simple());
 
     if (!tracks.length) {
         container.append($('<p>').addClass('tracks-empty').text('No tracks found.'));
@@ -152,13 +163,13 @@ export function renderTracks(job, root) {
         row.append(info, status_label);
 
         // skip
-        if (!manual_edit && !track.process)
+        if (!manual_trackselect_enabled && !track.process)
             row.addClass('skip-track');
 
         if (track.process)
             num_tracks_to_process++;
 
-        if (manual_edit) {
+        if (manual_trackselect_enabled) {
             const checkbox = $('<input>', {
                 type: 'checkbox',
                 class: 'track-checkbox',
@@ -195,13 +206,13 @@ export function renderTracks(job, root) {
         container.append(row);
     });
 
-    if (manual_time_remaining.expired && job.manual_edit)
+    if (manual_trackselect_time_remaining.expired && job.manual_trackselect_enabled)
         $('<div>', {
             class   : 'flash-alert flash-danger',
             html    : '<i class="fa-solid fa-triangle-exclamation"></i> Waiting for manual input expired!'
         }).appendTo(container);
 
-    else if (manual_edit) {
+    else if (manual_trackselect_enabled) {
         $('<button>', {
             type        : 'button',
             class       : 'arm-button arm-button-primary track-start',

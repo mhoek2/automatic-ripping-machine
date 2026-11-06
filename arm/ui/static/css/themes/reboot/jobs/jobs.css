@@ -82,8 +82,9 @@
     transition: transform 100ms ease-in-out;
 }
 
-.job-status.status-manual-edit-pending::after,
-.job-status.status-manual-starting::after {
+.job-status.status-manual-meta-wait::after,
+.job-status.status-manual-trackselect-wait::after,
+.job-status.status-manual-trackselect-done::after {
     content: attr(data-manual-info);
     position: absolute;
     bottom: -2em;
@@ -131,13 +132,13 @@
     background: var(--color-warning-bg);
 }
 
-.status-manual-edit-pending {
+.status-manual-trackselect-wait {
     color: var(--color-action-required);
     background: var(--color-action-required-bg);
     animation: statu-manual-edit-pulse 1.8s ease-in-out infinite;
 }
 
-.status-manual-starting {
+.status-manual-trackselect-done {
     color: var(--color-action-starting);
     background: var(--color-action-starting-bg);
     animation: status-starting-pulse 1.8s ease-in-out infinite;

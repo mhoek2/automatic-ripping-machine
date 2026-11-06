@@ -114,13 +114,13 @@ def jobdetail_track():
 	if job is None:
 		return jsonify(success=False, error='Job not found'), 404
 
-	manual_edit = (
+	manual_trackselect_enabled = (
 		job.manual_mode
-		and job.status == JobState.MANUAL_WAIT_STARTED.value
+		and job.status == JobState.VIDEO_WAITING.value
 		and not job.manual_start
 	)
 
-	if not manual_edit:
+	if not manual_trackselect_enabled:
 		return jsonify(success=False, error='Track selection is locked'), 409
 
 	track = job.tracks.filter_by(track_id=track_id).first()
