@@ -1,227 +1,62 @@
 # Automatic Ripping Machine (ARM)
 A fork of the [Automatic Ripping Machine](https://github.com/automatic-ripping-machine/automatic-ripping-machine) with updates to the UI, keeping true to usage of Flask, which is sufficient for its purpose.
 
-## License
-[MIT License](LICENSE)
-
-> [!IMPORTANT]
-> **Prerequisites**
->
-> - A system running Ubuntu Linux.
-> - Docker Engine and the Docker Compose plugin installed.
-> - A user account with `sudo` privileges.
-> - A working internet connection to download the ARM Docker image.
-> - A DVD or Blu-ray drive connected to the system for ripping media.
->
-> This guide assumes Docker is already installed and configured. If not, follow the [Quick Guide](#install-docker-on-ubuntu) or the official [Docker installation guide](https://docs.docker.com/engine/install/ubuntu/) first.
-
-
-## Install ARM
 > [!NOTE]
-> This guide covers a simple setup of Automatic Ripping Machine (ARM) using Docker Compose.
-<details>
-<summary>View steps</summary>
+> The project aims to improve the user experience while staying true to the original ARM functionality and architecture.
 
-1. Create a directory for ARM and its configuration files.
-    ```bash
-    sudo mkdir -p /stack/arm
-    cd /stack/arm
-    sudo nano docker-compose.yml
-    ```
+## Features
 
-2. Paste the following configuration into `docker-compose.yml` and save the file.
-    ```yaml
-    services:
-    arm:
-        image: ghcr.io/mhoek2/automatic-ripping-machine:latest
-        restart: unless-stopped
-        privileged: true
-        ports:
-        - "8080:8080"
-        environment:
-        - TZ=Europe/Amsterdam
-        volumes:
-        - ./config:/etc/arm/config
-        - ./data:/home/arm/db
-        - ./home:/home/arm
-        - ./logs:/home/arm/logs
-        - ./media:/home/arm/media
-        - ./music:/home/arm/Music
-        - /dev:/dev
-    ```
+| Feature | Description |
+|---------------------------|--------------------------------------------------------------------------|
+| **Automatic Disc Detection** | Detects inserted discs using udev and identifies the appropriate processing workflow. |
+| **Movie & TV Ripping** | Automatically identifies movies and TV shows and organizes the output. |
+| **Flexible Video Ripping** | Supports DVD and Blu-ray ripping using MakeMKV and HandBrake. |
+| **Audio CD Ripping** | Rips audio CDs with metadata and artwork. |
+| **Data Disc Backups** | Creates ISO backups of supported data discs. |
+| **Asynchronous Transcoding** | Runs HandBrake transcoding jobs alongside ongoing ripping operations. |
+| **Notifications** | Supports multiple notification services, including Discord, Slack, IFTTT and Pushbullet. |
+| **Multi-Drive Support** | Supports multiple optical drives operating simultaneously. |
+| **Web Interface** | Manage ripping jobs, monitor progress, inspect logs and update jobs through the Flask interface. |
 
-    Available package versions can be found [here](https://github.com/mhoek2/automatic-ripping-machine/pkgs/container/automatic-ripping-machine)
+## Installation
 
-3. From the `/stack/arm` directory, run Docker Compose to pull the image (if needed) and start the container in the background.
-    ```bash
-    sudo docker compose up -d
-    ```
+> [!TIP]
+> ARM runs in Docker, making it compatible with most platforms that support Docker Engine and Docker Compose. \
+> **Ubuntu Linux** is the recommended platform.
 
-45. Verify the Installation
-    ```bash
-    # Veiw current status of the container
-    sudo docker compose ps
-
-    # To view the container logs:
-    sudo docker compose logs -f
-
-    # To restart the container:
-    sudo docker compose restart
-
-    # To stop the container:
-    sudo docker compose down
-    ```
-
-6. Access the Web Interface
-    Open the following address in your browser:
-
-    http://<server-ip>:8080
-
-    Replace `<server-ip>` with the IP address of your Ubuntu server. If you're accessing ARM directly on the same machine, use `http://localhost:8080`.
- 
-    ```bash
-    # find ip on ubuntu:
-    ip a
-    ```
-</details>
-
-## Update ARM
-> [!NOTE]
-> Updating ARM is as simple as pulling the latest image and recreating the container.
-<details>
-<summary>View steps</summary>
-
-`* Before updating` \
-`Configuration and database files in the config and data folders are stored outside the container.
-These are usually preserved when the container is recreated, provided they are configured as persistent volumes.` \
-`But its good practise to create a backup, and write down the current version`
-
-```bash
-# Make sure you run the following commands from the install directory containing your docker-compose.yml file.
-cd /stack/arm
-
-# Optional: Create a backup
-zip -r arm-backup-$(date +%F).zip config data
-
-# pull and recreate
-docker compose pull && docker compose up -d
-``` 
-</details>
-
-
-## Install Docker on Ubuntu
-> [!NOTE]
-> This is a quick guide. More detailed guides are available online or follow the official [Docker installation guide](https://docs.docker.com/engine/install/ubuntu/)!
-
-<details>
-<summary>View steps</summary>
- 
-1. Install the required packages and add the official Docker repository.
-    ```bash
-    sudo apt install -y ca-certificates curl gnupg lsb-release software-properties-common
-
-    sudo mkdir -p /etc/apt/keyrings
-    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-
-    echo \
-        "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
-        $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-    ```
-
-2. Install
-    ```bash
-    sudo apt update
-    sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-    ```
-
-3. Enable Docker
-    ```bash
-    sudo systemctl enable docker
-    sudo systemctl start docker
-    sudo systemctl status docker
-    ```
-
-4. Verify Installation
-    ```bash
-    docker version
-    docker compose version
-    ```
-</details>
+- [Install ARM](https://mhoek2.github.io/automatic-ripping-machine/index.html#install-arm)
+- [Update ARM](https://mhoek2.github.io/automatic-ripping-machine/index.html#update-arm)
+- [Quick Guide: Install Docker on Ubuntu](https://mhoek2.github.io/automatic-ripping-machine/index.html#install-docker-on-ubuntu)
 
 ## Development
 
-> [!CAUTION]
-> The following sections describe how to set up a development environment and build and run a local ARM Docker image.
+Interested in contributing or running a local development environment?
 
-<details>
-<summary>VS Code Development Environment</summary>
+- [VS Code Development Environment](https://mhoek2.github.io/automatic-ripping-machine/development/development.html#vs-code-development-environment)
+- [Build and Run a Local Docker Image](https://mhoek2.github.io/automatic-ripping-machine/development/development.html#build-and-run-a-local-docker-image)
+- [Create Linter Reports and Documentation](https://mhoek2.github.io/automatic-ripping-machine/development/development.html#create-linter-reports-and-docs)
 
-1. Clone the repository.
-2. Copy `setup/arm.yml` to `dev/config`.
-3. Open the repository in VS Code.
-4. Open a terminal and navigate to the `dev` directory:
+### Code Quality
 
-   ```bash
-   cd dev
-   ```
+Automated linting and security checks are used to maintain code quality across the project.
 
-5. Start the development environment:
+The latest reports are available in the documentation:
 
-   ```bash
-   docker compose up -d
-   ```
+- [ESLint](https://mhoek2.github.io/automatic-ripping-machine/development/reports/eslint.html)
+- [Stylelint](https://mhoek2.github.io/automatic-ripping-machine/development/reports/stylelint.html)
+- [Ruff](https://mhoek2.github.io/automatic-ripping-machine/development/reports/ruff.html)
+- [ShellCheck](https://mhoek2.github.io/automatic-ripping-machine/development/reports/shellcheck.html)
+- [Hadolint](https://mhoek2.github.io/automatic-ripping-machine/development/reports/hadolint.html)
+- [Bandit Security](https://mhoek2.github.io/automatic-ripping-machine/development/reports/bandit.html)
+- [Python Dependency Audit](https://mhoek2.github.io/automatic-ripping-machine/development/reports/dependency-audit.html)
 
-6. To restart the services after making changes, run:
 
-   ```bash
-   docker compose restart
-   ```
+## License
 
-</details>
+This project is licensed under the [MIT License](LICENSE).
 
-<details>
-<summary>Build and Run a Local Docker Image</summary>
+## Credits
 
-### Build the Image
+This project is based on the original [Automatic Ripping Machine](https://github.com/automatic-ripping-machine/automatic-ripping-machine).
 
-1. Open the repository root folder in VS Code.
-2. Open a terminal and build the local image:
-
-   ```bash
-   docker build -t arm-local:dev .
-   ```
-
-### Run the Image
-
-1. Create a separate test directory on your computer.
-2. Copy the root `docker-compose.yml` into the test directory.
-3. Edit the copied `docker-compose.yml` to use the local image instead of the remote image:
-
-   ```yaml
-   image: arm-local:dev
-   # image: ghcr.io/mhoek2/automatic-ripping-machine:latest
-   ```
-
-4. Open a terminal in the test directory and start the container:
-
-   ```bash
-   docker compose up -d --force-recreate
-   ```
-
-### Update the Local Image
-
-Whenever you make code changes, rebuild the image and recreate the container:
-
-1. In the repository root, rebuild the image:
-
-   ```bash
-   docker build -t arm-local:dev .
-   ```
-
-2. In the test directory, recreate the container using the updated image:
-
-   ```bash
-   docker compose up -d --force-recreate
-   ```
-
-</details>
+Credit and thanks go to the original authors and contributors for their work.
