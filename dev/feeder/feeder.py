@@ -16,7 +16,7 @@ from arm.models.job import Job, JobState, JobStateGroup
 from arm.models.track import Track, TrackState
 from arm.models.system_drives import SystemDrives, CDS
 from arm.models.config import Config
-from arm.ripper.makemkv import manual_wait
+from arm.ripper.makemkv import manual_trackselect_wait
 from arm.ripper import utils
 
 import re
@@ -27,7 +27,7 @@ from movies import MOVIES
 class Feeder:
     SIMULATION_STAGES = [
         {"state": JobState.IDLE.value,                  "name": "Initializing / Identifying", "weight": 0.1,  "function": "stage_initializing"},
-        {"state": JobState.MANUAL_WAIT_STARTED.value,   "name": "Waiting / Manual Pause",     "weight": 0.1,  "function": "stage_manual_wait"},
+        {"state": JobState.MANUAL_WAIT_STARTED.value,   "name": "Waiting Manual Meta",        "weight": 0.1,  "function": "stage_manual_meta_wait"},
         {"state": JobState.VIDEO_INFO.value,            "name": "Reading Disc Info",          "weight": 0.2,  "function": "stage_reading_disc_info"},
         {"state": JobState.VIDEO_RIPPING.value,         "name": "Ripping with MakeMKV",       "weight": 0.35, "function": "stage_ripping"},
         {"state": JobState.TRANSCODE_WAITING.value,     "name": "Waiting for Transcoding",    "weight": 0.05, "function": "stage_transcode_waiting"},
@@ -135,10 +135,16 @@ class Feeder:
         
         time.sleep(duration)
 
-    def stage_manual_wait(self, duration : float ):
-        self.__append_jobfile("INFO", "ARM: Waiting for manual intervention")
+    def stage_manual_meta_wait(self, duration : float ):  
+        if self.job.config.MANUAL_WAIT:
+            self.__append_jobfile( "INFO", f"Waiting {self.job.config.MANUAL_WAIT_TIME} seconds for manual override.")
 
-        time.sleep(duration)
+            utils.check_for_meta_wait(self.job)
+
+        # skip this step
+        else:
+            self.__append_jobfile( "INFO", f"MANUAL_WAIT disabled")
+
 
     def stage_reading_disc_info(self, duration : float ):
         time.sleep(3.0)
@@ -202,7 +208,7 @@ class Feeder:
 
             # Process Tracks
             # Notify user: tracks are ready and wait for 30 minutes
-            if manual_wait(self.job): 
+            if manual_trackselect_wait(self.job): 
                 # Response from user provided, process requested tracks
                 self.job.status = JobState.VIDEO_RIPPING.value
                 self.job.stop_time = None # reset

@@ -216,6 +216,11 @@
     padding-bottom: 0.75em;
 }
 
+    .sysinfo-storage-row:last-child {
+        padding-bottom: 0;
+        border-bottom: 0;
+    }
+
 .sysinfo-storage-header {
     display: flex;
     align-items: flex-start;

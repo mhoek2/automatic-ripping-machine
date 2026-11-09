@@ -59,9 +59,9 @@ def serialize_job_results(jobs):
 			for track in tracks
 		]
         
-        result['manual_edit'] = (
+        result['manual_trackselect_enabled'] = (
             job.manual_mode
-            and job.status == JobState.MANUAL_WAIT_STARTED.value
+            and job.status == JobState.VIDEO_WAITING.value
             and len(tracks) > 0
             and not job.manual_start
         )

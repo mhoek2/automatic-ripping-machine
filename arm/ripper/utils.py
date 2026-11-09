@@ -895,7 +895,7 @@ def job_dupe_check(job):
         return False
 
 
-def check_for_wait(job):
+def check_for_meta_wait(job):
     """
     Wait if we have waiting for user input updates\n\n
     :param job: Current Job
@@ -904,23 +904,38 @@ def check_for_wait(job):
     #  If we have waiting for user input enabled
     if job.config.MANUAL_WAIT:
         logging.info(f"Waiting {job.config.MANUAL_WAIT_TIME} seconds for manual override.")
-        database_updater({"status": JobState.MANUAL_WAIT_STARTED.value}, job)
+
+        database_updater({
+            "status"    : JobState.MANUAL_WAIT_STARTED.value,
+            "stop_time" : datetime.datetime.now()
+        }, job)
+
         sleep_time = 0
         while sleep_time < job.config.MANUAL_WAIT_TIME:
             time.sleep(5)
             sleep_time += 5
             db.session.refresh(job)
+
             if job.title_manual:
                 logging.info("Manual override found.  Overriding auto identification values.")
-                job.updated = True
-                job.hasnicetitle = True
-                database_updater({"hasnicetitle": True, "updated": True}, job)
+
+                database_updater({
+                    "hasnicetitle"  : True, 
+                    "updated"       : True,
+                    "stop_time"     : None
+                }, job)
                 break
-        database_updater({"status": JobState.IDLE.value}, job)
+
+        database_updater({
+            "status"        : JobState.IDLE.value,
+            "stop_time" : None
+        }, job)
 
 
 def get_drive_mode(devpath: str) -> str:
     """
+    *deprecated
+
     Retrieve the drive mode for a specified device path.
 
     This function queries the database for a drive associated with the provided

@@ -23,7 +23,7 @@ export default [
         },
         rules: {
             ...js.configs.recommended.rules,
-            'no-console': 'warn',
+            'no-console': 'off',
             'no-unused-vars': ['warn', {
                 argsIgnorePattern: '^xhr$|^status$|^error$|^ui$|^event$',
             }],

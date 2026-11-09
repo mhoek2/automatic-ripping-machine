@@ -1,14 +1,14 @@
-const MILLISECONDS_PER_SECOND   = 1000;
-const SECONDS_PER_MINUTE        = 60;
-const MINUTES_PER_HOUR          = 60;
-const HOURS_PER_DAY             = 24;
-const DAYS_PER_MONTH            = 30;
-const DAYS_PER_YEAR             = 365;
+export const MILLISECONDS_PER_SECOND   = 1000;
+export const SECONDS_PER_MINUTE        = 60;
+export const MINUTES_PER_HOUR          = 60;
+export const HOURS_PER_DAY             = 24;
+export const DAYS_PER_MONTH            = 30;
+export const DAYS_PER_YEAR             = 365; 
 
-const SECONDS_PER_HOUR = SECONDS_PER_MINUTE * MINUTES_PER_HOUR;
-const SECONDS_PER_DAY = SECONDS_PER_HOUR * HOURS_PER_DAY;
-const SECONDS_PER_MONTH = SECONDS_PER_DAY * DAYS_PER_MONTH;
-const SECONDS_PER_YEAR = SECONDS_PER_DAY * DAYS_PER_YEAR;
+export const SECONDS_PER_HOUR = SECONDS_PER_MINUTE * MINUTES_PER_HOUR;
+export const SECONDS_PER_DAY = SECONDS_PER_HOUR * HOURS_PER_DAY;
+export const SECONDS_PER_MONTH = SECONDS_PER_DAY * DAYS_PER_MONTH;
+export const SECONDS_PER_YEAR = SECONDS_PER_DAY * DAYS_PER_YEAR;
 
 export function formatDateTitle(timestamp) {
     const date = new Date(timestamp);
@@ -94,6 +94,16 @@ export function formatCountdown(milliseconds) {
         title       : `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`,
         expired     : milliseconds <= Date.now()
     };
+}
+
+export function getWaitTimeRemaining(job, waitMilliseconds) {
+    const milliseconds = formatTimeToMilisecconds(job.stop_time);
+
+    if (Number.isNaN(milliseconds)) {
+        return { relative: '', title: '', expired: false };
+    }
+
+    return formatCountdown(milliseconds + waitMilliseconds);
 }
 
 export function formatTrackLength(length, videoType) {

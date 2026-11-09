@@ -97,6 +97,33 @@ def jobdetail_api():
 		} if meta['authenticated'] else -1,
 	)
 
+
+@route_jobs.route('/jobdetail_mode', methods=['POST'])
+@login_required
+def jobdetail_mode():
+    data = request.get_json(silent=True) or {}
+
+    job_id  = data.get('job_id')
+    mode    = data.get('mode')
+
+    if job_id is None or mode not in ['auto', 'manual']:
+        return jsonify(success=False, error='Invalid request'), 400
+
+    job = db.session.get(Job, job_id)
+
+    if job is None:
+        return jsonify(success=False, error='Job not found'), 404
+
+    try:
+        job.manual_mode = mode == 'manual'
+        db.session.commit()
+    except Exception:
+        db.session.rollback()
+        app.logger.exception('Failed to update job mode')
+        return jsonify(success=False, error='Failed to update job'), 500
+
+    return jsonify(success=True, mode=mode)
+
 @route_jobs.route('/jobdetail_track', methods=['POST'])
 @login_required
 def jobdetail_track():
@@ -114,13 +141,13 @@ def jobdetail_track():
 	if job is None:
 		return jsonify(success=False, error='Job not found'), 404
 
-	manual_edit = (
+	manual_trackselect_enabled = (
 		job.manual_mode
-		and job.status == JobState.MANUAL_WAIT_STARTED.value
+		and job.status == JobState.VIDEO_WAITING.value
 		and not job.manual_start
 	)
 
-	if not manual_edit:
+	if not manual_trackselect_enabled:
 		return jsonify(success=False, error='Track selection is locked'), 409
 
 	track = job.tracks.filter_by(track_id=track_id).first()
