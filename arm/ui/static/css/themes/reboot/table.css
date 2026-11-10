@@ -1,0 +1,50 @@
+
+/* Information table */
+.arm-info-table {
+    width: 100%;
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    border-spacing: 0;
+    overflow: hidden;
+    background: var(--color-surface);
+    color: var(--color-text);
+    font-size: 0.9rem;
+}
+
+.arm-info-table td {
+    padding: 0.875rem 1rem;
+    border-bottom: 1px solid var(--color-border);
+    transition: background 150ms ease;
+}
+
+.arm-info-table tr:last-child td {
+    border-bottom: none;
+}
+
+.arm-info-table td:first-child {
+    width: 50%;
+    background: var(--color-surface-raised);
+    color: var(--color-text-muted);
+    font-weight: 600;
+}
+
+.arm-info-table td:last-child {
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 0.85rem;
+    overflow-wrap: anywhere;
+}
+
+.arm-info-table tr:hover td {
+    background: var(--color-surface-hover);
+}
+
+@media (width <= 480px) {
+    .arm-info-table td {
+        padding: 0.75rem;
+        font-size: 0.85rem;
+    }
+
+    .arm-info-table td:last-child {
+        font-size: 0.8rem;
+    }
+}

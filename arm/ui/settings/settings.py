@@ -33,7 +33,6 @@ from arm.ui import app, db
 from arm.models.job import Job
 from arm.models.system_drives import SystemDrives
 from arm.models.system_info import SystemInfo
-from arm.models.ui_settings import UISettings
 import arm.config.config as cfg
 from arm.ui.settings import DriveUtils as drive_utils
 from arm.ui.settings import health
@@ -127,9 +126,6 @@ def settings():
     serverstats = get_server_stats();
     app.logger.debug(f"stats: {serverstats}")
 
-    # ARM UI config
-    armui_cfg = ui_utils.arm_db_cfg()
-
     # System Drives (CD/DVD/Blueray drives)
     drive_utils.update_job_status()
     drives = drive_utils.get_drives()
@@ -143,18 +139,17 @@ def settings():
     session["page_title"] = "Settings"
 
     return render_template("settings/settings.html",
-        settings             = cfg.arm_config,
-        settings_groups      = cfg.ARM_SETTINGS_GROUPS,
-        ui_settings          = armui_cfg,
-        serverstats          = serverstats,
-        apprise_cfg          = cfg.apprise_config,
-        apprise_groups       = cfg.APPRISE_SETTINGS_GROUPS,
-        form                 = form,
-        jsoncomments         = comments,
-        abcde_cfg            = cfg.abcde_config,
-        drives               = drives,
-        form_drive           = form_drive,
-        ripper_read_only     = is_read_only(cfg.arm_config_path),
+        settings            = cfg.arm_config,
+        settings_groups     = cfg.ARM_SETTINGS_GROUPS,
+        serverstats         = serverstats,
+        apprise_cfg         = cfg.apprise_config,
+        apprise_groups      = cfg.APPRISE_SETTINGS_GROUPS,
+        form                = form,
+        jsoncomments        = comments,
+        abcde_cfg           = cfg.abcde_config,
+        drives              = drives,
+        form_drive          = form_drive,
+        ripper_read_only    = is_read_only(cfg.arm_config_path),
         apprise_read_only   = is_read_only(cfg.apprise_config_path),
         abcde_read_only     = is_read_only(cfg.abcde_config_path)
       )
@@ -212,18 +207,20 @@ def save_ui_settings():
     form = UiSettingsForm()
     success = False
     message = f"Failed to update [UI] settings!"
-    arm_ui_cfg = UISettings.query.get(1)
+    armui_cfg = ui_utils.arm_db_cfg()
     if form.validate_on_submit():
         use_icons = (str(form.use_icons.data).strip().lower() == "true")
         save_remote_images = (str(form.save_remote_images.data).strip().lower() == "true")
-        arm_ui_cfg.index_refresh = format(form.index_refresh.data)
-        arm_ui_cfg.use_icons = use_icons
-        arm_ui_cfg.save_remote_images = save_remote_images
-        arm_ui_cfg.bootstrap_skin = format(form.bootstrap_skin.data)
-        arm_ui_cfg.language = format(form.language.data)
-        arm_ui_cfg.database_limit = format(form.database_limit.data)
-        arm_ui_cfg.notify_refresh = format(form.notify_refresh.data)
+        
+        armui_cfg.index_refresh         = format(form.index_refresh.data)
+        armui_cfg.use_icons             = use_icons
+        armui_cfg.save_remote_images    = save_remote_images
+        armui_cfg.bootstrap_skin        = format(form.bootstrap_skin.data)
+        armui_cfg.language              = format(form.language.data)
+        armui_cfg.database_limit        = format(form.database_limit.data)
+        armui_cfg.notify_refresh        = format(form.notify_refresh.data)
         db.session.commit()
+
         success = True
         message = "Updated [UI] settings!"
 
@@ -232,9 +229,8 @@ def save_ui_settings():
 
     # Masking the jinja update, otherwise an error is thrown
     # sqlalchemy.orm.exc.DetachedInstanceError: Instance <UISettings at 0x7f294c109fd0>
-    # app.jinja_env.globals.update(armui_cfg=arm_ui_cfg)
-    return {'success': success, 'settings': str(arm_ui_cfg), 'form': 'arm ui settings'}
-
+    # app.jinja_env.globals.update(armui_cfg=armui_cfg)
+    return {'success': success, 'settings': str(armui_cfg), 'form': 'arm ui settings'}
 
 @route_settings.route('/save_abcde_settings', methods=['POST'])
 @login_required

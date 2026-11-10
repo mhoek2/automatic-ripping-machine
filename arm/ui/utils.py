@@ -12,6 +12,7 @@ from datetime import datetime
 from pathlib import Path
 from sqlalchemy.exc import SQLAlchemyError
 from time import strftime, localtime, time, sleep
+from typing import Optional
 
 import bcrypt
 import requests
@@ -199,7 +200,7 @@ def arm_db_check():
     return db
 
 
-def arm_db_cfg():
+def arm_db_cfg() -> Optional[UISettings]:
     """
     Check if the database exists prior to creating global ui settings
     """
@@ -213,7 +214,11 @@ def arm_db_cfg():
     # UISettings could be incorrect, return None
     try:
         armui_cfg = UISettings.query.get(1)
-        app.jinja_env.globals.update(armui_cfg=armui_cfg)
+        # add global armui_cfg. 
+        # and use explicit argument and global for templates?
+        # move to attach_db_cfg_jinji_global() and deprecate for now
+        # app.jinja_env.globals.update(armui_cfg=armui_cfg)
+
     except Exception as e:
         app.logger.debug(f"arm_cfg request error {e}")
         armui_cfg = None
@@ -222,6 +227,15 @@ def arm_db_cfg():
 
     return armui_cfg
 
+def attach_db_cfg_jinja_global(armui_cfg):
+    """
+    *deprecated
+
+    Separate this from arm_db_cfg(), 
+    as its confusing to return both a object and set some global state"""
+    
+    #app.jinja_env.globals.update(armui_cfg=arm_db_cfg())
+    pass
 
 def arm_db_migrate():
     """

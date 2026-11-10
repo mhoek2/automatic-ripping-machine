@@ -18,10 +18,9 @@ from arm.models.config import Config
 from arm.models.job import Job, JobState
 from arm.models.notifications import Notifications
 from arm.models.track import Track
-from arm.models.ui_settings import UISettings
 from arm.ui import app, db
 from arm.ui.forms import ChangeParamsForm
-from arm.ui.utils import job_id_validator, database_updater, endpoint_meta
+from arm.ui.utils import arm_db_cfg, job_id_validator, database_updater, endpoint_meta
 from arm.ui.settings import DriveUtils as drive_utils # noqa E402
 
 
@@ -616,11 +615,13 @@ def read_notification(notify_id):
 def get_notify_timeout(notify_timeout):
     """Return the notification timeout UI setting"""
 
-    return_json = {'success': True,
-                   'mode': 'notify_timeout',
-                   'notify_timeout': ''}
+    return_json = {
+        'success'           : True,
+        'mode'              : 'notify_timeout',
+        'notify_timeout'    : ''
+    }
 
-    armui_cfg = UISettings.query.first()
+    armui_cfg = arm_db_cfg()
 
     if armui_cfg:
         return_json['notify_timeout'] = armui_cfg.notify_refresh

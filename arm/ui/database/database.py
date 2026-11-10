@@ -18,15 +18,16 @@ from arm.models.job import Job
 import arm.config.config as cfg
 from arm.ui.metadata import get_omdb_poster
 from arm.ui.forms import DBUpdate
+from arm.ripper import utils
 
 app.app_context().push()
 route_database = Blueprint('route_database', __name__,
                            template_folder='templates',
                            static_folder='../static')
 
+# *deprecated, added to inject_endpoint_meta()
 # This attaches the armui_cfg globally to let the users use any bootswatch skin from cdn
-armui_cfg = ui_utils.arm_db_cfg()
-
+#armui_cfg = ui_utils.attach_db_cfg_jinja_global()
 
 @route_database.route('/database')
 @login_required
@@ -66,27 +67,58 @@ def update_database():
     Update the ARM database when changes are made or the arm db file is missing
     """
     form = DBUpdate(request.form)
-    if request.method == 'POST' and form.validate():
+
+    if request.method != 'POST' or not form.validate():
+        return redirect('/index')
+
+    try:
         if form.dbfix.data == "migrate":
-            app.logger.debug("User requested - Database migration")
+            db_update = ui_utils.arm_db_check()
+
+            current_revision = db_update["db_revision"].version_num
+            target_revision = db_update["head_revision"]
+
+            app.logger.info("User requested database migration: %s -> %s", current_revision, target_revision)
+
             ui_utils.arm_db_migrate()
-            flash("ARM database migration successful!", "success")
+
+            title = "ARM Database Migration Successful"
+            message = (
+                f"Database migration completed successfully.\n"
+                f"Previous version: {current_revision}\n"
+                f"New version: {target_revision}"
+            )
+
         elif form.dbfix.data == "new":
-            app.logger.debug("User requested - New database")
+            app.logger.info("User requested new database setup.")
+
             ui_utils.check_db_version(cfg.arm_config['INSTALLPATH'], cfg.arm_config['DBFILE'])
-            flash("ARM database setup successful!", "success")
+
+            title = "ARM Database Created"
+            message = "A new ARM database was successfully created."
+
         else:
-            # No method defined
-            app.logger.debug(f"No update method defined from DB Update - {form.dbfix.data}")
-            flash("Error no update method specified, report this as a bug.", "error")
+            app.logger.error("Invalid database update method: %s", form.dbfix.data)
+            flash("Invalid database update method specified.", "error")
+            utils.notify(None, "ARM Database Update Failed", "An invalid database update method was specified.")
+            return redirect('/index')
 
-        # Update the arm UI config from DB post update
-        ui_utils.arm_db_cfg()
+        # Reload the ARM UI configuration after the database update
+        # *deprecated, not using global jinja object anymore.
+        #ui_utils.arm_db_cfg()
 
-        return redirect('/index')
-    else:
-        # Catch for GET requests of the page, redirect to index
-        return redirect('/index')
+        app.logger.info(message.replace("\n", " "))
+        flash(message, "success")
+        utils.notify(None, title, message)
+
+    except Exception:
+        app.logger.exception("Database update failed.")
+        message = "The database update failed. Check the ARM logs for details."
+        flash(message, "error")
+        utils.notify(None, "ARM Database Update Failed", message)
+
+    return redirect('/index')
+
 
 
 @route_database.route('/import_movies')

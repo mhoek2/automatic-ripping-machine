@@ -26,24 +26,12 @@ route_auth = Blueprint('route_auth', __name__,
 login_manager = LoginManager()
 login_manager.init_app(app)
 
-
 @route_auth.route('/login', methods=['GET', 'POST'])
 def login():
     """
     Login page if login is enabled
     :return: redirect
     """
-    page_support_databaseupdate = "support/databaseupdate.html"
-
-    # Check the database is current
-    db_update = ui_utils.arm_db_check()
-    if not db_update["db_current"] or not db_update["db_exists"]:
-        dbform = DBUpdate(request.form)
-        return render_template(page_support_databaseupdate, 
-            db_update   = db_update, 
-            dbform      = dbform
-        )
-
     return_redirect = None
     # if there is no user in the database
     try:
@@ -58,7 +46,7 @@ def login():
         app.logger.error(f"ERROR: Missing Data in the ARM User Table: {e}")
         dbform = DBUpdate(request.form)
         db_update = ui_utils.arm_db_check()
-        return render_template(page_support_databaseupdate, 
+        return render_template("support/databaseupdate.html", 
             db_update   = db_update, 
             dbform      = dbform
         )

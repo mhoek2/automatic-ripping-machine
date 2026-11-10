@@ -13,7 +13,7 @@ import os
 import json
 from pathlib import Path, PurePath
 from werkzeug.exceptions import HTTPException
-from flask import Flask, render_template, request, flash, \
+from flask import Flask, g, render_template, request, flash, \
     redirect, url_for, session   # noqa: F401
 from flask.logging import default_handler  # noqa: F401
 from flask_login import LoginManager, login_required, \
@@ -27,9 +27,9 @@ from arm.models.user import User
 import arm.config.config as cfg
 from arm.ui.forms import DBUpdate
 
-
+# *deprecated, added to inject_endpoint_meta()
 # This attaches the armui_cfg globally to let the users use any bootswatch skin from cdn
-armui_cfg = ui_utils.arm_db_cfg()
+#armui_cfg = ui_utils.attach_db_cfg_jinja_global()
 
 # Define the Flask login manager
 login_manager = LoginManager()
@@ -37,8 +37,34 @@ login_manager.init_app(app)
 
 @app.context_processor
 def inject_endpoint_meta():
-    return {"meta": ui_utils.endpoint_meta()}
+    return {
+        "meta"      : ui_utils.endpoint_meta(),
+        "armui_cfg" : ui_utils.arm_db_cfg()
+    }
+    
+@app.before_request
+def check_database():
+    """
+    Check whether the ARM database requires an update before processing requests.
+    """
+    #app.logger.info(request.endpoint)
+    # Allow access to the database update page and static files
+    if request.endpoint in ('static', 'route_database.update_database', 'get_notications'):
+        return
 
+    db_update = ui_utils.arm_db_check()
+
+    if db_update["db_current"] and db_update["db_exists"]:
+        return
+    
+    app.logger.debug(f"Error with ARM DB: [{db_update['db_current']}]-[{db_update['db_exists']}]")
+    flash(f"ARM has detected changes that require a database update. This may be due to a recent application update or an issue with the existing database. The database needs to be updated before ARM can continue. Your existing data will be preserved wherever possible.", "warning")
+
+    return render_template("support/databaseupdate.html", 
+        db_update   = db_update,
+        dbform      = DBUpdate(request.form)
+    )
+    
 @app.route('/')
 @app.route('/index.html')
 @app.route('/index')
@@ -46,16 +72,6 @@ def home():
     """
     The main homepage showing current rips and server stats
     """
-    # Check the database is current
-    db_update = ui_utils.arm_db_check()
-
-    if not db_update["db_current"] or not db_update["db_exists"]:
-        dbform = DBUpdate(request.form)
-        app.logger.debug(f"Error with ARM DB: [{db_update['db_current']}]-[{db_update['db_exists']}]")
-        return render_template("support/databaseupdate.html",
-            db_update   = db_update,
-            dbform      = dbform
-        )
 
     # Page titles
     session["arm_name"] = cfg.arm_config['ARM_NAME']
