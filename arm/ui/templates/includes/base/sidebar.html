@@ -35,8 +35,8 @@
 		<li id="navnotification">
 			<a class="nav-link" href="notifications" data-tooltip="Notifications">
 				<i class="fa-solid fa-bell"></i>
-				{% if notify_count %}
-					<span class="notification-badge">{{ notify_count }}</span>
+				{% if meta.notify_count %}
+					<span class="notification-badge">{{ meta.notify_count }}</span>
 				{% endif %}
 			</a>
 		</li>

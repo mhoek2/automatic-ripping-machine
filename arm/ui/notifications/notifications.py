@@ -18,21 +18,15 @@ route_notifications = Blueprint('route_notifications', __name__,
                                 template_folder='templates',
                                 static_folder='../static')
 
-
-@app.context_processor
-def arm_nav_notify():
+def arm_notification_count() -> int:
     """
     inject the unread notification count to all pages for the navbar count
     """
     try:
-        notify_count = Notifications.query.filter_by(cleared='0').count()
-        app.logger.debug(notify_count)
+        return Notifications.query.filter_by(cleared='0').count()
 
     except Exception:
-        notify_count = None
-
-    return dict(notify_count=notify_count)
-
+        return 0
 
 @route_notifications.route('/notifications')
 @login_required

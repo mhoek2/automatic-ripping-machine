@@ -37,6 +37,11 @@ login_manager.init_app(app)
 
 @app.context_processor
 def inject_endpoint_meta():
+    """
+    Inject meta info in render_template jinja arguments
+
+    Fires after @before_request
+    """
     return {
         "meta"      : ui_utils.endpoint_meta(),
         "armui_cfg" : ui_utils.arm_db_cfg()
@@ -47,22 +52,31 @@ def check_database():
     """
     Check whether the ARM database requires an update before processing requests.
     """
+    # run once per request
+    g.db_status = ui_utils.arm_db_check()
+    g.db_valid  = g.db_status["db_current"] and g.db_status["db_exists"]
+
     #app.logger.info(request.endpoint)
     # Allow access to the database update page and static files
     if request.endpoint in ('static', 'route_database.update_database', 'get_notications'):
         return
 
-    db_update = ui_utils.arm_db_check()
-
-    if db_update["db_current"] and db_update["db_exists"]:
+    if g.db_valid:
         return
     
-    app.logger.debug(f"Error with ARM DB: [{db_update['db_current']}]-[{db_update['db_exists']}]")
-    flash(f"ARM has detected changes that require a database update. This may be due to a recent application update or an issue with the existing database. The database needs to be updated before ARM can continue. Your existing data will be preserved wherever possible.", "warning")
-
+    app.logger.debug(f"Error with ARM DB: [{g.db_status['db_current']}]-[{g.db_status['db_exists']}]")
+    
+    flash(
+        "ARM has detected changes that require a database update. "
+        "This may be due to a recent application update or an issue with "
+        "the existing database. The database needs to be updated before ARM "
+        "can continue. Your existing data will be preserved wherever possible.",
+        "warning"
+    )
+    
     return render_template("support/databaseupdate.html", 
-        db_update   = db_update,
-        dbform      = DBUpdate(request.form)
+        db_status   = g.db_status,
+        db_form     = DBUpdate(request.form)
     )
     
 @app.route('/')

@@ -10,7 +10,7 @@ import os
 import json
 import re
 from flask_login import LoginManager, login_required  # noqa: F401
-from flask import render_template, jsonify, request, Blueprint, flash, redirect, session
+from flask import g, render_template, jsonify, request, Blueprint, flash, redirect, session
 
 import arm.ui.utils as ui_utils
 from arm.ui import app, db, constants, json_api
@@ -73,10 +73,10 @@ def update_database():
 
     try:
         if form.dbfix.data == "migrate":
-            db_update = ui_utils.arm_db_check()
+            db_status = getattr(g, 'db_status', None) # set in arm.ui.routes.check_database()
 
-            current_revision = db_update["db_revision"].version_num
-            target_revision = db_update["head_revision"]
+            current_revision = db_status["db_revision"].version_num
+            target_revision = db_status["head_revision"]
 
             app.logger.info("User requested database migration: %s -> %s", current_revision, target_revision)
 

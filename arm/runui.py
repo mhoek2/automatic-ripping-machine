@@ -18,8 +18,8 @@ shutdown_requested = False
 
 def startup():
     """ARM UI Startup check on database config"""
-    db_update = arm.ui.utils.arm_db_check()
-    if db_update["db_current"]:
+    db_status = arm.ui.utils.arm_db_check()
+    if db_status["db_current"]:
         app.logger.info("Updating Optical Drives")
         arm.ui.settings.DriveUtils.drives_update(startup=True)
 

@@ -9,7 +9,7 @@ Covers
 """
 from sqlite3 import OperationalError
 import bcrypt
-from flask import redirect, render_template, request, Blueprint, flash, app, session
+from flask import g, redirect, render_template, request, Blueprint, flash, app, session
 from flask_login import LoginManager, login_required, \
     current_user, login_user, logout_user  # noqa: F401
 
@@ -44,11 +44,12 @@ def login():
         flash(constants.NO_ADMIN_ACCOUNT, "danger")
         app.logger.error(constants.NO_ADMIN_ACCOUNT)
         app.logger.error(f"ERROR: Missing Data in the ARM User Table: {e}")
-        dbform = DBUpdate(request.form)
-        db_update = ui_utils.arm_db_check()
+
+        db_status = getattr(g, 'db_status', None) # set in arm.ui.routes.check_database()
+
         return render_template("support/databaseupdate.html", 
-            db_update   = db_update, 
-            dbform      = dbform
+            db_status   = db_status, 
+            db_form     = DBUpdate(request.form)
         )
 
     # if a user is logged in

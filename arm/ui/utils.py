@@ -19,6 +19,7 @@ import requests
 from werkzeug.routing import ValidationError
 from flask.logging import default_handler  # noqa: F401
 from flask_login import current_user
+from flask import g
 
 import arm.config.config as cfg
 from arm.config.config_utils import arm_yaml_test_bool
@@ -28,9 +29,11 @@ from arm.models.job import Job
 from arm.models.system_info import SystemInfo
 from arm.models.ui_settings import UISettings
 from arm.models.user import User
+from arm.models.notifications import Notifications
 from arm.ui import app, db
 from arm.ui.metadata import tmdb_search, get_tmdb_poster, tmdb_find, call_omdb_api
 from arm.ui.settings import DriveUtils
+from arm.ui.notifications.notifications import arm_notification_count
 
 # Path definitions
 path_migrations = "arm/migrations"
@@ -191,11 +194,11 @@ def arm_db_check():
         app.logger.debug(f"Database file is not present: {db_file}")
 
     db = {
-        "db_exists": db_exists,
-        "db_current": db_current,
-        "head_revision": head_revision,
-        "db_revision": db_revision,
-        "db_file": db_file
+        "db_exists"     : db_exists,
+        "db_current"    : db_current,
+        "head_revision" : head_revision,
+        "db_revision"   : db_revision,
+        "db_file"       : db_file
     }
     return db
 
@@ -204,8 +207,12 @@ def arm_db_cfg() -> Optional[UISettings]:
     """
     Check if the database exists prior to creating global ui settings
     """
-    db_update = arm_db_check()
-    if not db_update["db_exists"]:
+    db_status = getattr(g, 'db_status', None) # set in arm.ui.routes.check_database()
+
+    if not db_status:
+        return None
+
+    if not db_status["db_exists"]:
         app.logger.debug("No armui cfg setup")
         check_db_version(cfg.arm_config['INSTALLPATH'], cfg.arm_config['DBFILE'])
         setup_database()
@@ -213,7 +220,7 @@ def arm_db_cfg() -> Optional[UISettings]:
     # if the database has been updated
     # UISettings could be incorrect, return None
     try:
-        armui_cfg = UISettings.query.get(1)
+        settings = UISettings.query.get(1)
         # add global armui_cfg. 
         # and use explicit argument and global for templates?
         # move to attach_db_cfg_jinji_global() and deprecate for now
@@ -221,11 +228,9 @@ def arm_db_cfg() -> Optional[UISettings]:
 
     except Exception as e:
         app.logger.debug(f"arm_cfg request error {e}")
-        armui_cfg = None
+        settings = None
 
-    app.logger.debug(armui_cfg)
-
-    return armui_cfg
+    return settings
 
 def attach_db_cfg_jinja_global(armui_cfg):
     """
@@ -922,8 +927,17 @@ def authenticated_state() -> bool:
 
     return authenticated
 
-def endpoint_meta():
-    return {
+def endpoint_meta( db_valid : bool = False ):
+    meta = {
         "authenticated" : authenticated_state(),
-        "mode_dev"      : os.environ.get("MODE_DEV", "false").lower() == "true"
+        "mode_dev"      : os.environ.get("MODE_DEV", "false").lower() == "true",
+        "notify_count"  : 0
     }
+
+    # with a pending database migration, avoid application table queries
+    db_valid = getattr(g, 'db_valid', False)
+
+    if db_valid:
+        meta["notify_count"] = arm_notification_count()
+
+    return meta

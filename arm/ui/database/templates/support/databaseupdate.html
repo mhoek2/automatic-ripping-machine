@@ -1,39 +1,39 @@
 {% extends "base.html" %}
 
 {% block content %}
-    {% if not db_update.db_exists %}
+    {% if not db_status.db_exists %}
         <p><u> Missing database  </u></p>
-        <p> The ARM database is missing, the files is configured to be installed in: {{ db_update.db_file }}. </p>
+        <p> The ARM database is missing, the files is configured to be installed in: {{ db_status.db_file }}. </p>
         <p> If the file exists, confirm the file ownership and permissions are configured correctly, as ARM is unable to read the file </p>
         
         <form class="" action="dbupdate" method="post">
-            {{ dbform.hidden_tag() }}
+            {{ db_form.hidden_tag() }}
             <input type="hidden" id="dbfix" name="dbfix" value="new">
             <button type="submit" class="arm-button arm-button-primary arm-button-outline">Create the database</button>
         </form>
     {% else: %}
-        {% if not db_update.db_current %}
+        {% if not db_status.db_current %}
             <p><u>Database Update Required</u></p>
             <p>Database exists but requires an update/migration to continue working.</p>
             <table class="arm-info-table" style="max-width: 36em;">
                 <tbody>
                     <tr>
                         <td>Latest ARM Database Version</td>
-                        <td>{{ db_update.head_revision }}</td>
+                        <td>{{ db_status.head_revision }}</td>
                     </tr>
                     <tr>
                         <td>Current Database Version</td>
-                        <td>{{ db_update.db_revision.version_num }}</td>
+                        <td>{{ db_status.db_revision.version_num }}</td>
                     </tr>
                 </tbody>
             </table>
 
-            <p>The database that will be migrated: <em class="logs-count">{{ db_update.db_file }}</em></p>
+            <p>The database that will be migrated: <em class="logs-count">{{ db_status.db_file }}</em></p>
             <p>A backup of the file will be created within the same folder: <em class="logs-count">arm_migration_(timestamp).db</em></p>
             <br>
 
             <form class="" action="dbupdate" method="post">
-                {{ dbform.hidden_tag() }}
+                {{ db_form.hidden_tag() }}
                 <input type="hidden" id="dbfix" name="dbfix" value="migrate">
                 <button type="submit" class="arm-button arm-button-warning arm-button-outline">
                     <i class="fas fa-exclamation-triangle"></i> Migrate Now
