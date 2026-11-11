@@ -114,3 +114,25 @@ Whenever you make code changes, rebuild the image and recreate the container:
 
 reports/reports
 ```
+
+### Database Migrations
+<details>
+<summary>View steps</summary>
+
+1. Upgrade SQLAlchemy to a compatible version: `*optional`
+   ```bash
+   python -m pip install --user --upgrade "SQLAlchemy>=2.0.31,<2.1"
+   ```
+2. Navigate to the migrations directory:
+   ```bash
+   cd arm/migrations
+   ```
+3. Generate a new migration revision:
+   ```bash
+   python -m alembic revision -m "Add job plot column"
+   ```
+4. Open the generated migration file in `arm/migrations/versions/` and implement the changes in `upgrade()` and `downgrade()` functions.
+5. Update the associated model in `arm/models/<model>.py` to match the new format.
+6. Restart the ARM docker container
+7. The next time you launch the ARM web interface, a database migration page appears. Click `Migrate Now` to apply them.
+</details>
