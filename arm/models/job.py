@@ -161,6 +161,7 @@ class Job(db.Model):
     is_iso = db.Column(db.Boolean)
     manual_start = db.Column(db.Boolean)
     manual_mode = db.Column(db.Boolean)
+    external_meta = db.Column(db.JSON, nullable=True)
     tracks = db.relationship('Track', backref='job', lazy='dynamic')
     config = db.relationship('Config', uselist=False, backref="job")
 
