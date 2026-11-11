@@ -6,9 +6,10 @@ import pyudev
 import subprocess
 import time
 
-from datetime import datetime as dt
+from datetime import datetime
 from prettytable import PrettyTable
 from sqlalchemy.ext.hybrid import hybrid_property
+from dataclasses import dataclass, field, asdict
 
 from arm.ripper import music_brainz
 from arm.ui import db
@@ -111,6 +112,12 @@ class JobStateGroup:
         JobState.POSTPROCESSING_MOVING,
     }
 
+@dataclass(slots=True)
+class JobExternalMeta:
+    plot         : str = field( default="" )
+    background   : str = field( default="" )
+    timestamp    : str = field( default="" )
+
 class Job(db.Model):
     """
     Job Class hold most of the details for each job
@@ -181,6 +188,7 @@ class Job(db.Model):
         self.manual_start = False
         self.manual_mode = False
         self.has_track_99 = False
+        self.external_meta = None
 
         if self.disctype == "dvd" and not self.label:
             logging.info("No disk label Available. Trying lsdvd")
@@ -318,6 +326,26 @@ class Job(db.Model):
         self.drive.eject()
         self.ejected = True
 
+    def get_external_meta(self) -> dict:
+        """
+        Get cached or fetch and cache external metadata, eg: plot
+        """
+        # fetch and parse when unavailable
+        if not self.external_meta:
+            from arm.ui.utils import metadata_selector
+
+            external_meta = metadata_selector("get_details", self.title, self.year, self.imdb_id)
+
+            if external_meta and 'Error' not in external_meta:
+                self.external_meta = asdict(JobExternalMeta(
+                    plot        = external_meta['Plot'] if 'Plot' in external_meta else "There was a problem getting the plot",
+                    background  = external_meta['background_url'] if 'background_url' in external_meta else "",
+                    timestamp   = datetime.now().isoformat()
+                ))
+                db.session.commit()
+    
+        return self.external_meta or asdict(JobExternalMeta())
+
     @hybrid_property
     def finished(self):
         return JobState(self.status) in JobStateGroup.FINISHED
@@ -336,7 +364,7 @@ class Job(db.Model):
 
     @property
     def run_time(self):
-        return abs(dt.now() - self.start_time).total_seconds()
+        return abs(datetime.now() - self.start_time).total_seconds()
 
     @property
     def ripping_finished(self):

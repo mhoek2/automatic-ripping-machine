@@ -64,23 +64,10 @@ def jobdetail_api():
 		}
 
 	job_info = json_api.serialize_job_results([job])
-	if len(job_info) is not 1:
-		return jsonify(success=False, error='Invalid job info'), 404
+	if len(job_info) != 1:
+		return jsonify(success=False, error='Invalid job info')
     
 	job_info = job_info[0]
-
-    # this should be stored in the database once, and updated when changing title manually ..
-	meta = ui_utils.metadata_selector("get_details", job.title, job.year, job.imdb_id)
- 	 
-	if meta and 'Error' not in meta:
-		plot = meta['Plot'] if 'Plot' in meta else "There was a problem getting the plot"
-		background = meta['background_url'] if 'background_url' in meta else None
-	else:
-		plot = ""
-		background = None
-
-	#plot = " is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since 1966, when designers at Letraset and James Mosley, the librarian at St Bride Printing Library in London, took a 1914 Cicero translation and scrambled it to make dummy text for Letraset's Body Type sheets. It has survived not only many decades, but also the leap into el"
-	#background = ""
 
 	meta = ui_utils.endpoint_meta()
 
@@ -89,11 +76,10 @@ def jobdetail_api():
 		success     = True,
 		job         = {
             **job_info,
-			'plot'          : plot,
-			'background'    : background,
+			**job.get_external_meta()
 		},
 		technical   = {
-			'job'           : serialize_columns(job),
+			'job'   : serialize_columns(job),
 		} if meta['authenticated'] else -1,
 	)
 
@@ -222,18 +208,23 @@ def customtitle():
     """
     job_id = request.args.get('job_id')
     ui_utils.job_id_validator(job_id)
-    job = Job.query.get(job_id)
-    form = TitleSearchForm(obj=job)
+
+    job     = Job.query.get(job_id)
+    form    = TitleSearchForm(obj=job)
+
     if request.args.get("title"):
         args = {
-            'title': request.args.get("title"),
-            'title_manual': request.args.get("title"),
-            'year': request.args.get("year")
+            'title'         : request.args.get("title"),
+            'title_manual'  : request.args.get("title"),
+            'year'          : request.args.get("year"),
+            'external_meta' : None # reset, and fetch next time details modal request
         }
+
         notification = Notifications(f"Job: {job.job_id} was updated",
                                      f'Title: {job.title} ({job.year}) was updated to '
-                                     f'{request.args.get("title")} ({request.args.get("year")})')
+                                     f'{request.args.get("title")} ({request.args.get("year")})')  
         db.session.add(notification)
+
         ui_utils.database_updater(args, job)
 
         return redirect(url_for('home'))
@@ -290,28 +281,26 @@ def updatetitle():
     poster - new movie poster URL
     job_id - job to update
     """
-    #
+    job_id      = request.args.get('job_id')
+    job         : Job = Job.query.get(job_id)
+    old_title   = job.title
+    old_year    = job.year
+    new_title   = ui_utils.clean_for_filename(request.args.get('title'))
+    job.title   = job.title_manual = new_title
 
-    job_id = request.args.get('job_id')
-    job = Job.query.get(job_id)
-    old_title = job.title
-    old_year = job.year
     app.logger.debug(f"Old Title and Year: {old_title}, {old_year}")
-
     app.logger.debug(f"New Title: {request.args.get('title')}")
-    new_title = ui_utils.clean_for_filename(request.args.get('title'))
     app.logger.debug(f"Cleaned New Title: {new_title}")
-    job.title = job.title_manual = new_title
-
     app.logger.debug(f"New Year: {request.args.get('year')}")
     app.logger.debug(f"New Type: {request.args.get('type')}")
     app.logger.debug(f"New IMDB: {request.args.get('imdbID')}")
     app.logger.debug(f"New Poster: {request.args.get('poster')}")
 
-    job.year = job.year_manual = request.args.get('year')
-    job.video_type = job.video_type_manual = request.args.get('type')
-    job.imdb_id = job.imdb_id_manual = request.args.get('imdbID')
-    job.poster_url = job.poster_url_manual = request.args.get('poster')
+    job.year            = job.year_manual       = request.args.get('year')
+    job.video_type      = job.video_type_manual = request.args.get('type')
+    job.imdb_id         = job.imdb_id_manual    = request.args.get('imdbID')
+    job.poster_url      = job.poster_url_manual = request.args.get('poster')
+    job.external_meta   = None
 
     job.hasnicetitle = True
     notification = Notifications(f"Job: {job.job_id} was updated",
