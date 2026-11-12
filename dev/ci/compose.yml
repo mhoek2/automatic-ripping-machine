@@ -1,0 +1,10 @@
+services:
+  ci:
+    build:
+      context: ../..
+      dockerfile: dev/ci/Dockerfile
+      args:
+        PYTHON_VERSION: ${PYTHON_VERSION:-3.10}
+    working_dir: /workspace
+    volumes:
+      - ../..:/workspace
