@@ -18,15 +18,23 @@ services:
       TZ: Europe/Amsterdam
     command: python3 /opt/arm/arm/runui.py
 
-  phpliteadmin:
-    image: vtacquet/phpliteadmin:latest
-    container_name: arm-phpliteadmin
+  dbgate:
+    image: dbgate/dbgate:latest
+    container_name: arm-dbgate
     restart: unless-stopped
     ports:
-      - "8081:80"
+      - "8081:3000"
     volumes:
       - ./data:/db
+      - dbgate-data:/root/.dbgate
     environment:
       TZ: Europe/Amsterdam
+      LOGIN: admin
       PASSWORD: admin
-      LOCATION: /db
+      CONNECTIONS: arm
+      LABEL_arm: ARM SQLite
+      FILE_arm: /db/arm.db
+      ENGINE_arm: sqlite@dbgate-plugin-sqlite
+
+volumes:
+  dbgate-data:
