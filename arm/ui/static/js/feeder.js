@@ -19,37 +19,12 @@ const FEEDER_GROUPS = {
         JobState.POSTPROCESSING_MOVING,
         'clear',
     ],
-    //simulate: [
-    //    'simulate',
-    //]
 };
 
 function renderFeederGroup(group, states) {
     const container = $(`#feeder-${group}`);
-
-    /*if (group === 'simulate')
-    {
-        $.each(job_refresh.activeJobs, function (index, job) {
-            if (!job?.active)
-                return 1;
-
-            const ids = getJobIds(job);
-
-            container.append(
-                $("<button>", {
-                    type: 'button',
-                    text: `${job.title} (${job.year})`,
-                    'data-feeder-action': group,
-                    'data-job-id': ids.jobId,
-                    'data-drive': job.devpath,
-                })
-            );
-        });
-
-        return;
-    }*/
-
     const uniqueStates = [...new Set(states)];
+
     uniqueStates.forEach(state => {
         container.append(
             $('<button>', {

@@ -553,13 +553,7 @@ class Feeder:
                 logging.info("Database cleared.")
                 return
 
-            # simulate existing job till finished state
-            if self.command == "simulate":
-                self.drive_mount = self.data.get("drive")
-                self.run_simulation( 30, JobState.SUCCESS.value)
-                return
-
-            # simulate till requested state
+            # create job and simulate till requested state
             target_state            = self.FEEDER_SCENARIOS[self.command]
             self.status             = JobState.IDLE.value
             self.populate()
