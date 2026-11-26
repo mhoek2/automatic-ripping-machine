@@ -226,6 +226,8 @@ export function renderTracks(job, root) {
                 return;
             }
 
+            $(this).addClass('arm-button-outline');
+
             $.ajax({
                 url         : '/jobdetail_ready',
                 method      : 'POST',
@@ -237,7 +239,7 @@ export function renderTracks(job, root) {
                     job_id: local_job_id,
                 })
             }).fail(() => {
-                alert();
+                console.log('Request failed');
             });
         }).appendTo(actions);
     }

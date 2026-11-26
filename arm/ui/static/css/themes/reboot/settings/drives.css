@@ -130,59 +130,6 @@
     background: var(--color-surface-raised);
 }
 
-.drive-button {
-    flex: 1;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 32px;
-    padding: 5px 10px;
-    box-sizing: border-box;
-    border: 1px solid transparent;
-    border-radius: 5px;
-    font-size: 12px;
-    font-weight: 500;
-    text-decoration: none;
-    white-space: nowrap;
-    cursor: pointer;
-    transition:
-        background .15s ease,
-        border-color .15s ease,
-        color .15s ease;
-}
-
-.drive-button-primary {
-    background: var(--color-accent);
-    border-color: var(--color-accent);
-    color: var(--color-text-inverse);
-}
-
-.drive-button-primary:hover {
-    background: var(--color-accent-hover);
-    border-color: var(--color-accent-hover);
-}
-
-.drive-button-secondary {
-    background: var(--color-control);
-    border-color: var(--color-border-strong);
-    color: var(--color-text);
-}
-
-.drive-button-secondary:hover {
-    background: var(--color-control-hover);
-}
-
-.drive-button-danger {
-    background: transparent;
-    border-color: var(--color-danger);
-    color: var(--color-danger);
-}
-
-.drive-button-danger:hover {
-    background: var(--color-danger-bg);
-}
-
-
 /*
  * Empty state
  */

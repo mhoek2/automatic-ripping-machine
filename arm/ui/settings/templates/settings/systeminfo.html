@@ -1,9 +1,10 @@
 {% block tab_sysinfo %}
     <div id="system_stats" class="settings-tab-pane">
 
-        <div style="margin-left: 2em">
-            <p>Current CPU and System information - <a href="updatesysinfo">Update system information</a></p>
-        </div>
+        <a href="updatesysinfo" class="arm-button arm-button-secondary arm-button-outline" 
+            data-tooltip="Reload system CPU and memory config">
+            <i class="fa-solid fa-arrows-rotate"></i> Update system information
+        </a>
 
         {% include 'includes/sysinfo.html' %}
     </div>

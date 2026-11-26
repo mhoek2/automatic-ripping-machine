@@ -106,10 +106,10 @@ input::placeholder {
 /* Buttons */
 .arm-button {
 	all: unset;
+    position: relative;
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	min-height: 36px;
 	padding: 8px 15px;
 	border: 1px solid transparent;
 	border-radius: 6px;
@@ -119,6 +119,9 @@ input::placeholder {
 	cursor: pointer;
 	transition: background .15s ease, border-color .15s ease, color .15s ease;
 }
+    .arm-button-tall {
+        min-height: 36px;
+    }
     .arm-button:disabled {
         opacity: .5;
         cursor: not-allowed;
@@ -234,6 +237,8 @@ input::placeholder {
     background: var(--color-danger-bg);
 }
 
+/* tooltip */
+.arm-button[data-tooltip]::after,
 .icon-button[data-tooltip]::after {
     content: attr(data-tooltip);
     position: absolute;
@@ -253,6 +258,7 @@ input::placeholder {
     transition: opacity .12s ease;
 }
 
+.arm-button[data-tooltip]:hover::after,
 .icon-button[data-tooltip]:hover::after {
     opacity: 1;
     visibility: visible;
