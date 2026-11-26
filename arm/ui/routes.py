@@ -15,9 +15,7 @@ from pathlib import Path, PurePath
 from werkzeug.exceptions import HTTPException
 from flask import Flask, g, render_template, request, flash, \
     redirect, url_for, session   # noqa: F401
-from flask.logging import default_handler  # noqa: F401
-from flask_login import LoginManager, login_required, \
-    current_user, login_user, logout_user  # noqa: F401
+from flask_login import LoginManager, login_required
 from sqlalchemy.exc import SQLAlchemyError
 
 import arm.ui.utils as ui_utils

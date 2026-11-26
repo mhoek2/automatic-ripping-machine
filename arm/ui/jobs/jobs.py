@@ -15,8 +15,8 @@ Covers
 """
 
 import json
-from flask_login import LoginManager, login_required, current_user  # noqa: F401
-from flask import render_template, request, Blueprint, flash, redirect, url_for
+from flask_login import login_required  # noqa: F401
+from flask import render_template, jsonify, request, Blueprint, flash, redirect, url_for
 from werkzeug.routing import ValidationError
 
 import arm.ui.utils as ui_utils
@@ -24,7 +24,7 @@ from arm.ui import app, db, constants, json_api
 from arm.models.job import Job, JobState
 from arm.models.notifications import Notifications
 import arm.config.config as cfg
-from arm.ui.forms import TitleSearchForm, ChangeParamsForm, TrackFormDynamic
+from arm.ui.forms import TitleSearchForm, ChangeParamsForm
 
 route_jobs = Blueprint('route_jobs', __name__,
                        template_folder='templates',
@@ -32,9 +32,6 @@ route_jobs = Blueprint('route_jobs', __name__,
 
 
 from datetime import date, datetime
-
-from flask import jsonify, request
-
 
 @route_jobs.route('/jobdetail_api', methods=['GET'])
 # @login_required
@@ -82,7 +79,6 @@ def jobdetail_api():
 			'job'   : serialize_columns(job),
 		} if meta['authenticated'] else -1,
 	)
-
 
 @route_jobs.route('/jobdetail_mode', methods=['POST'])
 @login_required
@@ -151,7 +147,6 @@ def jobdetail_track():
 
 	return jsonify(success=True, track_id=track_id, process=process)
 
-
 @route_jobs.route('/jobdetail_ready', methods=['POST'])
 @login_required
 def jobdetail_ready():
@@ -199,7 +194,6 @@ def title_search():
         job              = job
     )
 
-
 @route_jobs.route('/customTitle')
 @login_required
 def customtitle():
@@ -235,7 +229,6 @@ def customtitle():
         job              = job
     )
 
-
 @route_jobs.route('/gettitle')
 @route_jobs.route('/select_title')
 @login_required
@@ -262,7 +255,6 @@ def gettitle():
         results         = dvd_info, 
         job_id          = job_id
     )
-
 
 @route_jobs.route('/updatetitle')
 @login_required
@@ -328,7 +320,6 @@ def changeparams():
         config           = config
     )
 
-
 @route_jobs.route('/list_titles')
 @login_required
 def list_titles():
@@ -364,7 +355,6 @@ def list_titles():
         title            = title, 
         year             = year
     )
-
 
 @route_jobs.route('/json', methods=['GET'])
 def feed_json():

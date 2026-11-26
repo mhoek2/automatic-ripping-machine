@@ -21,7 +21,7 @@ from arm.models.track import Track
 from arm.ui import app, db
 from arm.ui.forms import ChangeParamsForm
 from arm.ui.utils import arm_db_cfg, job_id_validator, database_updater, endpoint_meta
-from arm.ui.settings import DriveUtils as drive_utils # noqa E402
+from arm.ui.settings.utils import drive as drive_utils # noqa E402
 
 
 def get_unseen_notifications():

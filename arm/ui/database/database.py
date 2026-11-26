@@ -9,12 +9,11 @@ Covers
 import os
 import json
 import re
-from flask_login import LoginManager, login_required  # noqa: F401
+from flask_login import login_required  # noqa: F401
 from flask import g, render_template, jsonify, request, Blueprint, flash, redirect, session
 
 import arm.ui.utils as ui_utils
 from arm.ui import app, db, constants, json_api
-from arm.models.job import Job
 import arm.config.config as cfg
 from arm.ui.metadata import get_omdb_poster
 from arm.ui.forms import DBUpdate
@@ -118,8 +117,6 @@ def update_database():
         utils.notify(None, "ARM Database Update Failed", message)
 
     return redirect('/index')
-
-
 
 @route_database.route('/import_movies')
 @login_required

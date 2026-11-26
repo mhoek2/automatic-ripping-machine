@@ -8,7 +8,7 @@ sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 
 import arm.config.config as cfg  # noqa E402
 import arm.ui.routes  # noqa E402
-import arm.ui.settings.DriveUtils  # noqa E402
+import arm.ui.settings.utils.drive  # noqa E402
 import arm.ui.utils  # noqa E402
 
 from arm.ui import app  # noqa E402
@@ -21,7 +21,7 @@ def startup():
     db_status = arm.ui.utils.arm_db_check()
     if db_status["db_current"]:
         app.logger.info("Updating Optical Drives")
-        arm.ui.settings.DriveUtils.drives_update(startup=True)
+        arm.ui.settings.utils.drive.drives_update(startup=True)
 
 
 def handle_shutdown(signum, frame):

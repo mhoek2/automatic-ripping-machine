@@ -50,7 +50,6 @@ def arm_notification():
         notifications_new    = notifications_new
     )
 
-
 @route_notifications.route('/notification_clearall')
 @login_required
 def arm_notification_close():

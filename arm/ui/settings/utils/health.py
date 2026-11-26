@@ -9,7 +9,7 @@ from flask import flash
 
 from arm.ui import app
 import arm.config.config as cfg
-from arm.ui.settings.ServerUtil import ServerUtil
+from arm.ui.settings.utils.server import ServerUtil
 from arm.models.system_info import SystemInfo
 from arm.ripper.ProcessHandler import arm_subprocess
 

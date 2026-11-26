@@ -31,7 +31,7 @@ from arm.ripper import (arm_ripper, identify, logger,  # noqa: E402
                         music_brainz, utils)
 from arm.ripper.ARMInfo import ARMInfo  # noqa E402
 from arm.ui import app, constants, db  # noqa E402
-from arm.ui.settings import DriveUtils as drive_utils  # noqa E402
+from arm.ui.settings.utils import drive as drive_utils  # noqa E402
 
 job: Optional[Job] = None
 args: Optional[Namespace] = None

@@ -23,10 +23,8 @@ import os
 
 import sqlalchemy
 
-from flask_login import login_required, \
-    current_user, login_user, UserMixin, logout_user  # noqa: F401
-from flask import render_template, request, flash, \
-    redirect, Blueprint, session, url_for
+from flask_login import login_required
+from flask import render_template, request, flash, redirect, Blueprint, session, url_for
 
 import arm.ui.utils as ui_utils
 from arm.ui import app, db
@@ -34,8 +32,8 @@ from arm.models.job import Job
 from arm.models.system_drives import SystemDrives
 from arm.models.system_info import SystemInfo
 import arm.config.config as cfg
-from arm.ui.settings import DriveUtils as drive_utils
-from arm.ui.settings import health
+from arm.ui.settings.utils import drive as drive_utils
+from arm.ui.settings.utils import health
 from arm.ui.forms import SettingsForm, UiSettingsForm, AbcdeForm, SystemInfoDrives
 import arm.ripper.utils as ripper_utils
 from arm.ripper.ARMInfo import ARMInfo  # noqa E402
@@ -193,7 +191,6 @@ def save_settings():
 
     return {'success': success, 'settings': cfg.arm_config, 'form': 'arm ripper settings'}
 
-
 @route_settings.route('/save_ui_settings', methods=['POST'])
 @login_required
 def save_ui_settings():
@@ -270,7 +267,6 @@ def save_abcde():
             'settings': clean_abcde_str,
             'form': 'abcde config'}
 
-
 @route_settings.route('/save_apprise_cfg', methods=['POST'])
 @login_required
 def save_apprise_cfg():
@@ -302,7 +298,6 @@ def save_apprise_cfg():
     ripper_utils.notify(None, "ARM Settings", message, send_remote=False)
 
     return {'success': success, 'settings': cfg.apprise_config, 'form': 'Apprise config'}
-
 
 @route_settings.route('/systeminfo', methods=['POST'])
 @login_required
@@ -342,7 +337,6 @@ def server_info():
 
         return redirect(url_for(REDIRECT_SETTINGS))
 
-
 @route_settings.route('/systemdrivescan')
 def system_drive_scan():
     """
@@ -354,7 +348,6 @@ def system_drive_scan():
     new_count = drive_utils.drives_update()
     flash(f"ARM found {new_count} new drives", "success")
     return redirect(url_for(REDIRECT_SETTINGS))
-
 
 @route_settings.route('/drive/eject/<eject_id>')
 @login_required
@@ -379,7 +372,6 @@ def drive_eject(eject_id):
         flash(error, "error")
     return redirect(url_for(REDIRECT_SETTINGS))
 
-
 @route_settings.route('/drive/remove/<remove_id>')
 @login_required
 def drive_remove(remove_id):
@@ -397,7 +389,6 @@ def drive_remove(remove_id):
         app.logger.error(f"Drive removal encountered an error: {e}")
         flash("Drive unable to be removed, check logs for error", "error")
     return redirect(url_for(REDIRECT_SETTINGS))
-
 
 @route_settings.route('/drive/manual/<manual_id>')
 @login_required
@@ -438,7 +429,6 @@ def drive_manual(manual_id):
     flash(message, status)
     return redirect('/settings')
 
-
 @route_settings.route('/testapprise')
 def testapprise():
     """
@@ -452,7 +442,6 @@ def testapprise():
     ripper_utils.notify(None, "ARM notification", message)
     flash("Test notification sent ", "success")
     return redirect(url_for(REDIRECT_SETTINGS))
-
 
 # hmm
 @route_settings.route('/updatesysinfo')

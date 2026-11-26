@@ -8,7 +8,7 @@ Covers
 
 import os
 from pathlib import Path
-from flask_login import LoginManager, login_required  # noqa: F401
+from flask_login import login_required  # noqa: F401
 from flask import render_template, request, Blueprint, send_file, session, jsonify
 from werkzeug.routing import ValidationError
 
@@ -19,7 +19,6 @@ import arm.config.config as cfg
 route_logs = Blueprint('route_logs', __name__,
                        template_folder='templates',
                        static_folder='../static')
-
 
 @route_logs.route('/logs')
 @login_required
@@ -36,7 +35,6 @@ def logs():
         file             = request.args['logfile'], 
         mode             = mode
     )
-
 
 @route_logs.route('/listlogs', defaults={'path': ''})
 @login_required
@@ -60,7 +58,6 @@ def listlogs(path):
         files            = files, 
         date_format      = cfg.arm_config['DATE_FORMAT']
     )
-
 
 @route_logs.route('/logreader')
 @login_required

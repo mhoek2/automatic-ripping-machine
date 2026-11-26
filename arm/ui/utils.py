@@ -17,7 +17,6 @@ from typing import Optional
 import bcrypt
 import requests
 from werkzeug.routing import ValidationError
-from flask.logging import default_handler  # noqa: F401
 from flask_login import current_user
 from flask import g
 
@@ -32,7 +31,7 @@ from arm.models.user import User
 from arm.models.notifications import Notifications
 from arm.ui import app, db
 from arm.ui.metadata import tmdb_search, get_tmdb_poster, tmdb_find, call_omdb_api
-from arm.ui.settings import DriveUtils
+from arm.ui.settings.utils import drive
 from arm.ui.notifications.notifications import arm_notification_count
 
 # Path definitions
@@ -299,7 +298,7 @@ def arm_db_initialise():
         db.session.add(server)
         db.session.commit()
     # Scan and load drives to database
-    DriveUtils.drives_update()
+    drive.drives_update()
 
 
 def make_dir(path):
@@ -474,7 +473,7 @@ def setup_database():
         app.logger.debug("DB Init - Server info loaded")
         db.session.commit()
         # Scan and load drives to database
-        DriveUtils.drives_update()
+        drive.drives_update()
         app.logger.debug("DB Init - Drive info loaded")
         return True
     except SQLAlchemyError as e:
