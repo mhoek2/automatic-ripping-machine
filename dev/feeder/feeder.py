@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
+import os
 import random
 import sys
 import time
 import json
 from datetime import datetime, timedelta
 from pathlib import Path
+import logging
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
@@ -17,7 +19,7 @@ from arm.models.track import Track, TrackState
 from arm.models.system_drives import SystemDrives, CDS
 from arm.models.config import Config
 from arm.ripper.makemkv import manual_trackselect_wait
-from arm.ripper import utils
+from arm.ripper import utils, makemkv, arm_ripper
 
 import re
 from time import strftime
@@ -175,19 +177,32 @@ class Feeder:
         track_duration = duration / len(self.tracks) 
 
         for track in self.tracks:
-            print(f"[{datetime.now().strftime('%H:%M:%S')}] Start rip for track: #{track.track_number} - {track.basename}")
+            logging.info(f"[{datetime.now().strftime('%H:%M:%S')}] Start rip for track: #{track.track_number} - {track.basename}")
 
             if not track.process:
                 continue
 
             track.status = TrackState.TRACK_RIPPING
             db.session.commit()
-            
-            for progress in (100, 250, 400, 600, 800, 1000):
-                time.sleep(track_duration)
-                self.__append_makemkv_progress(progress)
-                self.__append_jobfile("INFO", f"MakeMKV: Ripping progress {progress / 10:.1f}%")
-                self.__append_jobfile("INFO", "MakeMKV: rip completed")
+
+            filename = os.path.join(self.rawpath, track.filename)
+            target_size = track.filesize
+
+            with open(filename, "wb") as f:
+                for progress in (100, 250, 400, 600, 800, 1000):
+                    time.sleep(track_duration)
+
+                    # Grow the file according to ripping progress.
+                    f.truncate(target_size * progress // 1000)
+                    f.flush()
+
+                    self.__append_makemkv_progress(progress)
+                    self.__append_jobfile("INFO", f"MakeMKV: Ripping progress {progress / 10:.1f}%")
+
+                # Ensure exact final filesize.
+                f.truncate(target_size)
+
+            self.__append_jobfile("INFO", "MakeMKV: rip completed")
 
             track.ripped = True
             track.status = TrackState.TRACK_RIPPED
@@ -197,9 +212,15 @@ class Feeder:
             self._job_notificaton(self.job, f"{self.job.title} {constants.RIPPING_COMPLETE}")
 
     def stage_ripping(self, duration : float ):
+        use_make_mkv = arm_ripper.rip_with_mkv(self.job, 0)
+        if use_make_mkv:
+            logging.info("************* Ripping disc with MakeMKV (simulate) *************")
+            self.makemkv_out_path   = self.rawpath # usually captured by makemkv
+            self.transcode_in_path  = self.makemkv_out_path
+
         # mimics: arm.ripper.makemkv.process_manual_tracks()
         if self.job.manual_mode:
-            print(f"[{datetime.now().strftime('%H:%M:%S')}] Use manual mode")
+            logging.info(f"[{datetime.now().strftime('%H:%M:%S')}] Use manual mode")
             
             # Stop/hold job and set status to waiting
             self.job.status = JobState.VIDEO_WAITING.value
@@ -244,9 +265,35 @@ class Feeder:
         time.sleep(duration)
 
     def stage_postprocessing(self, duration : float ):
+        use_make_mkv = arm_ripper.rip_with_mkv(self.job, 0)
+
+        logging.info(f"Transcode status: [{self.job.config.SKIP_TRANSCODE}] and MakeMKV Status: [{use_make_mkv}]")
+        if self.job.config.SKIP_TRANSCODE and use_make_mkv:
+            utils.delete_job_files([self.transcode_out_path])
+            self.transcode_out_path = self.transcode_in_path
+
+        logging.info(f"Job title status: [{self.job.title_manual}]")
+        if self.job.title_manual:
+            utils.delete_job_files([self.final_directory])
+            job_title = utils.fix_job_title(self.job)
+            self.final_directory = os.path.join(self.job.config.COMPLETED_PATH, self.type_sub_folder, job_title)
+            # Update the job.path with the final directory
+            utils.database_updater({'path': self.final_directory}, self.job)
+
+        # move files
+        arm_ripper.move_files_post(self.transcode_out_path, self.job)
+        utils.move_movie_poster(self.final_directory, self.transcode_out_path)
+        utils.set_permissions(self.final_directory)
+        utils.delete_job_files([
+            self.transcode_in_path, 
+            self.transcode_out_path, 
+            self.makemkv_out_path
+        ])
+
         self.__append_jobfile("INFO", "ARM: Moving completed files")
+        
+        #validate_tracks(job)
         self.__append_jobfile("INFO", "ARM: Output files verified")
-        self.__append_jobfile("INFO", "ARM: Job completed successfully")
 
         time.sleep(duration)
 
@@ -395,6 +442,32 @@ class Feeder:
         db.session.query(SystemDrives).delete()
         db.session.commit()
 
+    def __create_job_paths(self, job):
+        job_title       = utils.fix_job_title(job)
+
+        self.type_sub_folder = utils.convert_job_type(job.video_type)
+        self.have_dupes = utils.job_dupe_check(job)
+
+        self.rawpath            = makemkv.setup_rawpath(job, os.path.join(str(job.config.RAW_PATH), str(job_title)))
+
+        self.transcode_out_path = os.path.join(job.config.TRANSCODE_PATH, self.type_sub_folder, job_title)
+        self.final_directory    = os.path.join(job.config.COMPLETED_PATH, self.type_sub_folder, job_title)
+        self.transcode_out_path = utils.check_for_dupe_folder(self.have_dupes, self.transcode_out_path, job)
+        self.final_directory    = utils.check_for_dupe_folder(self.have_dupes, self.final_directory, job) 
+
+        self.makemkv_out_path = None
+        self.transcode_in_path = str(job.devpath)
+
+        logging.info(f"""
+            {'Variable':<22} | Value
+            {'-' * 22}-+----------------------------------------
+            {'raw_path':<22} | {self.rawpath}
+            {'transcode_out_path':<22} | {self.transcode_out_path}
+            {'final_directory':<22} | {self.final_directory}
+            {'makemkv_out_path':<22} | {self.makemkv_out_path}
+            {'transcode_in_path':<22} | {self.transcode_in_path}
+        """)
+
     def populate(self) -> str:
         self.movie = random.choice(MOVIES)
         
@@ -415,12 +488,14 @@ class Feeder:
         db.session.add(self.config)
         db.session.commit()
 
+        self.__create_job_paths(job)
+
         self.progress_path = self.__make_progress_log(job)
-        
-        print(f"Created job {job.job_id}: {self.movie['title']} [{job.status}]")
-        print(f"IMDb: {self.movie['imdb_id']}")
-        print(f"Drive: {self.drive.mount} (tray: {self.drive.tray.name})")
-        print(f"Logfile: {self.log_path}")
+
+        logging.info(f"Created job {job.job_id}: {self.movie['title']} [{job.status}]")
+        logging.info(f"IMDb: {self.movie['imdb_id']}")
+        logging.info(f"Drive: {self.drive.mount} (tray: {self.drive.tray.name})")
+        logging.info(f"Logfile: {self.log_path}")
 
     def run_simulation(self, total_duration_seconds: int, final_outcome: str = JobState.SUCCESS.value, target_state: str = None):
         drive = SystemDrives.query.filter_by(
@@ -428,7 +503,7 @@ class Feeder:
         ).first()
 
         if not drive or not drive.job_id_current:
-            print("No active job found in the mock drive. Run your feeder populate script first!")
+            logging.info("No active job found in the mock drive. Run your feeder populate script first!")
             return
 
         # fetch job from drive
@@ -436,31 +511,31 @@ class Feeder:
         self.job = db.session.get(Job, self.drive.job_id_current)
     
         if not self.job:
-            print(f"Job ID {self.drive.job_id_current} not found.")
+            logging.info(f"Job ID {self.drive.job_id_current} not found.")
             return
         
         self.config = Config.query.filter_by(job_id=self.job.job_id).first()
 
 
-        print(f"[{datetime.now().strftime('%H:%M:%S')}] Starting simulation for: {self.job.title} [{total_duration_seconds}s total duration]")
+        logging.info(f"[{datetime.now().strftime('%H:%M:%S')}] Starting simulation for: {self.job.title} [{total_duration_seconds}s total duration]")
         
         for stage in self.SIMULATION_STAGES:
             if self.config.SKIP_TRANSCODE and JobState(stage["state"]) in JobStateGroup.TRANSCODING:
-                print(f"[{datetime.now().strftime('%H:%M:%S')}] Transcoding is disabled, skipping transcode")
+                logging.info(f"[{datetime.now().strftime('%H:%M:%S')}] Transcoding is disabled, skipping transcode")
                 continue
                 
             self.job.status = stage["state"]
             self.job.stage = stage["name"]
             
             db.session.commit()
-            print(f"[{datetime.now().strftime('%H:%M:%S')}] State -> {stage['name']}")
+            logging.info(f"[{datetime.now().strftime('%H:%M:%S')}] State -> {stage['name']}")
 
             duration = total_duration_seconds * stage["weight"]
             # call stage function
             getattr(self, stage["function"])(duration)
             
             if target_state == stage["state"]:
-                print(f"Simulation stopped at requested state: {stage['state']}")
+                logging.info(f"Simulation stopped at requested state: {stage['state']}")
                 return
         
         finished_time = datetime.now()
@@ -469,13 +544,13 @@ class Feeder:
         
         self.__finish_job(final_outcome)
 
-        print(f"[{datetime.now().strftime('%H:%M:%S')}] Simulation finished with status: {self.job.status}")
+        logging.info(f"[{datetime.now().strftime('%H:%M:%S')}] Simulation finished with status: {self.job.status}")
 
     def run( self ):
           with app.app_context():
             if self.command == "clear":
                 self.clear()
-                print("Database cleared.")
+                logging.info("Database cleared.")
                 return
 
             # simulate existing job till finished state
